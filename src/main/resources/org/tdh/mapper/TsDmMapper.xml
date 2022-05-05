@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.tdh.mapper.TsDmMapper">
+
+    <resultMap id="BaseResultMap" type="org.tdh.domain.TsDm">
+            <id property="code" column="CODE" jdbcType="VARCHAR"/>
+            <id property="kind" column="KIND" jdbcType="VARCHAR"/>
+            <result property="bz" column="BZ" jdbcType="VARCHAR"/>
+            <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
+            <result property="bt" column="BT" jdbcType="VARCHAR"/>
+            <result property="mc" column="MC" jdbcType="VARCHAR"/>
+            <result property="sfjy" column="SFJY" jdbcType="VARCHAR"/>
+            <result property="pxh" column="PXH" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        CODE,KIND,BZ,
+        LASTUPDATE,BT,MC,
+        SFJY,PXH
+    </sql>
+</mapper>
