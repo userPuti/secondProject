@@ -5,31 +5,51 @@
 <mapper namespace="org.tdh.mapper.CkCkxzMapper">
 
     <resultMap id="BaseResultMap" type="org.tdh.domain.CkCkxz">
-            <id property="bdhm" column="BDHM" jdbcType="VARCHAR"/>
-            <result property="cklsh" column="CKLSH" jdbcType="VARCHAR"/>
-            <result property="zt" column="ZT" jdbcType="VARCHAR"/>
-            <result property="xzlb" column="XZLB" jdbcType="VARCHAR"/>
-            <result property="xzdwdm" column="XZDWDM" jdbcType="VARCHAR"/>
-            <result property="xzdwfl" column="XZDWFL" jdbcType="VARCHAR"/>
-            <result property="ah" column="AH" jdbcType="VARCHAR"/>
-            <result property="zjlx" column="ZJLX" jdbcType="VARCHAR"/>
-            <result property="zjhm" column="ZJHM" jdbcType="VARCHAR"/>
-            <result property="mc" column="MC" jdbcType="VARCHAR"/>
-            <result property="gj" column="GJ" jdbcType="VARCHAR"/>
-            <result property="hjszd" column="HJSZD" jdbcType="VARCHAR"/>
-            <result property="cbr" column="CBR" jdbcType="VARCHAR"/>
-            <result property="sjy" column="SJY" jdbcType="VARCHAR"/>
-            <result property="xzsm" column="XZSM" jdbcType="VARCHAR"/>
-            <result property="fydm" column="FYDM" jdbcType="VARCHAR"/>
-            <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
+        <id property="bdhm" column="BDHM" jdbcType="VARCHAR"/>
+        <result property="cklsh" column="CKLSH" jdbcType="VARCHAR"/>
+        <result property="zt" column="ZT" jdbcType="VARCHAR"/>
+        <result property="xzlb" column="XZLB" jdbcType="VARCHAR"/>
+        <result property="xzdwdm" column="XZDWDM" jdbcType="VARCHAR"/>
+        <result property="xzdwfl" column="XZDWFL" jdbcType="VARCHAR"/>
+        <result property="ah" column="AH" jdbcType="VARCHAR"/>
+        <result property="zjlx" column="ZJLX" jdbcType="VARCHAR"/>
+        <result property="zjhm" column="ZJHM" jdbcType="VARCHAR"/>
+        <result property="mc" column="MC" jdbcType="VARCHAR"/>
+        <result property="gj" column="GJ" jdbcType="VARCHAR"/>
+        <result property="hjszd" column="HJSZD" jdbcType="VARCHAR"/>
+        <result property="cbr" column="CBR" jdbcType="VARCHAR"/>
+        <result property="sjy" column="SJY" jdbcType="VARCHAR"/>
+        <result property="xzsm" column="XZSM" jdbcType="VARCHAR"/>
+        <result property="fydm" column="FYDM" jdbcType="VARCHAR"/>
+        <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        BDHM,CKLSH,ZT,
-        XZLB,XZDWDM,XZDWFL,
-        AH,ZJLX,ZJHM,
-        MC,GJ,HJSZD,
-        CBR,SJY,XZSM,
-        FYDM,LASTUPDATE
+        BDHM
+        , CKLSH,ZT, XZLB, XZDWDM, XZDWFL, AH, ZJLX, ZJHM, MC, GJ, HJSZD, CBR, SJY, XZSM, FYDM, LASTUPDATE
     </sql>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ck_ckxz
+    </select>
+    <select id="selectByCkxzDto" resultType="org.tdh.domain.CkCkxz">
+        select
+        <include refid="Base_Column_List"/>
+        from ck_ckxz
+        <where>
+            <if test="zt != null and zt != ''">
+                and zt in (${zt})
+            </if>
+            <if test="ah != null and ah != ''">
+                and ah like '%${ah}%'
+            </if>
+            <if test="mc != null and mc != ''">
+                and mc like '%${mc}%'
+            </if>
+            <if test="zjhm != null and zjhm != ''">
+                and zjhm = ${zjhm}
+            </if>
+        </where>
+    </select>
 </mapper>

@@ -51,8 +51,8 @@
 	<script type="text/javascript" src="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxDataView/codebase/dhtmlxdataprocessor.js"></script>
 <%}%>
 <%if(uilist.indexOf("_DTAB_")>=0){%>
-	<link rel="STYLESHEET" type="text/css" href="<%=CONTEXT_PATH %>/static/resources/v2/static/plugg/dhtmlx/dhtmlxTabbar/codebase/dhtmlxtabbar.css" />
-	<script  src="<%=CONTEXT_PATH %>/static/resources/v2/static/plugg/dhtmlx/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>
+	<link rel="STYLESHEET" type="text/css" href="<%=CONTEXT_PATH %>/resources/static/v2/static/plugg/dhtmlx/dhtmlxTabbar/codebase/dhtmlxtabbar.css" />
+	<script  src="<%=CONTEXT_PATH %>/resources/static/v2/static/plugg/dhtmlx/dhtmlxTabbar/codebase/dhtmlxtabbar.js"></script>
 <%}%>
 <%if(uilist.indexOf("_DTREE_")>=0){ %>
 	<link rel="stylesheet" type="text/css" href="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxTree/codebase/dhtmlxtree.css" />
@@ -69,7 +69,7 @@
 <script src="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxCombo/codebase/ext/dhtmlxcombo_whp.js"></script>
 <%}%>
 <%if(uilist.indexOf("_DACCORDION_")>=0){%>
-<script src="<%=CONTEXT_PATH%>/resources/v2/static/plugg/dhtmlx/dhtmlxAccordion/codebase/dhtmlxcommon.js"></script>
+<script src="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxAccordion/codebase/dhtmlxcommon.js"></script>
 <script src="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxAccordion/codebase/dhtmlxcontainer.js"></script>
 <script src="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxAccordion/codebase/dhtmlxaccordion.js"></script>
 <link rel="stylesheet"  href="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_blue.css">

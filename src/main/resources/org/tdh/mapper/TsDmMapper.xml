@@ -5,19 +5,26 @@
 <mapper namespace="org.tdh.mapper.TsDmMapper">
 
     <resultMap id="BaseResultMap" type="org.tdh.domain.TsDm">
-            <id property="code" column="CODE" jdbcType="VARCHAR"/>
-            <id property="kind" column="KIND" jdbcType="VARCHAR"/>
-            <result property="bz" column="BZ" jdbcType="VARCHAR"/>
-            <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
-            <result property="bt" column="BT" jdbcType="VARCHAR"/>
-            <result property="mc" column="MC" jdbcType="VARCHAR"/>
-            <result property="sfjy" column="SFJY" jdbcType="VARCHAR"/>
-            <result property="pxh" column="PXH" jdbcType="INTEGER"/>
+        <id property="code" column="CODE" jdbcType="VARCHAR"/>
+        <id property="kind" column="KIND" jdbcType="VARCHAR"/>
+        <result property="bz" column="BZ" jdbcType="VARCHAR"/>
+        <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
+        <result property="bt" column="BT" jdbcType="VARCHAR"/>
+        <result property="mc" column="MC" jdbcType="VARCHAR"/>
+        <result property="sfjy" column="SFJY" jdbcType="VARCHAR"/>
+        <result property="pxh" column="PXH" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        CODE,KIND,BZ,
+        CODE
+        ,KIND,BZ,
         LASTUPDATE,BT,MC,
         SFJY,PXH
     </sql>
+    <select id="selectAllByKindAndSfjy" resultType="org.tdh.domain.TsDm">
+        select
+        <include refid="Base_Column_List"/>
+        from ts_dm
+        where kind = #{kind} and sfjy = #{sfjy}
+    </select>
 </mapper>

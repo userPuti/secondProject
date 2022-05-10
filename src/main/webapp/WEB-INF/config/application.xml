@@ -12,10 +12,6 @@
 
     <context:property-placeholder location="/WEB-INF/config/jdbc.properties"/>
 
-<!--    <bean id="properyConfigure" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
-<!--        <property name="location" value="/WEB-INF/config/jdbc.properties"></property>-->
-<!--    </bean>-->
-
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
         <property name="driverClassName" value="${jdbc.driver}"/>
         <property name="url" value="${jdbc.url}"/>

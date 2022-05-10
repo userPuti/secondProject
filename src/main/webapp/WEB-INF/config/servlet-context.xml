@@ -10,7 +10,7 @@
     <context:component-scan base-package="org.tdh.controller"/>
 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/templates/"/>
+        <property name="prefix" value="/webapp/wdcx/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
@@ -37,5 +37,7 @@
     </mvc:annotation-driven>
 
     <mvc:default-servlet-handler/>
+
+
 
 </beans>

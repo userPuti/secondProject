@@ -10,8 +10,6 @@ import org.tdh.domain.CkCkdx;
 * @createDate 2022-05-05 14:26:12
 * @Entity org.tdh.domain.CkCkdx
 */
-@Repository
-@Mapper
 public interface CkCkdxMapper  {
     /**
      *

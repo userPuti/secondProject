@@ -15,4 +15,7 @@
         XZDWDM,XZDWFL,MC,
         LASTUPDATE
     </sql>
+    <select id="selectAll" resultType="org.tdh.domain.CkXzdw">
+        select <include refid="Base_Column_List"/> from ck_xzdw;
+    </select>
 </mapper>
