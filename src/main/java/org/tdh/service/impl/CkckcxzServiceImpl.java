@@ -6,8 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tdh.cache.Caches;
 import org.tdh.domain.CkCkxz;
+import org.tdh.domain.TsDm;
 import org.tdh.dto.CkxzDto;
 import org.tdh.mapper.CkCkxzMapper;
 import org.tdh.service.CkCkxzService;
@@ -45,6 +47,23 @@ public class CkckcxzServiceImpl implements CkCkxzService {
         return null;
     }
 
+
+    /**
+     * 批量删除
+     *
+     * @param bdhms 表单号码
+     * @return 删除的数量
+     */
+    @Override
+    @Transactional
+    public int batchDel(String bdhms) {
+        if (bdhms != null && !"".equals(bdhms)) {
+            log.warn("正在删除查控协执信息： 表单号码是： {}", bdhms);
+            return ckxzMapper.batchDel(bdhms);
+        }
+        return 0;
+    }
+
     /**
      * 用户显示到主页的表格
      *
@@ -60,8 +79,16 @@ public class CkckcxzServiceImpl implements CkCkxzService {
             allCkxzXml.append("<userdata name='totalnumber'><![CDATA[").append(count).append("]]></userdata>");
             for (CkCkxz ckxz : list) {
                 allCkxzXml.append("<row id=\"").append(ckxz.getBdhm()).append("\">");
+                allCkxzXml.append("<userdata name='zt'><![CDATA[").append(ckxz.getZt()).append("]]></userdata>");
                 allCkxzXml.append("<cell>0</cell>");
-                allCkxzXml.append("<cell><![CDATA[").append(ckxz.getZt()).append("]]></cell>");
+
+                List<TsDm> ckzts = Caches.CKZT_MAP.get("ckzts");
+                for (TsDm dm : ckzts) {
+                    if (ckxz.getZt().equals(dm.getCode())) {
+                        allCkxzXml.append("<cell><![CDATA[").append(dm.getMc()).append("]]></cell>");
+                        break;
+                    }
+                }
 
                 if (10 < Integer.parseInt(ckxz.getZt())) {
                     allCkxzXml.append("<cell><![CDATA[").append("/sp/resources/static/v2/static/tdh/btn/images/blue/search.png^查看^javascript:view(\"")
@@ -71,7 +98,7 @@ public class CkckcxzServiceImpl implements CkCkxzService {
                 }
 
                 if ("10".equals(ckxz.getZt())) {
-                    allCkxzXml.append("<cell><![CDATA[").append("/sp/resources/static/v2/static/tdh/btn/images/blue/edit.png^查看^javascript:view(\"")
+                    allCkxzXml.append("<cell><![CDATA[").append("/sp/resources/static/v2/static/tdh/btn/images/blue/edit.png^编辑^javascript:view(\"")
                             .append(ckxz.getBdhm()).append("\")^_self").append("]]></cell>");
                 } else {
                     allCkxzXml.append("<cell></cell>");

@@ -5,12 +5,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.tdh.cache.Caches;
 import org.tdh.domain.TsDm;
 import org.tdh.dto.CkxzDto;
 import org.tdh.service.CkCkxzService;
+import org.tdh.util.response.ResResult;
+import org.tdh.util.response.ResponseVO;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -69,6 +72,38 @@ public class MainPageController {
 
         log.debug("主页面加载成功");
         return mav;
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param bdhms
+     * @return
+     */
+    @RequestMapping(value = "/batchDel.do", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public ResponseVO bulkDel(@RequestParam("bdhms") String bdhms) {
+        String[] idArray = bdhms.trim().split(",");
+        int total = idArray.length;
+        int succCount = ckxzService.batchDel(bdhms);
+        int fail = total - succCount;
+        if (succCount > 0) {
+            return ResResult.successWithData("成功删除了" + succCount + "条数据,失败了" + fail + "条");
+        } else {
+            return ResResult.fail();
+        }
+    }
+
+    /**
+     * 用于跳转到添加页面
+     *
+     * @param func 功能参数，为添加add
+     * @return 返回一个ModelAndView对象，同时传递func参数到userForm页面
+     */
+    @RequestMapping("/cxsfdj.do")
+    public ModelAndView cxsfdj(String func) {
+        ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
+        return modelAndView;
     }
 
 }

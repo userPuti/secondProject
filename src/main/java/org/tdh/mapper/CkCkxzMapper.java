@@ -1,8 +1,5 @@
 package org.tdh.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.tdh.domain.CkCkxz;
 import org.tdh.dto.CkxzDto;
 
@@ -22,7 +19,21 @@ public interface CkCkxzMapper {
      */
     public List<CkCkxz> selectAll();
 
+    /**
+     * 根据ckxzDto查询协执信息
+     *
+     * @param ckxzDto 查控协执入参信息
+     * @return 查询到的查控协执信息的List集合
+     */
     public List<CkCkxz> selectByCkxzDto(CkxzDto ckxzDto);
+
+    /**
+     * 根据表单号码删除信息
+     *
+     * @param bdhms 表单号码
+     * @return 删除的条数
+     */
+    public int batchDel(String bdhms);
 }
 
 

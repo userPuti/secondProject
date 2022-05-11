@@ -12,4 +12,11 @@ public interface CkCkxzService {
      * @return 所有信息拼接的xml的String
      */
     String CkckxzInfo(CkxzDto ckxzDto);
+
+    /**
+     * 批量删除
+     * @param bdhms 表单号码
+     * @return 删除的数量
+     */
+    int batchDel(String bdhms);
 }

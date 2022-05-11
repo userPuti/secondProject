@@ -28,6 +28,11 @@
         BDHM
         , CKLSH,ZT, XZLB, XZDWDM, XZDWFL, AH, ZJLX, ZJHM, MC, GJ, HJSZD, CBR, SJY, XZSM, FYDM, LASTUPDATE
     </sql>
+    <delete id="batchDel" parameterType="String">
+        delete
+        from ck_ckxz
+        where bdhm in (${bdhms})
+    </delete>
     <select id="selectAll" resultMap="BaseResultMap">
         select
         <include refid="Base_Column_List"/>
@@ -38,11 +43,11 @@
         <include refid="Base_Column_List"/>
         from ck_ckxz
         <where>
-            <if test="zt != null and zt != ''">
-                and zt in (${zt})
-            </if>
             <if test="ah != null and ah != ''">
                 and ah like '%${ah}%'
+            </if>
+            <if test="zt != null and zt != ''">
+                and zt in (${zt})
             </if>
             <if test="mc != null and mc != ''">
                 and mc like '%${mc}%'
@@ -51,5 +56,6 @@
                 and zjhm = ${zjhm}
             </if>
         </where>
+        order by lastupdate
     </select>
 </mapper>

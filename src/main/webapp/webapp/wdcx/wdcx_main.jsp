@@ -46,16 +46,18 @@
                 <input id="zjhm" name="zjhm" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
             </div>
 
-            <div class="searchbar_row">
+            <div class="searchbar_row searchbar_row_fr">
                 <a class="tdh_btn mgr8" href="javascript:void(0);" id="query" onclick="queryInfo()">
-                    <i class="tdh_icon icon_search"></i>查询</a>
+                    <i class="tdh_icon icon_search"></i>查询
+                </a>
 
-                <a class="tdh_btn mgr8" href="javascript:void(0);" id="delUsers" onclick="bulkDeletion()">
+                <a class="tdh_btn mgr8" href="javascript:void(0);" id="addInfo" onclick="addInfo()">
+                    <i class="tdh_icon icon_add"></i>新增
+                </a>
+
+                <a class="tdh_btn mgr8" href="javascript:void(0);" id="delUsers" onclick="batchDel()">
                     <i class="tdh_icon icon_del"></i>删除
                 </a>
-            </div>
-            <div class="searchbar_row searchbar_row_fr">
-                <a class="tdh_btn tdh_btn_blue"><i class="tdh_icon icon_add"></i>新增</a>
             </div>
         </div>
         <div class="list">
@@ -63,6 +65,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>
