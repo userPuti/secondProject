@@ -5,17 +5,24 @@
 <mapper namespace="org.tdh.mapper.CkXzdwMapper">
 
     <resultMap id="BaseResultMap" type="org.tdh.domain.CkXzdw">
-            <id property="xzdwdm" column="XZDWDM" jdbcType="VARCHAR"/>
-            <result property="xzdwfl" column="XZDWFL" jdbcType="VARCHAR"/>
-            <result property="mc" column="MC" jdbcType="VARCHAR"/>
-            <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
+        <id property="xzdwdm" column="XZDWDM" jdbcType="VARCHAR"/>
+        <result property="xzdwfl" column="XZDWFL" jdbcType="VARCHAR"/>
+        <result property="mc" column="MC" jdbcType="VARCHAR"/>
+        <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        XZDWDM,XZDWFL,MC,
+        XZDWDM
+        ,XZDWFL,MC,
         LASTUPDATE
     </sql>
+
     <select id="selectAll" resultType="org.tdh.domain.CkXzdw">
         select <include refid="Base_Column_List"/> from ck_xzdw;
+    </select>
+    <select id="selectByXzdwfl" resultType="org.tdh.domain.CkXzdw">
+        select
+        <include refid="Base_Column_List"/>
+        from ck_xzdw where xzdwfl = #{xzdwfl}
     </select>
 </mapper>

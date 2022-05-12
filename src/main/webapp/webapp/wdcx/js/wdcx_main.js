@@ -41,6 +41,15 @@ function queryInfo() {
 //删除
 function batchDel() {
     let gridlist = mygrid.getCheckedRows(0);
+
+    if (gridlist === null || gridlist === '') {
+        layer.msg('未选择登记状态的记录，无法删除', {
+            icon: 7,
+            shade: 0.000001, //不展示遮罩，但是要有遮罩效果
+            time: 2000
+        })
+    }
+
     let bdhms = gridlist.split(",");
     let delZt = [];
     let count = 0;
@@ -55,7 +64,6 @@ function batchDel() {
     }
 
     delZt = delZt.join(',');
-    console.info(delZt);
 
     if (0 === count) {
         layer.msg('未选择登记状态的记录，无法删除', {
@@ -63,9 +71,7 @@ function batchDel() {
             shade: 0.000001, //不展示遮罩，但是要有遮罩效果
             time: 2000
         })
-    }
-
-    if (bdhms.length !== count) {
+    } else if (bdhms.length !== count) {
         layer.confirm('存在非登记状态的记录，只会删除登记状态的记录，是否继续!', {
             title: '删除提示',
             btn: ['是', '否'],
@@ -76,7 +82,7 @@ function batchDel() {
                 layerClose(true);
             }
         });
-    } else {
+    } else if (bdhms.length === count) {
         layer.confirm('是否删除选中的记录!', {
             title: '删除提示',
             btn: ['是', '否'],
@@ -136,4 +142,9 @@ function addInfoCallback(rtn) {
     if (rtn === "success") {
         return mygrid.loadXML(CONTEXT_PATH + "webapp/wdcx/listwdcx.do");
     }
+}
+
+//查看
+function view(bdhm) {
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewXzInfo.do?bdhm="+bdhm+"&func=view", "查看协执信息", 700, 700);
 }

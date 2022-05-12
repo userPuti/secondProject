@@ -89,6 +89,16 @@ public class CkCkxz implements Serializable {
     private String fydm;
 
     /**
+     * 诉讼地位  
+     */
+    private String ssdw;
+
+    /**
+     * 登记批次UUID  
+     */
+    private String djpc;
+
+    /**
      * 更新日期  
      */
     private Date lastupdate;
@@ -320,6 +330,34 @@ public class CkCkxz implements Serializable {
     }
 
     /**
+     * 诉讼地位  
+     */
+    public String getSsdw() {
+        return ssdw;
+    }
+
+    /**
+     * 诉讼地位  
+     */
+    public void setSsdw(String ssdw) {
+        this.ssdw = ssdw;
+    }
+
+    /**
+     * 登记批次UUID  
+     */
+    public String getDjpc() {
+        return djpc;
+    }
+
+    /**
+     * 登记批次UUID  
+     */
+    public void setDjpc(String djpc) {
+        this.djpc = djpc;
+    }
+
+    /**
      * 更新日期  
      */
     public Date getLastupdate() {
@@ -361,6 +399,8 @@ public class CkCkxz implements Serializable {
             && (this.getSjy() == null ? other.getSjy() == null : this.getSjy().equals(other.getSjy()))
             && (this.getXzsm() == null ? other.getXzsm() == null : this.getXzsm().equals(other.getXzsm()))
             && (this.getFydm() == null ? other.getFydm() == null : this.getFydm().equals(other.getFydm()))
+            && (this.getSsdw() == null ? other.getSsdw() == null : this.getSsdw().equals(other.getSsdw()))
+            && (this.getDjpc() == null ? other.getDjpc() == null : this.getDjpc().equals(other.getDjpc()))
             && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()));
     }
 
@@ -384,6 +424,8 @@ public class CkCkxz implements Serializable {
         result = prime * result + ((getSjy() == null) ? 0 : getSjy().hashCode());
         result = prime * result + ((getXzsm() == null) ? 0 : getXzsm().hashCode());
         result = prime * result + ((getFydm() == null) ? 0 : getFydm().hashCode());
+        result = prime * result + ((getSsdw() == null) ? 0 : getSsdw().hashCode());
+        result = prime * result + ((getDjpc() == null) ? 0 : getDjpc().hashCode());
         result = prime * result + ((getLastupdate() == null) ? 0 : getLastupdate().hashCode());
         return result;
     }
@@ -410,6 +452,8 @@ public class CkCkxz implements Serializable {
         sb.append(", sjy=").append(sjy);
         sb.append(", xzsm=").append(xzsm);
         sb.append(", fydm=").append(fydm);
+        sb.append(", ssdw=").append(ssdw);
+        sb.append(", djpc=").append(djpc);
         sb.append(", lastupdate=").append(lastupdate);
         sb.append(", serialVersionUID=").append(serialVersionUID);
         sb.append("]");

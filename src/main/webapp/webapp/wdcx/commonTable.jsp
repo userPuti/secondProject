@@ -21,29 +21,32 @@
         <label><input name="fxk1" class="inputCheck" type="checkbox"/></label>
     </td>
     <td class="tdTitle">案号<i class="required">*</i></td>
-    <td class="tdCont"><input class="inputText" type="text"/></td>
+    <td class="tdCont"><input class="inputText" type="text" value="${ckxz.ah}"/></td>
     <td class="tdTitle">承办人<i class="required">*</i></td>
-    <td class="tdCont"><input class="inputText" type="text"/></td>
+    <td class="tdCont"><input class="inputText" type="text" value="${ckxz.cbr}"/></td>
     <td class="tdTitle">书记员<i class="required">*</i></td>
-    <td class="tdCont"><input class="inputText" type="text"/></td>
+    <td class="tdCont"><input class="inputText" type="text" value="${ckxz.sjy}"/></td>
 </tr>
 <tr>
     <td class="tdTitle">查询对象<i class="required">*</i></td>
-    <td class="tdCont"><input class="inputText" type="text"/></td>
+    <td class="tdCont"><input class="inputText" type="text" value="${ckxz.mc}"/></td>
     <td class="tdTitle">涉案身份</td>
     <td class="tdCont">
+        <input id="sasf" type="hidden" value="${ckxz.ssdw}"/>
         <select class="inputSel">
-            <option value=""></option>
+            <option value="" selected="selected"></option>
+            ${sasfOption}
         </select>
     </td>
     <td class="tdTitle">类型<i class="required">*</i></td>
-    <td class="tdCont"><input class="inputText" type="text" placeholder="自然人"/></td>
+    <td class="tdCont"><input class="inputText" type="text" value="自然人" disabled="disabled"/></td>
 </tr>
 <tr>
     <td class="tdTitle">证件类型<i class="required">*</i></td>
     <td class="tdCont">
         <select class="inputSel">
-            <option value=""></option>
+            <option value="" selected="selected"></option>
+            ${zjflOption}
         </select>
     </td>
     <td class="tdTitle">证件号码<i class="required">*</i></td>
@@ -53,7 +56,8 @@
     <td class="tdTitle">国家或地区</td>
     <td class="tdCont">
         <select class="inputSel">
-            <option value=""></option>
+            <option value="" selected="selected"></option>
+            ${gjOption}
         </select>
     </td>
     <td class="tdTitle">户籍地<i class="required">*</i></td>

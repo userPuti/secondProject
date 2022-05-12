@@ -5,23 +5,34 @@
 <mapper namespace="org.tdh.mapper.TsBzdmMapper">
 
     <resultMap id="BaseResultMap" type="org.tdh.domain.TsBzdm">
-            <id property="kind" column="KIND" jdbcType="VARCHAR"/>
-            <id property="code" column="CODE" jdbcType="VARCHAR"/>
-            <result property="kin09" column="KIN09" jdbcType="VARCHAR"/>
-            <result property="bt" column="BT" jdbcType="VARCHAR"/>
-            <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
-            <result property="codenow" column="CODENOW" jdbcType="VARCHAR"/>
-            <result property="sfjy" column="SFJY" jdbcType="VARCHAR"/>
-            <result property="ver" column="VER" jdbcType="VARCHAR"/>
-            <result property="mc" column="MC" jdbcType="VARCHAR"/>
-            <result property="fdm" column="FDM" jdbcType="VARCHAR"/>
-            <result property="pxh" column="PXH" jdbcType="INTEGER"/>
+        <id property="kind" column="KIND" jdbcType="VARCHAR"/>
+        <id property="code" column="CODE" jdbcType="VARCHAR"/>
+        <result property="kin09" column="KIN09" jdbcType="VARCHAR"/>
+        <result property="bt" column="BT" jdbcType="VARCHAR"/>
+        <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
+        <result property="codenow" column="CODENOW" jdbcType="VARCHAR"/>
+        <result property="sfjy" column="SFJY" jdbcType="VARCHAR"/>
+        <result property="ver" column="VER" jdbcType="VARCHAR"/>
+        <result property="mc" column="MC" jdbcType="VARCHAR"/>
+        <result property="fdm" column="FDM" jdbcType="VARCHAR"/>
+        <result property="pxh" column="PXH" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        KIND,CODE,KIN09,
+        KIND
+        ,CODE,KIN09,
         BT,LASTUPDATE,CODENOW,
         SFJY,VER,MC,
         FDM,PXH
     </sql>
+    <select id="selectByKindAndSfjy" resultType="org.tdh.domain.TsBzdm">
+        select
+        <include refid="Base_Column_List"/>
+        from ts_bzdm where kind=#{kind} and sfjy=#{sfjy}
+    </select>
+    <select id="selectByKind" resultType="org.tdh.domain.TsBzdm">
+        select
+        <include refid="Base_Column_List"/>
+        from ts_bzdm where kind=#{kind}
+    </select>
 </mapper>

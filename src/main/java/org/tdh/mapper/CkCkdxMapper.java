@@ -1,7 +1,5 @@
 package org.tdh.mapper;
 
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
 import org.tdh.domain.CkCkdx;
 
 /**

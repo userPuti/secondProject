@@ -1,5 +1,6 @@
 package org.tdh.service;
 
+import org.tdh.domain.CkCkxz;
 import org.tdh.dto.CkxzDto;
 
 /**
@@ -19,4 +20,11 @@ public interface CkCkxzService {
      * @return 删除的数量
      */
     int batchDel(String bdhms);
+
+    /**
+     * 根据表单号码查询协执信息
+     * @param bdhm 表单号码
+     * @return 查控协执对象
+     */
+    CkCkxz viewCkxzInfo(String bdhm);
 }

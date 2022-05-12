@@ -64,6 +64,27 @@ public class CkckcxzServiceImpl implements CkCkxzService {
         return 0;
     }
 
+
+    /**
+     * 根据表单号码查询协执信息
+     *
+     * @param bdhm 表单号码
+     * @return 查控协执对象，找不到数据就返回null
+     */
+    @Override
+    public CkCkxz viewCkxzInfo(String bdhm) {
+        if (bdhm != null && !"".equals(bdhm)) {
+            CkCkxz ckxz = ckxzMapper.selectByBdhm(bdhm);
+            if (ckxz != null) {
+                return ckxz;
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
     /**
      * 用户显示到主页的表格
      *
@@ -98,7 +119,7 @@ public class CkckcxzServiceImpl implements CkCkxzService {
                 }
 
                 if ("10".equals(ckxz.getZt())) {
-                    allCkxzXml.append("<cell><![CDATA[").append("/sp/resources/static/v2/static/tdh/btn/images/blue/edit.png^编辑^javascript:view(\"")
+                    allCkxzXml.append("<cell><![CDATA[").append("/sp/resources/static/v2/static/tdh/btn/images/blue/edit.png^编辑^javascript:edit(\"")
                             .append(ckxz.getBdhm()).append("\")^_self").append("]]></cell>");
                 } else {
                     allCkxzXml.append("<cell></cell>");

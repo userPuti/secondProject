@@ -53,29 +53,7 @@
                 <label><input name="fxk1" class="inputCheck" type="checkbox"/>所有单位(选择下列单位发起财产查询通知, 至少选择一个协助执行单位)</label>
             </td>
         </tr>
-        <tr>
-            <td class="tdTitle">
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>银行</label>
-            </td>
-            <td colspan="6" class="tdCont_pd">
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>工商银行</label>
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>建设银行</label>
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>农业银行</label><br/>
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>中国银行</label>
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>华夏银行</label>
-            </td>
-        </tr>
-        <tr>
-            <td class="tdTitle">
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>互联网金融</label>
-            </td>
-            <td colspan="6" class="tdCont_pd">
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>支付宝</label>
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>百度金融</label>
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>京东钱包</label><br/>
-                <label><input name="fxk1" class="inputCheck" type="checkbox"/>腾讯财付通</label>
-            </td>
-        </tr>
+        ${xzdw}
     </form>
 
     <form id="xxsm" action="#">
@@ -90,12 +68,10 @@
     <form id="wsxx">
         <tr rowspan="4">
             <td align="center">文<br/>书<br/>信<br/>息<br/></td>
-
             <td class="tdCont_pd" colspan="7">
                 <textarea class="inputArea"></textarea>
             </td>
         </tr>
-
     </form>
 </table>
 

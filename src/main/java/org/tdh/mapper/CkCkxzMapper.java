@@ -34,6 +34,13 @@ public interface CkCkxzMapper {
      * @return 删除的条数
      */
     public int batchDel(String bdhms);
+
+    /**
+     * 根据表单号码查询查控协执信息
+     * @param bdhm 表单号码
+     * @return 查控协执对象
+     */
+    public CkCkxz selectByBdhm(String bdhm);
 }
 
 

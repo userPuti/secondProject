@@ -44,18 +44,24 @@
         from ck_ckxz
         <where>
             <if test="ah != null and ah != ''">
-                and ah like '%${ah}%'
+                and ah like "%"#{ah}"%"
             </if>
             <if test="zt != null and zt != ''">
                 and zt in (${zt})
             </if>
             <if test="mc != null and mc != ''">
-                and mc like '%${mc}%'
+                and mc like "%"#{mc}"%"
             </if>
             <if test="zjhm != null and zjhm != ''">
-                and zjhm = ${zjhm}
+                and zjhm = #{zjhm}
             </if>
         </where>
         order by lastupdate
+    </select>
+    <select id="selectByBdhm" resultType="org.tdh.domain.CkCkxz">
+        select
+        <include refid="Base_Column_List"/>
+        from ck_ckxz
+        where bdhm=#{bdhm}
     </select>
 </mapper>
