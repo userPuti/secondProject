@@ -48,7 +48,6 @@ public class MainPageController {
             return ckxzXml;
         }
         log.info("加载表格出现了问题");
-
         return "";
     }
 
@@ -89,100 +88,17 @@ public class MainPageController {
     @RequestMapping(value = "/batchDel.do", produces = "application/json;charset=utf-8")
     @ResponseBody
     public ResponseVO batchDel(@RequestParam("bdhms") String bdhms) {
+        log.debug("正在批量删除表单号码为 {} 的信息",bdhms);
         String[] idArray = bdhms.trim().split(",");
         int total = idArray.length;
         int succCount = ckxzService.batchDel(bdhms);
         int fail = total - succCount;
         if (succCount > 0) {
+            log.debug("删除成功，并向后端返回成功信息！");
             return ResResult.successWithData("成功删除了" + succCount + "条数据,失败了" + fail + "条");
         } else {
+            log.debug("删除失败，并向前端返回失败信息！");
             return ResResult.fail();
         }
-    }
-
-
-    /**
-     * 用于跳转到添加页面
-     *
-     * @param func 功能参数，为添加add
-     * @return 返回一个ModelAndView对象，同时传递func参数到userForm页面
-     */
-    @RequestMapping("/cxsfdj.do")
-    public ModelAndView cxsfdj(String func) {
-        ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
-
-        StringBuilder zjflString = new StringBuilder();
-        for (TsDm zjfl : Caches.ZJFL_MAP.get("zjfl")) {
-            zjflString.append("<option value=\"").append(zjfl.getCode()).append("\">").append(zjfl.getMc()).append("</option>");
-        }
-
-        if (!"".equals(zjflString)) {
-            log.debug("证件类型下拉框加载成功：{}", zjflString);
-            modelAndView.addObject("zjflOption", zjflString.toString());
-        } else {
-            log.info("证件类型下拉框加载为空,可能出现问题");
-        }
-
-        StringBuilder sasfString = new StringBuilder();
-        for (TsBzdm sasf : Caches.SASF_MAP.get("sasf")) {
-            sasfString.append("<option value=\"").append(sasf.getCode()).append("\">").append(sasf.getMc()).append("</option>");
-        }
-        if (!"".equals(sasfString)) {
-            log.debug("涉案身份下拉框加载成功：{}", sasfString);
-            modelAndView.addObject("sasfOption", sasfString.toString());
-        } else {
-            log.info("涉案身份下拉框加载为空,可能出现问题");
-        }
-
-        StringBuilder gjString = new StringBuilder();
-        for (TsBzdm gj : Caches.GJ_MAP.get("gj")) {
-            gjString.append("<option value=\"").append(gj.getCode()).append("\">").append(gj.getMc()).append("</option>");
-        }
-        if (!"".equals(gjString)) {
-            log.debug("国籍下拉框加载成功：{}", gjString);
-            modelAndView.addObject("gjOption", gjString.toString());
-        } else {
-            log.info("国籍下拉框加载为空,可能出现问题");
-        }
-
-        List<TsDm> cklbs = Caches.CKLB_MAP.get("cklb");
-        StringBuilder ckxzString = new StringBuilder();
-        for (TsDm cklb : cklbs) {
-            ckxzString.append(" <tr ><td class=\"tdTitle\" colspan = \"2\" >")
-                    .append("   <label ><input class=\"inputCheck\" type = \"checkbox\" / >").append(cklb.getMc())
-                    .append("</label ></td ><td colspan = \"5\" class=\"tdCont_pd\" >");
-
-            int i = 0;
-            for (CkXzdw xzdw : Caches.CKXZDWFL_MAP.get(cklb.getCode())) {
-                ckxzString.append("<label ><input class=\"inputCheck\" type = \"checkbox\" / >").append(xzdw.getMc()).append("</label >");
-                i++;
-                if (0 == (i % 3)) {
-                    ckxzString.append("<br/>");
-                }
-            }
-
-            ckxzString.append("</td></tr>");
-        }
-
-        modelAndView.addObject("xzdw", ckxzString);
-
-        return modelAndView;
-    }
-
-
-    /**
-     * 根据bdhm来查询协执的信息，并传递给前端相应的数据
-     *
-     * @param bdhm 表单号码
-     * @param func 只能是view和edit
-     * @return ModelAndView
-     */
-    @RequestMapping("/viewXzInfo.do")
-    public ModelAndView viewXzInfo(String bdhm, String func) {
-        ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
-        modelAndView.addObject("func", func);
-        CkCkxz ckxz = ckxzService.viewCkxzInfo(bdhm);
-        modelAndView.addObject("ckxz",ckxz);
-        return modelAndView;
     }
 }

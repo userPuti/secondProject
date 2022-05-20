@@ -5,19 +5,18 @@
 <mapper namespace="org.tdh.mapper.TsDmMapper">
 
     <resultMap id="BaseResultMap" type="org.tdh.domain.TsDm">
-        <id property="code" column="CODE" jdbcType="VARCHAR"/>
-        <id property="kind" column="KIND" jdbcType="VARCHAR"/>
-        <result property="bz" column="BZ" jdbcType="VARCHAR"/>
-        <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
-        <result property="bt" column="BT" jdbcType="VARCHAR"/>
-        <result property="mc" column="MC" jdbcType="VARCHAR"/>
-        <result property="sfjy" column="SFJY" jdbcType="VARCHAR"/>
-        <result property="pxh" column="PXH" jdbcType="INTEGER"/>
+            <id property="code" column="CODE" jdbcType="VARCHAR"/>
+            <id property="kind" column="KIND" jdbcType="VARCHAR"/>
+            <result property="bz" column="BZ" jdbcType="VARCHAR"/>
+            <result property="lastupdate" column="LASTUPDATE" jdbcType="TIMESTAMP"/>
+            <result property="bt" column="BT" jdbcType="VARCHAR"/>
+            <result property="mc" column="MC" jdbcType="VARCHAR"/>
+            <result property="sfjy" column="SFJY" jdbcType="VARCHAR"/>
+            <result property="pxh" column="PXH" jdbcType="INTEGER"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        CODE
-        ,KIND,BZ,
+        CODE,KIND,BZ,
         LASTUPDATE,BT,MC,
         SFJY,PXH
     </sql>

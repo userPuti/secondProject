@@ -9,52 +9,52 @@ import java.util.Date;
  */
 public class CkCkxz implements Serializable {
     /**
-     * 表单号码UUID  
+     * 表单号码UUID
      */
     private String bdhm;
 
     /**
-     * 查控流水号  
+     * 查控流水号
      */
     private String cklsh;
 
     /**
-     * 状态  代码值TS_DM.KIND=CKZT
+     * 状态代码值TS_DM.KIND=CKZT
      */
     private String zt;
 
     /**
-     * 协执类别    1-查询 2-控制
+     * 协执类别1-查询 2-控制
      */
     private String xzlb;
 
     /**
-     * 协执单位代码  
+     * 协执单位代码
      */
     private String xzdwdm;
 
     /**
-     * 协执单位分类  代码值TS_DM.KIND=CKLB
+     * 协执单位分类代码值TS_DM.KIND=CKLB
      */
     private String xzdwfl;
 
     /**
-     * 案号  
+     * 案号
      */
     private String ah;
 
     /**
-     * 证件类型  代码值TS_DM.KIND=ZJFL
+     * 证件类型代码值TS_DM.KIND=ZJFL
      */
     private String zjlx;
 
     /**
-     * 证件号码  
+     * 证件号码
      */
     private String zjhm;
 
     /**
-     * 名称  
+     * 名称
      */
     private String mc;
 
@@ -64,182 +64,182 @@ public class CkCkxz implements Serializable {
     private String gj;
 
     /**
-     * 户籍所在地  
+     * 户籍所在地
      */
     private String hjszd;
 
     /**
-     * 承办人  中文姓名
+     * 承办人中文姓名
      */
     private String cbr;
 
     /**
-     * 书记员  中文姓名
+     * 书记员中文姓名
      */
     private String sjy;
 
     /**
-     * 协助说明  
+     * 协助说明
      */
     private String xzsm;
 
     /**
-     * 法院代码  
+     * 法院代码
      */
     private String fydm;
 
     /**
-     * 诉讼地位  
+     * 诉讼地位
      */
     private String ssdw;
 
     /**
-     * 登记批次UUID  
+     * 登记批次UUID
      */
     private String djpc;
 
     /**
-     * 更新日期  
+     * 更新日期
      */
     private Date lastupdate;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 表单号码UUID  
+     * 表单号码UUID
      */
     public String getBdhm() {
         return bdhm;
     }
 
     /**
-     * 表单号码UUID  
+     * 表单号码UUID
      */
     public void setBdhm(String bdhm) {
         this.bdhm = bdhm;
     }
 
     /**
-     * 查控流水号  
+     * 查控流水号
      */
     public String getCklsh() {
         return cklsh;
     }
 
     /**
-     * 查控流水号  
+     * 查控流水号
      */
     public void setCklsh(String cklsh) {
         this.cklsh = cklsh;
     }
 
     /**
-     * 状态  代码值TS_DM.KIND=CKZT
+     * 状态代码值TS_DM.KIND=CKZT
      */
     public String getZt() {
         return zt;
     }
 
     /**
-     * 状态  代码值TS_DM.KIND=CKZT
+     * 状态代码值TS_DM.KIND=CKZT
      */
     public void setZt(String zt) {
         this.zt = zt;
     }
 
     /**
-     * 协执类别    1-查询 2-控制
+     * 协执类别1-查询 2-控制
      */
     public String getXzlb() {
         return xzlb;
     }
 
     /**
-     * 协执类别    1-查询 2-控制
+     * 协执类别1-查询 2-控制
      */
     public void setXzlb(String xzlb) {
         this.xzlb = xzlb;
     }
 
     /**
-     * 协执单位代码  
+     * 协执单位代码
      */
     public String getXzdwdm() {
         return xzdwdm;
     }
 
     /**
-     * 协执单位代码  
+     * 协执单位代码
      */
     public void setXzdwdm(String xzdwdm) {
         this.xzdwdm = xzdwdm;
     }
 
     /**
-     * 协执单位分类  代码值TS_DM.KIND=CKLB
+     * 协执单位分类代码值TS_DM.KIND=CKLB
      */
     public String getXzdwfl() {
         return xzdwfl;
     }
 
     /**
-     * 协执单位分类  代码值TS_DM.KIND=CKLB
+     * 协执单位分类代码值TS_DM.KIND=CKLB
      */
     public void setXzdwfl(String xzdwfl) {
         this.xzdwfl = xzdwfl;
     }
 
     /**
-     * 案号  
+     * 案号
      */
     public String getAh() {
         return ah;
     }
 
     /**
-     * 案号  
+     * 案号
      */
     public void setAh(String ah) {
         this.ah = ah;
     }
 
     /**
-     * 证件类型  代码值TS_DM.KIND=ZJFL
+     * 证件类型代码值TS_DM.KIND=ZJFL
      */
     public String getZjlx() {
         return zjlx;
     }
 
     /**
-     * 证件类型  代码值TS_DM.KIND=ZJFL
+     * 证件类型代码值TS_DM.KIND=ZJFL
      */
     public void setZjlx(String zjlx) {
         this.zjlx = zjlx;
     }
 
     /**
-     * 证件号码  
+     * 证件号码
      */
     public String getZjhm() {
         return zjhm;
     }
 
     /**
-     * 证件号码  
+     * 证件号码
      */
     public void setZjhm(String zjhm) {
         this.zjhm = zjhm;
     }
 
     /**
-     * 名称  
+     * 名称
      */
     public String getMc() {
         return mc;
     }
 
     /**
-     * 名称  
+     * 名称
      */
     public void setMc(String mc) {
         this.mc = mc;
@@ -260,112 +260,112 @@ public class CkCkxz implements Serializable {
     }
 
     /**
-     * 户籍所在地  
+     * 户籍所在地
      */
     public String getHjszd() {
         return hjszd;
     }
 
     /**
-     * 户籍所在地  
+     * 户籍所在地
      */
     public void setHjszd(String hjszd) {
         this.hjszd = hjszd;
     }
 
     /**
-     * 承办人  中文姓名
+     * 承办人中文姓名
      */
     public String getCbr() {
         return cbr;
     }
 
     /**
-     * 承办人  中文姓名
+     * 承办人中文姓名
      */
     public void setCbr(String cbr) {
         this.cbr = cbr;
     }
 
     /**
-     * 书记员  中文姓名
+     * 书记员中文姓名
      */
     public String getSjy() {
         return sjy;
     }
 
     /**
-     * 书记员  中文姓名
+     * 书记员中文姓名
      */
     public void setSjy(String sjy) {
         this.sjy = sjy;
     }
 
     /**
-     * 协助说明  
+     * 协助说明
      */
     public String getXzsm() {
         return xzsm;
     }
 
     /**
-     * 协助说明  
+     * 协助说明
      */
     public void setXzsm(String xzsm) {
         this.xzsm = xzsm;
     }
 
     /**
-     * 法院代码  
+     * 法院代码
      */
     public String getFydm() {
         return fydm;
     }
 
     /**
-     * 法院代码  
+     * 法院代码
      */
     public void setFydm(String fydm) {
         this.fydm = fydm;
     }
 
     /**
-     * 诉讼地位  
+     * 诉讼地位
      */
     public String getSsdw() {
         return ssdw;
     }
 
     /**
-     * 诉讼地位  
+     * 诉讼地位
      */
     public void setSsdw(String ssdw) {
         this.ssdw = ssdw;
     }
 
     /**
-     * 登记批次UUID  
+     * 登记批次UUID
      */
     public String getDjpc() {
         return djpc;
     }
 
     /**
-     * 登记批次UUID  
+     * 登记批次UUID
      */
     public void setDjpc(String djpc) {
         this.djpc = djpc;
     }
 
     /**
-     * 更新日期  
+     * 更新日期
      */
     public Date getLastupdate() {
         return lastupdate;
     }
 
     /**
-     * 更新日期  
+     * 更新日期
      */
     public void setLastupdate(Date lastupdate) {
         this.lastupdate = lastupdate;

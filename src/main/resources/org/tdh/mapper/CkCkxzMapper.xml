@@ -5,29 +5,157 @@
 <mapper namespace="org.tdh.mapper.CkCkxzMapper">
 
     <resultMap id="BaseResultMap" type="org.tdh.domain.CkCkxz">
-        <id property="bdhm" column="BDHM" jdbcType="VARCHAR"/>
-        <result property="cklsh" column="CKLSH" jdbcType="VARCHAR"/>
-        <result property="zt" column="ZT" jdbcType="VARCHAR"/>
-        <result property="xzlb" column="XZLB" jdbcType="VARCHAR"/>
-        <result property="xzdwdm" column="XZDWDM" jdbcType="VARCHAR"/>
-        <result property="xzdwfl" column="XZDWFL" jdbcType="VARCHAR"/>
-        <result property="ah" column="AH" jdbcType="VARCHAR"/>
-        <result property="zjlx" column="ZJLX" jdbcType="VARCHAR"/>
-        <result property="zjhm" column="ZJHM" jdbcType="VARCHAR"/>
-        <result property="mc" column="MC" jdbcType="VARCHAR"/>
-        <result property="gj" column="GJ" jdbcType="VARCHAR"/>
-        <result property="hjszd" column="HJSZD" jdbcType="VARCHAR"/>
-        <result property="cbr" column="CBR" jdbcType="VARCHAR"/>
-        <result property="sjy" column="SJY" jdbcType="VARCHAR"/>
-        <result property="xzsm" column="XZSM" jdbcType="VARCHAR"/>
-        <result property="fydm" column="FYDM" jdbcType="VARCHAR"/>
-        <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
+            <id property="bdhm" column="BDHM" jdbcType="VARCHAR"/>
+            <result property="cklsh" column="CKLSH" jdbcType="VARCHAR"/>
+            <result property="zt" column="ZT" jdbcType="VARCHAR"/>
+            <result property="xzlb" column="XZLB" jdbcType="VARCHAR"/>
+            <result property="xzdwdm" column="XZDWDM" jdbcType="VARCHAR"/>
+            <result property="xzdwfl" column="XZDWFL" jdbcType="VARCHAR"/>
+            <result property="ah" column="AH" jdbcType="VARCHAR"/>
+            <result property="zjlx" column="ZJLX" jdbcType="VARCHAR"/>
+            <result property="zjhm" column="ZJHM" jdbcType="VARCHAR"/>
+            <result property="mc" column="MC" jdbcType="VARCHAR"/>
+            <result property="gj" column="GJ" jdbcType="VARCHAR"/>
+            <result property="hjszd" column="HJSZD" jdbcType="VARCHAR"/>
+            <result property="cbr" column="CBR" jdbcType="VARCHAR"/>
+            <result property="sjy" column="SJY" jdbcType="VARCHAR"/>
+            <result property="xzsm" column="XZSM" jdbcType="VARCHAR"/>
+            <result property="fydm" column="FYDM" jdbcType="VARCHAR"/>
+            <result property="ssdw" column="SSDW" jdbcType="VARCHAR"/>
+            <result property="djpc" column="DJPC" jdbcType="VARCHAR"/>
+            <result property="lastupdate" column="LASTUPDATE" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        BDHM
-        , CKLSH,ZT, XZLB, XZDWDM, XZDWFL, AH, ZJLX, ZJHM, MC, GJ, HJSZD, CBR, SJY, XZSM, FYDM, LASTUPDATE
+        BDHM,CKLSH,ZT,
+        XZLB,XZDWDM,XZDWFL,
+        AH,ZJLX,ZJHM,
+        MC,GJ,HJSZD,
+        CBR,SJY,XZSM,
+        FYDM,SSDW,DJPC,
+        LASTUPDATE
     </sql>
+    <insert id="insertSelective">
+        insert into ck_ckxz
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bdhm != null">
+                bdhm,
+            </if>
+            <if test="cklsh != null">
+                cklsh,
+            </if>
+            <if test="zt != null">
+                zt,
+            </if>
+            <if test="xzlb != null">
+                xzlb,
+            </if>
+            <if test="xzdwdm != null">
+                xzdwdm,
+            </if>
+            <if test="xzdwfl != null">
+                xzdwfl,
+            </if>
+            <if test="zjlx != null">
+                zjlx,
+            </if>
+            <if test="zjhm != null">
+                zjhm,
+            </if>
+            <if test="mc != null">
+                mc,
+            </if>
+            <if test="cbr != null">
+                cbr,
+            </if>
+            <if test="sjy != null">
+                sjy,
+            </if>
+            <if test="hjszd != null">
+                hjszd,
+            </if>
+            <if test="gj != null">
+                gj,
+            </if>
+            <if test="ah != null">
+                ah,
+            </if>
+            <if test="xzsw != null">
+                xzsw,
+            </if>
+            <if test="fydm != null">
+                fydm,
+            </if>
+            <if test="djpc != null">
+                djpc,
+            </if>
+            <if test="ssdw != null">
+                ssdw,
+            </if>
+            <if test="lastupdate != null">
+                lastupdate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bdhm != null">
+                #{bdhm},
+            </if>
+            <if test="cklsh != null">
+                #{cklsh},
+            </if>
+            <if test="zt != null">
+                #{zt},
+            </if>
+            <if test="xzlb != null">
+                #{xzlb},
+            </if>
+            <if test="xzdwdm != null">
+                #{xzdwdm},
+            </if>
+            <if test="xzdwfl != null">
+                #{xzdwfl},
+            </if>
+            <if test="zjlx != null">
+                #{zjlx},
+            </if>
+            <if test="zjhm != null">
+                #{zjhm},
+            </if>
+            <if test="mc != null">
+                #{mc},
+            </if>
+            <if test="cbr != null">
+                #{cbr},
+            </if>
+            <if test="sjy != null">
+                #{sjy},
+            </if>
+            <if test="hjszd != null">
+                #{hjszd},
+            </if>
+            <if test="gj != null">
+                #{gj},
+            </if>
+            <if test="ah != null">
+                #{ah},
+            </if>
+            <if test="xzsw != null">
+                #{xzsw},
+            </if>
+            <if test="fydm != null">
+                #{fydm},
+            </if>
+            <if test="djpc != null">
+                #{djpc},
+            </if>
+            <if test="ssdw != null">
+                #{ssdw},
+            </if>
+            <if test="lastupdate != null">
+                #{lastupdate},
+            </if>
+        </trim>
+    </insert>
     <delete id="batchDel" parameterType="String">
         delete
         from ck_ckxz

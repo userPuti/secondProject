@@ -41,6 +41,13 @@ public interface CkCkxzMapper {
      * @return 查控协执对象
      */
     public CkCkxz selectByBdhm(String bdhm);
+
+    /**
+     * 插入一条数据
+     * @param ckxz 查控协执对象
+     * @return 插入成功返回1，否则返回0
+     */
+    public int insertSelective(CkCkxz ckxz);
 }
 
 

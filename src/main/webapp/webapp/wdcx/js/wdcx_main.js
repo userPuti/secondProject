@@ -134,7 +134,7 @@ function deleted(bdhms) {
 
 //新增
 function addInfo() {
-    openLayerModal(CONTEXT_PATH + "webapp/wdcx/cxsfdj.do?func=add", "查询申请登记", 700, 700, addInfoCallback());
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/cxsfdj.do?func=add", "查询申请登记", 700, 600, addInfoCallback());
 }
 
 //查询申请登记的回调函数，用于刷新
@@ -146,5 +146,10 @@ function addInfoCallback(rtn) {
 
 //查看
 function view(bdhm) {
-    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewXzInfo.do?bdhm="+bdhm+"&func=view", "查看协执信息", 700, 700);
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewXzInfo.do?bdhm="+bdhm+"&func=view", "查看协执信息", 700, 600);
+}
+
+//编辑
+function edit(bdhm) {
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewXzInfo.do?bdhm="+bdhm+"&func=edit", "编辑协执信息", 700, 600);
 }

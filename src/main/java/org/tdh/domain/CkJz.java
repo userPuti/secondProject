@@ -9,116 +9,116 @@ import java.util.Date;
  */
 public class CkJz implements Serializable {
     /**
-     * 登记批次UUID  
+     * 登记批次UUID@@
      */
     private String djpc;
 
     /**
-     * 序号  
+     * 序号@@
      */
     private Integer xh;
 
     /**
-     * 文件名称  
+     * 文件名称@@
      */
     private String wjmc;
 
     /**
-     * 文件类型  
+     * 文件类型@@
      */
     private String wjlx;
 
     /**
-     * 文件文件地址  
+     * 文件文件地址@@
      */
     private String path;
 
     /**
-     * 更新日期  
+     * 更新日期@@
      */
     private Date lastupdate;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 登记批次UUID  
+     * 登记批次UUID@@
      */
     public String getDjpc() {
         return djpc;
     }
 
     /**
-     * 登记批次UUID  
+     * 登记批次UUID@@
      */
     public void setDjpc(String djpc) {
         this.djpc = djpc;
     }
 
     /**
-     * 序号  
+     * 序号@@
      */
     public Integer getXh() {
         return xh;
     }
 
     /**
-     * 序号  
+     * 序号@@
      */
     public void setXh(Integer xh) {
         this.xh = xh;
     }
 
     /**
-     * 文件名称  
+     * 文件名称@@
      */
     public String getWjmc() {
         return wjmc;
     }
 
     /**
-     * 文件名称  
+     * 文件名称@@
      */
     public void setWjmc(String wjmc) {
         this.wjmc = wjmc;
     }
 
     /**
-     * 文件类型  
+     * 文件类型@@
      */
     public String getWjlx() {
         return wjlx;
     }
 
     /**
-     * 文件类型  
+     * 文件类型@@
      */
     public void setWjlx(String wjlx) {
         this.wjlx = wjlx;
     }
 
     /**
-     * 文件文件地址  
+     * 文件文件地址@@
      */
     public String getPath() {
         return path;
     }
 
     /**
-     * 文件文件地址  
+     * 文件文件地址@@
      */
     public void setPath(String path) {
         this.path = path;
     }
 
     /**
-     * 更新日期  
+     * 更新日期@@
      */
     public Date getLastupdate() {
         return lastupdate;
     }
 
     /**
-     * 更新日期  
+     * 更新日期@@
      */
     public void setLastupdate(Date lastupdate) {
         this.lastupdate = lastupdate;

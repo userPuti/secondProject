@@ -9,78 +9,78 @@ import java.util.Date;
  */
 public class CkXzdw implements Serializable {
     /**
-     * 协助单位代码  
+     * 协助单位代码@@
      */
     private String xzdwdm;
 
     /**
-     * 协执单位分类  代码值TS_DM.KIND=CKLB
+     * 协执单位分类@@代码值TS_DM.KIND=CKLB
      */
     private String xzdwfl;
 
     /**
-     * 单位名称  
+     * 单位名称@@
      */
     private String mc;
 
     /**
-     * 更新日期  
+     * 更新日期@@
      */
     private Date lastupdate;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 协助单位代码  
+     * 协助单位代码@@
      */
     public String getXzdwdm() {
         return xzdwdm;
     }
 
     /**
-     * 协助单位代码  
+     * 协助单位代码@@
      */
     public void setXzdwdm(String xzdwdm) {
         this.xzdwdm = xzdwdm;
     }
 
     /**
-     * 协执单位分类  代码值TS_DM.KIND=CKLB
+     * 协执单位分类@@代码值TS_DM.KIND=CKLB
      */
     public String getXzdwfl() {
         return xzdwfl;
     }
 
     /**
-     * 协执单位分类  代码值TS_DM.KIND=CKLB
+     * 协执单位分类@@代码值TS_DM.KIND=CKLB
      */
     public void setXzdwfl(String xzdwfl) {
         this.xzdwfl = xzdwfl;
     }
 
     /**
-     * 单位名称  
+     * 单位名称@@
      */
     public String getMc() {
         return mc;
     }
 
     /**
-     * 单位名称  
+     * 单位名称@@
      */
     public void setMc(String mc) {
         this.mc = mc;
     }
 
     /**
-     * 更新日期  
+     * 更新日期@@
      */
     public Date getLastupdate() {
         return lastupdate;
     }
 
     /**
-     * 更新日期  
+     * 更新日期@@
      */
     public void setLastupdate(Date lastupdate) {
         this.lastupdate = lastupdate;

@@ -9,11 +9,12 @@
             <id property="xh" column="XH" jdbcType="INTEGER"/>
             <result property="wjmc" column="WJMC" jdbcType="VARCHAR"/>
             <result property="wjlx" column="WJLX" jdbcType="VARCHAR"/>
-            <result property="lastupdate" column="LASTUPDATE" jdbcType="DATE"/>
+            <result property="path" column="PATH" jdbcType="VARCHAR"/>
+            <result property="lastupdate" column="LASTUPDATE" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         DJPC,XH,WJMC,
-        WJLX,LASTUPDATE,WSNR
+        WJLX,PATH,LASTUPDATE
     </sql>
 </mapper>
