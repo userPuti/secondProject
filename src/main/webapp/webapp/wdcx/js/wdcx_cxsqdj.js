@@ -1,9 +1,10 @@
+let countCkdx = 0;
+
 $(
     function () {
         let func = $('#func').val();
 
         addCxdx();
-        loadCheckBox();
         selectAllXzdw();
 
         if (func === 'view') {
@@ -72,30 +73,12 @@ function addCxdx() {
         dataType: "html",
         success: function (data) {
             $('#cxdxTab').append(data);
-
-            let sasfOption = $('#sasfOption').val();
-            sasfOption = JSON.parse(sasfOption);
-            $.each(sasfOption, function (index, item) {
-                $('.sasf').append(new Option(item.mc, item.code));
-            });
-
-            let zjlxOption = $('#zjlxOption').val();
-            zjlxOption = JSON.parse(zjlxOption);
-            $.each(zjlxOption, function (index, item) {
-                $('.zjlx').append(new Option(item.mc, item.code));
-            });
-
-            let gjOption = $('#gjOption').val();
-            gjOption = JSON.parse(gjOption);
-            $.each(gjOption, function (index, item) {
-                $('.gj').append(new Option(item.mc, item.code));
-            });
-
-            selectInit('.inputSel');
-            checkboxInit(':checkbox');
+            selectInit('#cxdxTab .inputSel');
+            checkboxInit('#cxdxTab .inputCheck');
+            countCkdx++;
         },
         error: function () {
-            layer.msg("请求出现错误，请联系管理员！", {
+            layer.msg("新增对象页面请求出现错误，请联系管理员！", {
                 icon: 0,
                 shade: 0.000001, //不展示遮罩，但是要有遮罩效果
                 time: 2000
@@ -107,6 +90,23 @@ function addCxdx() {
 }
 
 function delCxdx() {
+    let count = $('.tableInpChk:checked').size();
+
+    if ((countCkdx - count) < 1) {
+        layer.msg("至少要保留一个查控对象", {
+            icon: 7,
+            shade: 0.000001, //不展示遮罩，但是要有遮罩效果
+            time: 2000
+        });
+        return false;
+    } else {
+        $('.tableInpChk:checked').each(function () {
+            let tableID = $(this).val();
+            $('#' + tableID).remove();
+            countCkdx -= count;
+            count = 0;
+        })
+    }
 
 }
 
@@ -120,23 +120,6 @@ function validateForm() {
         }
     })
     return zt;
-}
-
-function loadCheckBox() {
-    let ckxzdwMap = $('#ckxzdwMap').val();
-    ckxzdwMap = JSON.parse(ckxzdwMap);
-    let ckxzdwHtml = '';
-
-    $.each(ckxzdwMap, function (key, value) {
-        ckxzdwHtml += '<tr><td><label><input type="checkbox" class="inputCheck">' + key + '</input></label></td><td>'
-        $.each(value, function (index, ckxzdw) {
-            ckxzdwHtml += '<label><input type="checkbox" class="inputCheck">' + ckxzdw.mc + '</input></label>'
-        })
-        ckxzdwHtml += '</td></tr>';
-    });
-    $('#ckxzdwMap').replaceWith(ckxzdwHtml);
-
-    checkboxInit($('.inputCheck'));
 }
 
 

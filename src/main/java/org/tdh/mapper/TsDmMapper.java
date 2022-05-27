@@ -21,7 +21,13 @@ public interface TsDmMapper {
      * @return TsDm对象
      */
     List<TsDm> selectAllByKindAndSfjy(@Param("kind") String kind, @Param("sfjy") String sfjy);
-}
+
+    /**
+     * 查询所有的代码
+     * @return
+     */
+    List<TsDm> selectAll();
+ }
 
 
 

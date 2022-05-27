@@ -1,7 +1,5 @@
 package org.tdh.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,13 +7,16 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.tdh.cache.Caches;
+import org.tdh.cache.CkxzdwCache;
+import org.tdh.cache.TsBzdmCache;
+import org.tdh.cache.TsDmCache;
 import org.tdh.domain.CkCkdx;
 import org.tdh.domain.CkCkxz;
 import org.tdh.domain.CkXzdw;
 import org.tdh.domain.TsDm;
-import org.tdh.service.CkCkdxService;
-import org.tdh.service.CkCkxzService;
+import org.tdh.dto.CkdxDto;
+import org.tdh.dto.CkxzDto;
+import org.tdh.service.CkxzService;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
 
@@ -31,10 +32,7 @@ public class CxdjController {
     private Logger log = LoggerFactory.getLogger(CxdjController.class);
 
     @Autowired
-    private CkCkxzService ckxzService;
-
-    @Autowired
-    private CkCkdxService ckdxService;
+    private CkxzService ckxzService;
 
 
     /**
@@ -71,7 +69,7 @@ public class CxdjController {
             ckdx.setLastupdate(now);
             ckdx.setZt("10");
 
-            boolean isSucc = ckdxService.insertCkdx(ckdx);
+            boolean isSucc = ckxzService.insertCkdx(ckdx);
 
             if (isSucc) {
                 log.debug("插入数据成功！,返回给前端：{}", ResResult.success());
@@ -112,18 +110,20 @@ public class CxdjController {
      * @return
      */
     @RequestMapping("getCxdxTab.do")
-    public ModelAndView getCxdxTab(String djpc) {
+    public ModelAndView getCxdxTab(String djpc, CkdxDto ckdxDto) {
+        System.out.println(ckdxDto);
         ModelAndView modelAndView = new ModelAndView("commonTable");
         loadSel(modelAndView);
-//        List<CkCkdx> ckCkdxList = new ArrayList<>();
-//        if("".equals(djpc)){
-//            CkCkdx ckdx = new CkCkdx();
-//            ckdx.setCklsh("312312312");
-//            ckCkdxList.add(ckdx);
-//        }else{
-//            //todo
-//        }
-//        mav.addObject("ckCkdxList",ckCkdxList);
+        List<CkCkdx> ckCkdxList = new ArrayList<>();
+        if (djpc == null || "".equals(djpc)) {
+            CkCkdx ckdx = new CkCkdx();
+            String cklsh = UUID.randomUUID().toString().replaceAll("-","");
+            ckdx.setCklsh(cklsh);
+            ckCkdxList.add(ckdx);
+        } else {
+            //todo
+        }
+        modelAndView.addObject("ckCkdxList", ckCkdxList);
         return modelAndView;
     }
 
@@ -134,14 +134,9 @@ public class CxdjController {
      * @param modelAndView
      */
     private void loadSel(ModelAndView modelAndView) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            modelAndView.addObject("zjfl", objectMapper.writeValueAsString(Caches.ZJFL_MAP.get("zjfl")).replaceAll("\"", "&quot;"));
-            modelAndView.addObject("sasf", objectMapper.writeValueAsString(Caches.SASF_MAP.get("sasf")).replaceAll("\"", "&quot;"));
-            modelAndView.addObject("gj", objectMapper.writeValueAsString(Caches.GJ_MAP.get("gj")).replaceAll("\"", "&quot;"));
-        } catch (JsonProcessingException e) {
-            log.error("需要加载的下拉框的信息转化为json对象失败", e);
-        }
+        modelAndView.addObject("zjfl", TsDmCache.KIND_TSDM_MAP.get("ZJFL"));
+        modelAndView.addObject("sasf", TsBzdmCache.KIND_TSBZDM_MAP.get("05036"));
+        modelAndView.addObject("gj", TsBzdmCache.KIND_TSBZDM_MAP.get("00004"));
     }
 
 
@@ -155,21 +150,15 @@ public class CxdjController {
         Map<String, List<CkXzdw>> ckxzdwMap = new HashMap<>();
         List<CkXzdw> ckxzdwList = new ArrayList<>();
 
-        if (Caches.CKLB_MAP != null && Caches.CKXZDWFL_MAP != null) {
-            for (TsDm cklb : Caches.CKLB_MAP.get("cklb")) {
-                for (CkXzdw xzdw : Caches.CKXZDWFL_MAP.get(cklb.getCode())) {
-                    ckxzdwList.add(xzdw);
-                }
-                List<CkXzdw> temp = new ArrayList<>(ckxzdwList);
-                ckxzdwMap.put(cklb.getMc(), temp);
-                ckxzdwList.clear();
+        if (CkxzdwCache.XZDWFL_XZDW_MAP != null) {
+            List<TsDm> tsDmList = TsDmCache.KIND_TSDM_MAP.get("CKLB");
+
+            for (TsDm tsDm : tsDmList) {
+                ckxzdwMap.put(tsDm.getBz(), CkxzdwCache.XZDWFL_XZDW_MAP.get(tsDm.getCode()));
             }
+
             log.debug("复选框的信息：{}", ckxzdwMap);
-            try {
-                modelAndView.addObject("ckxzdwMap", new ObjectMapper().writeValueAsString(ckxzdwMap).replaceAll("\"", "&quot;"));
-            } catch (JsonProcessingException e) {
-                log.error("查控协执单位信息转化为json对象失败：", e);
-            }
+            modelAndView.addObject("ckxzdwMap", ckxzdwMap);
         } else {
             log.info("缓存里面的东西为空，无法传递协执单位信息！");
         }

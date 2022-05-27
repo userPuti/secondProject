@@ -8,18 +8,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.tdh.cache.Caches;
-import org.tdh.domain.CkCkxz;
-import org.tdh.domain.CkXzdw;
-import org.tdh.domain.TsBzdm;
+import org.tdh.cache.TsDmCache;
 import org.tdh.domain.TsDm;
 import org.tdh.dto.CkxzDto;
-import org.tdh.service.CkCkxzService;
+import org.tdh.service.CkxzService;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 /**
  * @author Puti
@@ -31,7 +27,7 @@ public class MainPageController {
     private Logger log = LoggerFactory.getLogger(MainPageController.class);
 
     @Autowired
-    private CkCkxzService ckxzService;
+    private CkxzService ckxzService;
 
     /**
      * 加载查控协执信息
@@ -63,7 +59,7 @@ public class MainPageController {
         ModelAndView mav = new ModelAndView("wdcx_main");
         StringBuilder sb = new StringBuilder();
 
-        for (TsDm ckzt : Caches.CKZT_MAP.get("ckzts")) {
+        for (TsDm ckzt : TsDmCache.KIND_TSDM_MAP.get("CKZT")) {
             sb.append("<option value=\"").append(ckzt.getCode()).append("\">").append(ckzt.getMc()).append("</option>");
         }
 

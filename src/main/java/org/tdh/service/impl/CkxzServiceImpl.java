@@ -7,25 +7,84 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.tdh.cache.Caches;
+import org.tdh.cache.CkxzdwCache;
+import org.tdh.cache.TsDmCache;
+import org.tdh.domain.CkCkdx;
 import org.tdh.domain.CkCkxz;
 import org.tdh.domain.TsDm;
 import org.tdh.dto.CkxzDto;
+import org.tdh.mapper.CkCkdxMapper;
 import org.tdh.mapper.CkCkxzMapper;
-import org.tdh.service.CkCkxzService;
+import org.tdh.service.CkxzService;
 
 import java.util.List;
 
 /**
  * @author Puti
- * @date 2022/5/6 16:07
+ * @date 2022/5/24 17:34
  */
 @Service
-public class CkckcxzServiceImpl implements CkCkxzService {
-    private Logger log = LoggerFactory.getLogger(CkckcxzServiceImpl.class);
+public class CkxzServiceImpl implements CkxzService {
+    private Logger log = LoggerFactory.getLogger(CkxzServiceImpl.class);
+
+    @Autowired
+    private CkCkdxMapper ckdxMapper;
 
     @Autowired
     private CkCkxzMapper ckxzMapper;
+
+    @Override
+    public CkCkdx getAll() {
+        return ckdxMapper.getAll();
+    }
+
+    /**
+     * 插入一条查控协执对象
+     *
+     * @param ckdx 查控协执对象
+     * @return 是否插入成功
+     */
+    @Override
+    @Transactional
+    public boolean insertCkdx(CkCkdx ckdx) {
+        if (ckdx != null) {
+            log.debug("正在插入一条查控对象数据！：{}", ckdx);
+            int count = ckdxMapper.insertSelective(ckdx);
+            if (0 != count) {
+                log.debug("插入一条查控对象数据成功!");
+                return true;
+            } else {
+                log.info("插入查控对象数据出现了问题！");
+                return false;
+            }
+        }
+        log.info("需要插入的查控对象为空，不能插入！");
+        return false;
+    }
+
+    /**
+     * 插入一条查控协执信息
+     *
+     * @param ckxz 查控协执对象
+     * @return 插入成功返回true，失败返回false
+     */
+    @Override
+    @Transactional
+    public boolean insertCkxz(CkCkxz ckxz) {
+        if (ckxz != null) {
+            log.debug("正在插入一条查控协执数据： {}", ckxz);
+            int count = ckxzMapper.insertSelective(ckxz);
+            if (0 != count) {
+                log.debug("插入一条查控协执数据成功!");
+                return true;
+            } else {
+                log.info("插入查控协执数据出现了问题！");
+                return false;
+            }
+        }
+        log.info("需要插入的查控协执对象为空，不能插入！");
+        return false;
+    }
 
     /**
      * ckckxz表中的所有信息
@@ -103,7 +162,7 @@ public class CkckcxzServiceImpl implements CkCkxzService {
                 allCkxzXml.append("<userdata name='zt'><![CDATA[").append(ckxz.getZt()).append("]]></userdata>");
                 allCkxzXml.append("<cell>0</cell>");
 
-                List<TsDm> ckzts = Caches.CKZT_MAP.get("ckzts");
+                List<TsDm> ckzts = TsDmCache.KIND_TSDM_MAP.get("CKZT");
                 for (TsDm dm : ckzts) {
                     if (ckxz.getZt().equals(dm.getCode())) {
                         allCkxzXml.append("<cell><![CDATA[").append(dm.getMc()).append("]]></cell>");
@@ -131,7 +190,7 @@ public class CkckcxzServiceImpl implements CkCkxzService {
 
                 String xzdwdm = ckxz.getXzdwdm();
 
-                allCkxzXml.append("<cell><![CDATA[").append(Caches.CKXZDW_MAP.get(xzdwdm).getMc()).append("]]></cell>");
+                allCkxzXml.append("<cell><![CDATA[").append(CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm).getMc()).append("]]></cell>");
 
                 allCkxzXml.append("<cell><![CDATA[").append(ckxz.getCbr()).append("]]></cell>");
                 allCkxzXml.append("<cell><![CDATA[").append(ckxz.getSjy()).append("]]></cell>");

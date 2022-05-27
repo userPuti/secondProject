@@ -14,11 +14,10 @@ import java.util.List;
 public interface TsBzdmMapper {
 
     /**
-     * 根据kind来查询
-     * @param kind
+     * 查询所有得标准代码
      * @return
      */
-    List<TsBzdm> selectByKind(@Param("kind") String kind);
+    List<TsBzdm> selectAll();
 
 
     /**

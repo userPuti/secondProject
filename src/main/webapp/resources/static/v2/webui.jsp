@@ -74,3 +74,6 @@
 <script src="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxAccordion/codebase/dhtmlxaccordion.js"></script>
 <link rel="stylesheet"  href="<%=CONTEXT_PATH%>/resources/static/v2/static/plugg/dhtmlx/dhtmlxAccordion/codebase/skins/dhtmlxaccordion_dhx_blue.css">
 <%}%>
+<%if(uilist.indexOf("_JSON2_")>=0){%>
+<script src="<%=CONTEXT_PATH%>/resources/static/js/json2.js"></script>
+<%}%>

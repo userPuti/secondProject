@@ -9,9 +9,6 @@ import java.util.Map;
  * @date 2022/5/7 10:48
  */
 public class CkxzDto {
-
-    private Map<String, CkCkdx> ckCkdxMap;
-
     private String zt;
     private String ah;
     private String mc;
