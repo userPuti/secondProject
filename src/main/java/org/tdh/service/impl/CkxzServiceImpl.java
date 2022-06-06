@@ -2,6 +2,7 @@ package org.tdh.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +12,15 @@ import org.tdh.cache.CkxzdwCache;
 import org.tdh.cache.TsDmCache;
 import org.tdh.domain.CkCkdx;
 import org.tdh.domain.CkCkxz;
+import org.tdh.domain.CkXzdw;
 import org.tdh.domain.TsDm;
 import org.tdh.dto.CkxzDto;
+import org.tdh.dto.HomePageDto;
 import org.tdh.mapper.CkCkdxMapper;
 import org.tdh.mapper.CkCkxzMapper;
 import org.tdh.service.CkxzService;
 
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Puti
@@ -38,51 +41,62 @@ public class CkxzServiceImpl implements CkxzService {
         return ckdxMapper.getAll();
     }
 
-    /**
-     * 插入一条查控协执对象
-     *
-     * @param ckdx 查控协执对象
-     * @return 是否插入成功
-     */
-    @Override
-    @Transactional
-    public boolean insertCkdx(CkCkdx ckdx) {
-        if (ckdx != null) {
-            log.debug("正在插入一条查控对象数据！：{}", ckdx);
-            int count = ckdxMapper.insertSelective(ckdx);
-            if (0 != count) {
-                log.debug("插入一条查控对象数据成功!");
-                return true;
-            } else {
-                log.info("插入查控对象数据出现了问题！");
-                return false;
-            }
-        }
-        log.info("需要插入的查控对象为空，不能插入！");
-        return false;
-    }
 
     /**
-     * 插入一条查控协执信息
+     * 插入一条查控协执信息,在插入查控协执单位的同时，插入查控对象
      *
-     * @param ckxz 查控协执对象
+     * @param ckxzDto
      * @return 插入成功返回true，失败返回false
      */
     @Override
     @Transactional
-    public boolean insertCkxz(CkCkxz ckxz) {
-        if (ckxz != null) {
-            log.debug("正在插入一条查控协执数据： {}", ckxz);
-            int count = ckxzMapper.insertSelective(ckxz);
-            if (0 != count) {
-                log.debug("插入一条查控协执数据成功!");
-                return true;
-            } else {
-                log.info("插入查控协执数据出现了问题！");
-                return false;
+    public boolean insertCkxz(CkxzDto ckxzDto) {
+        if(ckxzDto != null) {
+            Map<String, CkCkdx> ckdxMap = ckxzDto.getCkCkdxMap();
+            String djpc = UUID.randomUUID().toString().replaceAll("-","");
+
+            for (String cklsh : ckdxMap.keySet()) {
+                CkCkdx ckdx = ckdxMap.get(cklsh);
+                boolean b = insertCkdx(ckdx,djpc);
+
+                if(!b) {
+                    return false;
+                }
+
+                CkCkxz ckxz = new CkCkxz();
+                ckxz.setCklsh(ckdx.getCklsh());
+                ckxz.setZt("10");
+                ckxz.setXzlb("1");
+                ckxz.setAh(ckdx.getAh());
+                ckxz.setZjhm(ckdx.getZjhm());
+                ckxz.setZjlx(ckdx.getZjlx());
+                ckxz.setMc(ckdx.getMc());
+                ckxz.setGj(ckdx.getGj());
+                ckxz.setHjszd(ckdx.getHjszd());
+                ckxz.setCbr(ckdx.getCbr());
+                ckxz.setSjy(ckdx.getSjy());
+                ckxz.setXzsm(ckxzDto.getXzsm());
+                ckxz.setFydm("");
+                ckxz.setSsdw(ckdx.getSsdw());
+                ckxz.setDjpc("");
+                ckxz.setLastupdate(new Date());
+
+                String[] xzdwdms = ckxzDto.getXzdwdm().split(",");
+
+                for (String xzdwdm : xzdwdms) {
+                    String bdhm = UUID.randomUUID().toString().replaceAll("-", "");
+                    ckxz.setBdhm(bdhm);
+                    ckxz.setXzdwdm(xzdwdm);
+                    ckxz.setXzdwfl(CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm).getXzdwfl());
+                    ckxz.setDjpc(djpc);
+                    int insertCount = ckxzMapper.insertSelective(ckxz);
+                    if(1 != insertCount) {
+                        return false;
+                    }
+                }
             }
+            return true;
         }
-        log.info("需要插入的查控协执对象为空，不能插入！");
         return false;
     }
 
@@ -92,11 +106,11 @@ public class CkxzServiceImpl implements CkxzService {
      * @return 所有信息拼接的xml的String
      */
     @Override
-    public String CkckxzInfo(CkxzDto ckxzDto) {
-        if (ckxzDto != null) {
-            log.debug("根据ckxzDto来查询信息： {}", ckxzDto);
-            PageHelper.offsetPage(ckxzDto.getStart() - 1, ckxzDto.getLimit());
-            List<CkCkxz> ckCkxzs = ckxzMapper.selectByCkxzDto(ckxzDto);
+    public String CkckxzInfo(HomePageDto homePageDto) {
+        if (homePageDto != null) {
+            log.debug("根据ckxzDto来查询信息： {}", homePageDto);
+            PageHelper.offsetPage(homePageDto.getStart() - 1, homePageDto.getLimit());
+            List<CkCkxz> ckCkxzs = ckxzMapper.selectByCkxzDto(homePageDto);
             PageInfo<CkCkxz> usersPageInfo = new PageInfo<>(ckCkxzs);
             int total = (int) usersPageInfo.getTotal();
             log.debug("查询到的数据总数为：{}, ckxzDto查询的信息为: {}", total, ckCkxzs);
@@ -141,6 +155,32 @@ public class CkxzServiceImpl implements CkxzService {
             }
         }
         return null;
+    }
+
+
+    /**
+     * 插入一条查控协执对象
+     *
+     * @param ckdx 查控协执对象
+     * @return 是否插入成功
+     */
+    private boolean insertCkdx(CkCkdx ckdx,String djpc) {
+        if (ckdx != null) {
+            log.debug("正在插入一条查控对象数据！：{}", ckdx);
+            ckdx.setLastupdate(new Date());
+            ckdx.setZt("10");
+            ckdx.setDjpc(djpc);
+            int count = ckdxMapper.insertSelective(ckdx);
+            if (0 != count) {
+                log.debug("插入一条查控对象数据成功!");
+                return true;
+            } else {
+                log.info("插入查控对象数据出现了问题！");
+                return false;
+            }
+        }
+        log.info("需要插入的查控对象为空，不能插入！");
+        return false;
     }
 
 

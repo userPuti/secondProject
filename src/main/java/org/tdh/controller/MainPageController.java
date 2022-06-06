@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import org.tdh.cache.TsDmCache;
 import org.tdh.domain.TsDm;
-import org.tdh.dto.CkxzDto;
+import org.tdh.dto.HomePageDto;
 import org.tdh.service.CkxzService;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
@@ -36,9 +36,9 @@ public class MainPageController {
      */
     @RequestMapping(value = "/listwdcx.do", produces = "application/xml;charset=utf-8")
     @ResponseBody
-    public String listWdcx(CkxzDto ckxzDto, HttpServletRequest request) {
+    public String listWdcx(HomePageDto homePageDto, HttpServletRequest request) {
         log.debug("加载查控协执表格");
-        String ckxzXml = ckxzService.CkckxzInfo(ckxzDto);
+        String ckxzXml = ckxzService.CkckxzInfo(homePageDto);
         if (ckxzXml != null) {
             log.debug("表格加载完毕,{}", ckxzXml);
             return ckxzXml;

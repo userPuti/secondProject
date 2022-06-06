@@ -6,85 +6,60 @@ import java.util.Map;
 
 /**
  * @author Puti
- * @date 2022/5/7 10:48
+ * @date 2022/5/25 15:41
  */
 public class CkxzDto {
-    private String zt;
-    private String ah;
-    private String mc;
-    private String zjhm;
-    private int start;
-    private int limit;
+    /**
+     * key——查控流水号
+     * value--对应的查控对象
+     */
+    private Map<String, CkCkdx> ckCkdxMap;
+    //协执单位名称
+    private String xzdwdm;
+    //协执说明
+    private String xzsm;
 
     public CkxzDto() {
     }
 
-    public CkxzDto(String zt, String ah, String mc, String zjhm, int start, int limit) {
-        this.zt = zt;
-        this.ah = ah;
-        this.mc = mc;
-        this.zjhm = zjhm;
-        this.start = start;
-        this.limit = limit;
+    public CkxzDto(Map<String, CkCkdx> ckCkdxMap, String xzdwdm, String xzsm) {
+        this.ckCkdxMap = ckCkdxMap;
+        this.xzdwdm = xzdwdm;
+        this.xzsm = xzsm;
     }
 
-    public String getZt() {
-        return zt;
+
+    public String getXzdwdm() {
+        return xzdwdm;
     }
 
-    public void setZt(String zt) {
-        this.zt = zt;
+    public void setXzdwdm(String xzdwdm) {
+        this.xzdwdm = xzdwdm;
     }
 
-    public String getAh() {
-        return ah;
+    public Map<String, CkCkdx> getCkCkdxMap() {
+        return ckCkdxMap;
     }
 
-    public void setAh(String ah) {
-        this.ah = ah;
+    public void setCkCkdxMap(Map<String, CkCkdx> ckCkdxMap) {
+        this.ckCkdxMap = ckCkdxMap;
     }
 
-    public String getMc() {
-        return mc;
+
+    public String getXzsm() {
+        return xzsm;
     }
 
-    public void setMc(String mc) {
-        this.mc = mc;
-    }
-
-    public String getZjhm() {
-        return zjhm;
-    }
-
-    public void setZjhm(String zjhm) {
-        this.zjhm = zjhm;
-    }
-
-    public int getStart() {
-        return start;
-    }
-
-    public void setStart(int start) {
-        this.start = start;
-    }
-
-    public int getLimit() {
-        return limit;
-    }
-
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setXzsm(String xzsm) {
+        this.xzsm = xzsm;
     }
 
     @Override
     public String toString() {
         return "CkxzDto{" +
-                "zt='" + zt + '\'' +
-                ", ah='" + ah + '\'' +
-                ", mc='" + mc + '\'' +
-                ", zjhm='" + zjhm + '\'' +
-                ", start=" + start +
-                ", limit=" + limit +
+                ", ckCkdxMap=" + ckCkdxMap +
+                ", xzdwmc='" + xzdwdm + '\'' +
+                ", xzsm='" + xzsm + '\'' +
                 '}';
     }
 }

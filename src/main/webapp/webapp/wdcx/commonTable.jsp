@@ -10,19 +10,19 @@
 <c:forEach var="ckdx" items="${ckCkdxList}">
     <table id="${ckdx.cklsh}" class="tdh_table">
         <colgroup>
-            <col width="%5"/>
-            <col width="%20"/>
-            <col width="%15"/>
-            <col width="%20"/>
-            <col width="%15"/>
-            <col width="%20"/>
-            <col width="%15"/>
+            <col width="7%"/>
+            <col width="17%"/>
+            <col width="18%"/>
+            <col width="17%"/>
+            <col width="18%"/>
+            <col width="17%"/>
+            <col width="18%"/>
         </colgroup>
 
         <tr>
             <td rowspan="4" class="tdTitle">
-                <input type="hidden" value="${ckdx.cklsh}" name="cklsh">
-                <label><input value="${ckdx.cklsh}" class="inputCheck tableInpChk" type="checkbox"/></label>
+                <input type="hidden" name="ckCkdxMap['${ckdx.cklsh}'].cklsh" value="${ckdx.cklsh}"/>
+                <input value="${ckdx.cklsh}" class="inputCheck tableInpChk" type="checkbox"/>
             </td>
             <td class="tdTitle">案号<i class="required">*</i></td>
             <td class="tdCont"><input name="ckCkdxMap['${ckdx.cklsh}'].ah" class="inputText validate" type="text"

@@ -1,7 +1,7 @@
 package org.tdh.mapper;
 
 import org.tdh.domain.CkCkxz;
-import org.tdh.dto.CkxzDto;
+import org.tdh.dto.HomePageDto;
 
 import java.util.List;
 
@@ -22,10 +22,10 @@ public interface CkCkxzMapper {
     /**
      * 根据ckxzDto查询协执信息
      *
-     * @param ckxzDto 查控协执入参信息
+     * @param homePageDto 查控协执入参信息
      * @return 查询到的查控协执信息的List集合
      */
-    public List<CkCkxz> selectByCkxzDto(CkxzDto ckxzDto);
+    public List<CkCkxz> selectByCkxzDto(HomePageDto homePageDto);
 
     /**
      * 根据表单号码删除信息

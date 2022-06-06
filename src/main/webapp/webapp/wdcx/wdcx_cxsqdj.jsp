@@ -22,26 +22,26 @@
             type="text/javascript"></script>
     <script type="application/javascript"
             src="${pageContext.request.contextPath}/resources/static/js/plupload.full.min.js"></script>
+    <script type="application/javascript"
+            src="${pageContext.request.contextPath}/resources/static/js/jquery.plupload.queue/jquery.plupload.queue.min.js"></script>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/webapp/wdcx/css/list.css"/>
 </head>
 <body style="padding: 0 10px;box-sizing: border-box; ">
-<div class="content" style="overflow: auto">
-    <div class="searchbar">
-        <div class="searchbar_row">
-            <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="cxsqdjSave">
-                <i class="tdh_icon icon_save"></i>保存
-            </a>
-        </div>
-        <div class="searchbar_row">
-            <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="cxsqdjSend">
-                <i class="tdh_icon icon_send"></i>发送
-            </a>
-        </div>
-    </div>
-    <div class="tdh_form_title">司法查询登记表</div>
 
-    <div>
-        <form id="ckxz" action="#">
+<div class="tdh_form_search">
+    <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="cxsqdjSave">
+        <i class="tdh_icon icon_save"></i>保存
+    </a>
+
+    <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="cxsqdjSend">
+        <i class="tdh_icon icon_send"></i>发送
+    </a>
+</div>
+
+<div class="tdh_form_title">司法查询登记表</div>
+<div class="content" style="overflow-y: auto">
+    <form id="ckxz" action="#">
+        <div>
             <table class="tdh_form">
                 <colgroup>
                     <col width="5%"/>
@@ -64,6 +64,8 @@
                     </td>
                 </tr>
             </table>
+        </div>
+        <div>
             <table class="tdh_form" id="xzdwTable">
                 <colgroup>
                     <col width="5%"/>
@@ -79,59 +81,65 @@
                             至少选择一个协助执行单位)</label>
                     </td>
                 </tr>
-                <c:forEach items="${ckxzdwMap}" var="xzdws">
+                <c:forEach items="${ckxzdwMap}" var="xzdws" varStatus="idxStatus">
                     <tr>
                         <td class="tdCont">
-                            <label><input class="inputCheck ${xzdws.key}" type="checkbox"/>${xzdws.key}</label>
+                            <label><input class="inputCheck xzdw" type="checkbox" id="xzdw_${idxStatus.index}"
+                                          onchange="chkXzdw(this,${idxStatus.index})"/>${xzdws.key}</label>
                         </td>
                         <td class="tdCont">
                             <c:forEach items="${xzdws.value}" var="xzdw">
-                                <label><input class="inputCheck ${xzdws.key}" type="checkbox"/>${xzdw.mc}</label>
+                                <div style="width: 100px;padding: 0px 5px 0px 5px; float: left">
+                                    <label><input
+                                            class="inputCheck xzdw_${idxStatus.index} xzdw"
+                                            type="checkbox" value="${xzdw.xzdwdm}"
+                                            onchange="allXzdwchk(${idxStatus.index})"/>${xzdw.mc}</label></div>
                             </c:forEach>
                         </td>
                     </tr>
                 </c:forEach>
             </table>
-        </form>
-    </div>
-    <div>
-        <table class="tdh_form">
-            <colgroup>
-                <col width="5%"/>
-            </colgroup>
+        </div>
+        <div>
+            <table class="tdh_form">
+                <colgroup>
+                    <col width="5%"/>
+                </colgroup>
 
-            <tr rowspan="4">
-                <td align="center">协<br/>执<br/>说<br/>明<br/></td>
-                <td class="tdCont_pd">
-                    <textarea class="inputArea"></textarea>
-                </td>
-            </tr>
-        </table>
-    </div>
-    <div style="padding: 0px 0px 10px 0px">
-        <table class="tdh_form">
-            <colgroup>
-                <col width="5%"/>
-            </colgroup>
+                <tr rowspan="4">
+                    <td align="center">协<br/>执<br/>说<br/>明<br/></td>
+                    <td class="tdCont_pd">
+                        <textarea class="inputArea" name="xzsm"></textarea>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </form>
 
-            <tr rowspan="4">
-                <td align="center">文<br/>书<br/>信<br/>息<br/></td>
-                <td class="tdCont_pd">
-                    <div align="right">
-                        <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="fileUpload"
-                           onclick="saveInfo()">
-                            <i class="tdh_icon icon_upload"></i>上传
-                        </a>
-                        <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="filDel"
-                           onclick="sendInfo()">
-                            <i class="tdh_icon icon_del"></i>删除
-                        </a>
-                    </div>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <table class="tdh_form">
+        <colgroup>
+            <col width="5%"/>
+            <col width="60%"/>
+        </colgroup>
 
+        <tr>
+            <td align="center">文<br/>书<br/>信<br/>息<br/></td>
+            <td id="fileList" class="tdCont_pd" style="border-right: 0px">
+                <pre id="console"/>
+            </td>
+            <td class="tdCont_pd" style="border-left: 0px">
+                <div align="right">
+                    <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="fileUpload">
+                        <i class="tdh_icon icon_upload"></i>上传
+                    </a>
+                    <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="fileDel">
+                        <i class="tdh_icon icon_del"></i>删除
+                    </a>
+                </div>
+            </td>
+        </tr>
+    </table>
 </div>
+<input id="func" type="hidden" value="${func}"/>
 </body>
 </html>

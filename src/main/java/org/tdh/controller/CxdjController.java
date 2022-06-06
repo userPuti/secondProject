@@ -5,7 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.tdh.cache.CkxzdwCache;
 import org.tdh.cache.TsBzdmCache;
@@ -14,12 +16,15 @@ import org.tdh.domain.CkCkdx;
 import org.tdh.domain.CkCkxz;
 import org.tdh.domain.CkXzdw;
 import org.tdh.domain.TsDm;
-import org.tdh.dto.CkdxDto;
 import org.tdh.dto.CkxzDto;
 import org.tdh.service.CkxzService;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.*;
 
 /**
@@ -53,38 +58,6 @@ public class CxdjController {
 
 
     /**
-     * 添加一个查控对象
-     *
-     * @return
-     */
-    @RequestMapping("/addCxdx.do")
-    @ResponseBody
-    public ResponseVO addCxdx(CkCkdx ckdx) {
-        if (ckdx != null) {
-            log.debug("正在插入数据：{}", ckdx);
-
-            UUID cklsh = UUID.randomUUID();
-            ckdx.setCklsh(cklsh.toString().replaceAll("-", ""));
-            Date now = new Date();
-            ckdx.setLastupdate(now);
-            ckdx.setZt("10");
-
-            boolean isSucc = ckxzService.insertCkdx(ckdx);
-
-            if (isSucc) {
-                log.debug("插入数据成功！,返回给前端：{}", ResResult.success());
-                return ResResult.success();
-            } else {
-                log.info("插入数据失败");
-                return ResResult.fail();
-            }
-        }
-        log.info("查控协执对象为空！");
-        return ResResult.fail();
-    }
-
-
-    /**
      * 根据bdhm来查询协执的信息，并传递给前端相应的数据
      *
      * @param bdhm 表单号码
@@ -106,30 +79,75 @@ public class CxdjController {
     /**
      * 查控对象信息框
      *
-     * @param djpc
      * @return
      */
     @RequestMapping("getCxdxTab.do")
-    public ModelAndView getCxdxTab(String djpc, CkdxDto ckdxDto) {
-        System.out.println(ckdxDto);
+    public ModelAndView getCxdxTab() {
         ModelAndView modelAndView = new ModelAndView("commonTable");
         loadSel(modelAndView);
         List<CkCkdx> ckCkdxList = new ArrayList<>();
-        if (djpc == null || "".equals(djpc)) {
-            CkCkdx ckdx = new CkCkdx();
-            String cklsh = UUID.randomUUID().toString().replaceAll("-","");
-            ckdx.setCklsh(cklsh);
-            ckCkdxList.add(ckdx);
-        } else {
-            //todo
-        }
+
+        CkCkdx ckdx = new CkCkdx();
+        String cklsh = UUID.randomUUID().toString().replaceAll("-", "");
+        ckdx.setCklsh(cklsh);
+        ckCkdxList.add(ckdx);
+
         modelAndView.addObject("ckCkdxList", ckCkdxList);
         return modelAndView;
     }
 
+    /**
+     * @param ckxzDto
+     * @return
+     */
+    @RequestMapping("saveCkxz.do")
+    @ResponseBody
+    public ResponseVO saveCkxz(CkxzDto ckxzDto) {
+        if (ckxzDto != null && !"".equals(ckxzDto)) {
+            String xzdwmc = ckxzDto.getXzdwdm();
+            //去除多余的一个逗号
+            xzdwmc = xzdwmc.substring(0, xzdwmc.length() - 1);
+            ckxzDto.setXzdwdm(xzdwmc);
+            boolean isSuccess = ckxzService.insertCkxz(ckxzDto);
+            if (isSuccess) {
+                return ResResult.success();
+            } else {
+                return ResResult.fail();
+            }
+        }
+        return ResResult.fail();
+    }
+
 
     /**
-     * 本类中用于加载下拉框的公用函数
+     *
+     * @param desc
+     * @param files
+     * @return
+     * @throws IOException
+     */
+    @RequestMapping("upload.do")
+    @ResponseBody
+    public String testMutiUpload(@RequestParam("desc") String desc, @RequestParam("file") MultipartFile[] files) throws IOException {
+        System.out.println("文件描述：" + desc);
+        for (MultipartFile file : files) {
+            InputStream inputStream = file.getInputStream();
+            String fileName = file.getOriginalFilename();
+            OutputStream outputStream = new FileOutputStream("C:\\tmp\\" + fileName);
+            byte[] bs = new byte[1024];
+            int len = -1;
+            while ((len = inputStream.read(bs)) != -1) {
+                outputStream.write(bs, 0, len);
+            }
+            inputStream.close();
+            outputStream.close();
+        }
+        return "success";
+    }
+
+
+    /**
+     * 加载下拉框
      *
      * @param modelAndView
      */
