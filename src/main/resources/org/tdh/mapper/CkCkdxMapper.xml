@@ -197,4 +197,25 @@
         <include refid="Base_Column_List"/>
         from ck_ckdx where djpc = #{djpc}
     </select>
+
+    <select id="selectAll" resultType="org.tdh.domain.CkCkdx">
+        select
+        <include refid="Base_Column_List"/>
+        from ck_ckdx
+        <where>
+            <if test="ah != null and ah != ''">
+                and ah like "%"#{ah}"%"
+            </if>
+            <if test="zt != null and zt != ''">
+                and zt in (${zt})
+            </if>
+            <if test="mc != null and mc != ''">
+                and mc like "%"#{mc}"%"
+            </if>
+            <if test="zjhm != null and zjhm != ''">
+                and zjhm = #{zjhm}
+            </if>
+        </where>
+        order by lastupdate desc
+    </select>
 </mapper>

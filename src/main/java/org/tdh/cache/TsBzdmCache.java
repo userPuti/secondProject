@@ -30,8 +30,8 @@ public class TsBzdmCache {
     private TsBzdmMapper tsBzdmMapper;
 
     public void init() {
-        List<TsBzdm> sasf = tsBzdmMapper.selectAll();
-        for (TsBzdm tsBzdm : sasf) {
+        List<TsBzdm> bzdms = tsBzdmMapper.selectAll();
+        for (TsBzdm tsBzdm : bzdms) {
             String kind = tsBzdm.getKind();
             if (!KIND_TSBZDM_MAP.containsKey(kind)) {
                 List<TsBzdm> tsDmList = new ArrayList<>();

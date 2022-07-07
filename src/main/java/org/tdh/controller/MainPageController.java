@@ -38,7 +38,7 @@ public class MainPageController {
     @ResponseBody
     public String listWdcx(HomePageDto homePageDto, HttpServletRequest request) {
         log.debug("加载查控协执表格");
-        String ckxzXml = ckxzService.CkckxzInfo(homePageDto);
+        String ckxzXml = ckxzService.showCksqInfo(homePageDto);
         if (ckxzXml != null) {
             log.debug("表格加载完毕,{}", ckxzXml);
             return ckxzXml;

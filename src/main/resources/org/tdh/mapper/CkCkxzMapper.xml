@@ -191,7 +191,7 @@
                 and zjhm = #{zjhm}
             </if>
         </where>
-        order by lastupdate
+        order by lastupdate desc
     </select>
     <select id="selectByBdhm" resultType="org.tdh.domain.CkCkxz">
         select

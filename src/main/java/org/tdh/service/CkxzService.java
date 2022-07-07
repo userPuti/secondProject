@@ -17,7 +17,7 @@ public interface CkxzService {
      *
      * @return 所有信息拼接的xml的String
      */
-    String CkckxzInfo(HomePageDto homePageDto);
+    String showCksqInfo(HomePageDto homePageDto);
 
     /**
      * 批量删除

@@ -1,6 +1,8 @@
 package org.tdh.mapper;
 
 import org.tdh.domain.CkCkdx;
+import org.tdh.domain.CkCkxz;
+import org.tdh.dto.HomePageDto;
 
 import java.util.List;
 
@@ -11,6 +13,14 @@ import java.util.List;
  * @Entity org.tdh.domain.CkCkdx
  */
 public interface CkCkdxMapper {
+
+    /**
+     *
+     * @param homePageDto
+     * @return
+     */
+    List<CkCkdx> selectAll(HomePageDto homePageDto);
+
 
     /**
      * 插入一条完整的数据

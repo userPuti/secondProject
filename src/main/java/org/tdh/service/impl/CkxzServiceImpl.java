@@ -61,7 +61,7 @@ public class CkxzServiceImpl implements CkxzService {
             String xzsm = cxsqDto.getXzsm();
             List<CkJz> files = cxsqDto.getFiles();
 
-            if (!insertCkdx(ckdxes, djpc) || !insertCkxz(djpc,ckdxes,xzdwdms,xzsm) || !insertCkjz(files,djpc)) {
+            if (!insertCkdx(ckdxes, xzdwdms, djpc) || !insertCkxz(djpc, ckdxes, xzdwdms, xzsm) || !insertCkjz(files, djpc)) {
                 return false;
             }
 
@@ -72,14 +72,198 @@ public class CkxzServiceImpl implements CkxzService {
 
 
     /**
-     * @param djpc
-     * @param ckdxes
-     * @param xzdwdms
-     * @param xzsm
-     * @return
+     * ckckxz表中的所有信息
+     *
+     * @return 所有信息拼接的xml的String
+     */
+    @Override
+    public String showCksqInfo(HomePageDto homePageDto) {
+        if (homePageDto != null) {
+            log.debug("根据ckxzDto来查询信息： {}", homePageDto);
+            PageHelper.offsetPage(homePageDto.getStart() - 1, homePageDto.getLimit());
+            List<CkCkdx> ckdxes = ckdxMapper.selectAll(homePageDto);
+            PageInfo<CkCkdx> usersPageInfo = new PageInfo<>(ckdxes);
+            int total = (int) usersPageInfo.getTotal();
+            log.debug("查询到的数据总数为：{}, ckxzDto查询的信息为: {}", total, ckdxes);
+
+            return ckxzListXml(ckdxes, total);
+        }
+        log.info("ckxzDto为null");
+        return null;
+    }
+
+    /**
+     * 批量删除
+     *
+     * @param bdhms 表单号码
+     * @return 删除的数量
+     */
+    @Override
+    @Transactional
+    public int batchDel(String[] bdhms) {
+        if (bdhms != null && !"".equals(bdhms)) {
+            log.warn("正在删除查控协执信息： 表单号码是： {}", bdhms);
+            return ckxzMapper.batchDel(bdhms);
+        }
+        return 0;
+    }
+
+
+    /**
+     * 根据登记批次查询查控对象信息
+     *
+     * @param djpc 登记批次
+     * @return 返回查询到的同一批次的查控对象
+     */
+    @Override
+    public List<CkCkdx> viewCkdxInfo(String djpc) {
+        if (djpc != null && !"".equals(djpc)) {
+            List<CkCkdx> ckCkdxes = ckdxMapper.selectAllByDjpc(djpc);
+            if (ckCkdxes != null) {
+                return ckCkdxes;
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据登记批次获取协执单位代码信息
+     *
+     * @param djpc 登记批次
+     * @return 协执单位代码信息，没有返回null
+     */
+    @Override
+    public List<String> getXzdwdm(String djpc) {
+        if (djpc != null && !"".equals(djpc)) {
+            List<String> xzdwdms = ckxzMapper.selectXzdwdmByDjpc(djpc);
+
+            if (xzdwdms != null) {
+                return xzdwdms;
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据登记批次获取协执说明信息
+     *
+     * @param djpc 登记批次
+     * @return 获取协执说明，没有则返回null
+     */
+    @Override
+    public String getXzsm(String djpc) {
+        if (djpc != null && !"".equals(djpc)) {
+            String xzsm = ckxzMapper.selectXzsmByDjpc(djpc);
+            if (xzsm != null) {
+                return xzsm;
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 根据登记批次查询查控卷宗信息
+     *
+     * @param djpc 登记批次
+     * @return 根据登记批次查询到的卷宗对象信息，没有返回null
+     */
+    @Override
+    @Transactional
+    public List<CkJz> getCkJz(String djpc) {
+        if (djpc != null && !"".equals(djpc)) {
+            List<CkJz> ckJzs = ckJzMapper.selectAllByDjpc(djpc);
+
+            if (ckJzs != null) {
+                return ckJzs;
+            } else {
+                return null;
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 更新查询申请信息
+     *
+     * @param cxsqDto 查控协执参数
+     * @return 更新成功返回true，否则返回false
+     */
+    @Override
+    public boolean updateSqInfo(CxsqDto cxsqDto) {
+        if (cxsqDto != null) {
+            String djpc = cxsqDto.getDjpc();
+            if (deleteCkxzInfo(djpc)) {
+                List<CkCkdx> ckdxes = (List<CkCkdx>) cxsqDto.getCkCkdxMap().values();
+
+                for (CkCkdx ckdx : ckdxes) {
+                    if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
+                        return false;
+                    }
+                }
+
+                String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
+
+                CkCkxz ckxz = new CkCkxz();
+                ckxz.setDjpc(djpc);
+
+
+                for (String xzdwdm : xzdwdms) {
+                    String bdhm = getUUID();
+                    ckxz.setBdhm(bdhm);
+                    ckxz.setXzdwdm(xzdwdm);
+                    ckxz.setXzdwfl(CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm).getXzdwfl());
+                    ckxz.setDjpc(djpc);
+                    int insertCount = ckxzMapper.insertSelective(ckxz);
+                    if (1 != insertCount) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 根据登记批次删除所有此登记批次的信息
+     *
+     * @param djpc 登记批次
+     * @return 是否删除成功
+     */
+    public boolean deleteCkxzInfo(String djpc) {
+        if (djpc != null && !"".equals(djpc)) {
+            int xzdel = ckxzMapper.deleteByDjpc(djpc);
+
+            if (0 != xzdel) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 插入一条查控协执信息
+     *
+     * @param djpc    登记批次
+     * @param ckdxes  查控对象
+     * @param xzdwdms 协执单位
+     * @param xzsm    协执说明
+     * @return 插入成功返回true，否则返回false
      */
     private boolean insertCkxz(String djpc, List<CkCkdx> ckdxes, String[] xzdwdms, String xzsm) {
-
         for (CkCkdx ckdx : ckdxes) {
             CkCkxz ckxz = new CkCkxz();
             ckxz.setCklsh(ckdx.getCklsh());
@@ -137,43 +321,6 @@ public class CkxzServiceImpl implements CkxzService {
         return true;
     }
 
-    /**
-     * ckckxz表中的所有信息
-     *
-     * @return 所有信息拼接的xml的String
-     */
-    @Override
-    public String CkckxzInfo(HomePageDto homePageDto) {
-        if (homePageDto != null) {
-            log.debug("根据ckxzDto来查询信息： {}", homePageDto);
-            PageHelper.offsetPage(homePageDto.getStart() - 1, homePageDto.getLimit());
-            List<CkCkxz> ckCkxzs = ckxzMapper.selectByCkxzDto(homePageDto);
-            PageInfo<CkCkxz> usersPageInfo = new PageInfo<>(ckCkxzs);
-            int total = (int) usersPageInfo.getTotal();
-            log.debug("查询到的数据总数为：{}, ckxzDto查询的信息为: {}", total, ckCkxzs);
-            return ckxzListXml(ckCkxzs, total);
-        }
-        log.info("ckxzDto为null");
-        return null;
-    }
-
-
-    /**
-     * 批量删除
-     *
-     * @param bdhms 表单号码
-     * @return 删除的数量
-     */
-    @Override
-    @Transactional
-    public int batchDel(String[] bdhms) {
-        if (bdhms != null && !"".equals(bdhms)) {
-            log.warn("正在删除查控协执信息： 表单号码是： {}", bdhms);
-            return ckxzMapper.batchDel(bdhms);
-        }
-        return 0;
-    }
-
 
     /**
      * 插入一条查控协执对象
@@ -181,218 +328,102 @@ public class CkxzServiceImpl implements CkxzService {
      * @param ckdxes 查控协执对象
      * @return 是否插入成功
      */
-    private boolean insertCkdx(List<CkCkdx> ckdxes, String djpc) {
+    private boolean insertCkdx(List<CkCkdx> ckdxes, String[] xzdwdms, String djpc) {
         if (ckdxes != null) {
             for (CkCkdx ckdx : ckdxes) {
                 log.debug("正在插入一条查控对象数据！：{}", ckdx);
                 ckdx.setLastupdate(new Date());
                 ckdx.setZt("10");
                 ckdx.setDjpc(djpc);
-                int count = ckdxMapper.insertSelective(ckdx);
-                if (1 == count) {
-                    log.debug("插入一条查控对象数据成功!");
-                    return true;
+
+                List<String> xzdwflList = new ArrayList<>();
+                if (xzdwflList != null && xzdwdms.length > 0) {
+                    for (String xzdwdm : xzdwdms) {
+                        xzdwflList.add(CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm).getXzdwfl());
+                    }
+                    xzdwflList = removeDuplicationByHashSet(xzdwflList);
+                    String ckfw = String.join(",", xzdwflList);
+                    ckdx.setCkfw(ckfw);
                 } else {
+                    xzdwflList = null;
+                }
+
+                int count = ckdxMapper.insertSelective(ckdx);
+                if (0 == count) {
                     log.info("插入查控对象数据出现了问题！");
                     return false;
                 }
             }
+            return true;
+        } else {
+            log.info("需要插入的查控对象为空，不能插入！");
+            return false;
         }
-        log.info("需要插入的查控对象为空，不能插入！");
-        return false;
     }
 
-
-    /**
-     * 根据登记批次查询查控对象信息
-     *
-     * @param djpc 登记批次
-     * @return 返回查询到的同一批次的查控对象
-     */
-    @Override
-    public List<CkCkdx> viewCkdxInfo(String djpc) {
-        if (djpc != null && !"".equals(djpc)) {
-            List<CkCkdx> ckCkdxes = ckdxMapper.selectAllByDjpc(djpc);
-            if (ckCkdxes != null) {
-                return ckCkdxes;
-            } else {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 根据登记批次获取协执单位代码信息
-     *
-     * @param djpc 登记批次
-     * @return 协执单位代码信息，没有返回null
-     */
-    @Override
-    public List<String> getXzdwdm(String djpc) {
-        if (djpc != null && !"".equals(djpc)) {
-            List<String> xzdwdms = ckxzMapper.selectXzdwdmByDjpc(djpc);
-
-            if (xzdwdms != null) {
-                return xzdwdms;
-            } else {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 根据登记批次获取协执说明信息
-     *
-     * @param djpc 登记批次
-     * @return 获取协执说明，没有则返回null
-     */
-    @Override
-    public String getXzsm(String djpc) {
-        if (djpc != null && !"".equals(djpc)) {
-            String xzsm = ckxzMapper.selectXzsmByDjpc(djpc);
-            if (xzsm != null) {
-                return xzsm;
-            } else {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 根据登记批次查询查控卷宗信息
-     *
-     * @param djpc 登记批次
-     * @return 根据登记批次查询到的卷宗对象信息，没有返回null
-     */
-    @Override
-    @Transactional
-    public List<CkJz> getCkJz(String djpc) {
-        if (djpc != null && !"".equals(djpc)) {
-            List<CkJz> ckJzs = ckJzMapper.selectAllByDjpc(djpc);
-
-            if (ckJzs != null) {
-                return ckJzs;
-            } else {
-                return null;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 更新查询申请信息
-     *
-     * @param cxsqDto 查控协执参数
-     * @return 更新成功返回true，否则返回false
-     */
-    @Override
-    public boolean updateSqInfo(CxsqDto cxsqDto) {
-        if (cxsqDto != null) {
-            String djpc = cxsqDto.getDjpc();
-            if (deleteCkxzInfo(djpc)) {
-                List<CkCkdx> ckdxes = (List<CkCkdx>) cxsqDto.getCkCkdxMap().values();
-
-                for (CkCkdx ckdx : ckdxes) {
-                    if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
-                        return false;
-                    }
-                }
-
-                String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
-
-                CkCkxz ckxz = new CkCkxz();
-                ckxz.setDjpc(djpc);
-
-
-                for (String xzdwdm : xzdwdms) {
-                    String bdhm = getUUID();
-                    ckxz.setBdhm(bdhm);
-                    ckxz.setXzdwdm(xzdwdm);
-                    ckxz.setXzdwfl(CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm).getXzdwfl());
-                    ckxz.setDjpc(djpc);
-                    int insertCount = ckxzMapper.insertSelective(ckxz);
-                    if (1 != insertCount) {
-                        return false;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 根据登记批次删除所有此登记批次的信息
-     *
-     * @param djpc 登记批次
-     * @return 是否删除成功
-     */
-    public boolean deleteCkxzInfo(String djpc) {
-        if (djpc != null && !"".equals(djpc)) {
-            int xzdel = ckxzMapper.deleteByDjpc(djpc);
-
-            if (0 != xzdel) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
-    }
 
     /**
      * 用户显示到主页的表格
      *
-     * @param list  需要显示到表格的List集合
-     * @param count 需要显示的数据的数量
+     * @param ckdxes 需要显示到表格的List集合
+     * @param count  需要显示的数据的数量
      * @return String拼接的xml
      */
-    private String ckxzListXml(List<CkCkxz> list, int count) {
+    private String ckxzListXml(List<CkCkdx> ckdxes, int count) {
         StringBuilder allCkxzXml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
-        if (list != null && count > 0) {
+        if (ckdxes != null && count > 0) {
             log.debug("正在构建表格的xml的String！");
             allCkxzXml.append("<rows>");
             allCkxzXml.append("<userdata name='totalnumber'><![CDATA[").append(count).append("]]></userdata>");
-            for (CkCkxz ckxz : list) {
-                allCkxzXml.append("<row id=\"").append(ckxz.getBdhm()).append("\">");
-                allCkxzXml.append("<userdata name='zt'><![CDATA[").append(ckxz.getZt()).append("]]></userdata>");
+
+            for (CkCkdx ckdx : ckdxes) {
+                allCkxzXml.append("<row id=\"").append(ckdx.getCklsh()).append("\">");
+                allCkxzXml.append("<userdata name='zt'><![CDATA[").append(ckdx.getZt()).append("]]></userdata>");
                 allCkxzXml.append("<cell>0</cell>");
 
                 List<TsDm> ckzts = TsDmCache.KIND_TSDM_MAP.get("CKZT");
                 for (TsDm dm : ckzts) {
-                    if (ckxz.getZt().equals(dm.getCode())) {
+                    if (ckdx.getZt().equals(dm.getCode())) {
                         allCkxzXml.append("<cell><![CDATA[").append(dm.getMc()).append("]]></cell>");
                         break;
                     }
                 }
 
-                if (10 < Integer.parseInt(ckxz.getZt())) {
+                if (10 < Integer.parseInt(ckdx.getZt())) {
                     allCkxzXml.append("<cell><![CDATA[").append("/sp/resources/static/v2/static/tdh/btn/images/blue/search.png^查看^javascript:view(\"")
-                            .append(ckxz.getDjpc()).append("\")^_self").append("]]></cell>");
+                            .append(ckdx.getDjpc()).append("\")^_self").append("]]></cell>");
                 } else {
                     allCkxzXml.append("<cell></cell>");
                 }
 
-                if ("10".equals(ckxz.getZt())) {
+                if ("10".equals(ckdx.getZt())) {
                     allCkxzXml.append("<cell><![CDATA[").append("/sp/resources/static/v2/static/tdh/btn/images/blue/edit.png^编辑^javascript:edit(\"")
-                            .append(ckxz.getDjpc()).append("\")^_self").append("]]></cell>");
+                            .append(ckdx.getDjpc()).append("\")^_self").append("]]></cell>");
                 } else {
                     allCkxzXml.append("<cell></cell>");
                 }
 
-                allCkxzXml.append("<cell><![CDATA[").append(ckxz.getAh()).append("]]></cell>");
-                allCkxzXml.append("<cell><![CDATA[").append(ckxz.getMc()).append("]]></cell>");
-                allCkxzXml.append("<cell><![CDATA[").append(ckxz.getZjhm()).append("]]></cell>");
+                allCkxzXml.append("<cell><![CDATA[").append(ckdx.getAh()).append("]]></cell>");
+                allCkxzXml.append("<cell><![CDATA[").append(ckdx.getMc()).append("]]></cell>");
+                allCkxzXml.append("<cell><![CDATA[").append(ckdx.getZjhm()).append("]]></cell>");
 
-                String xzdwdm = ckxz.getXzdwdm();
 
-                allCkxzXml.append("<cell><![CDATA[").append(CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm).getMc()).append("]]></cell>");
+                String tempCkfw = ckdx.getCkfw();
+                String ckfwmc = "";
 
-                allCkxzXml.append("<cell><![CDATA[").append(ckxz.getCbr()).append("]]></cell>");
-                allCkxzXml.append("<cell><![CDATA[").append(ckxz.getSjy()).append("]]></cell>");
+                if (tempCkfw != null && tempCkfw.length() > 0) {
+                    String[] ckfws = tempCkfw.split(",");
+                    if (ckfws.length > 0) {
+                        for (String ckfw : ckfws) {
+                            ckfwmc += TsDmCache.CODE_BZ_MAP.get(ckfw) + ",";
+                        }
+                    }
+                    ckfwmc = ckfwmc.substring(0, ckfwmc.length() - 1);
+                }
 
+                allCkxzXml.append("<cell><![CDATA[").append(ckfwmc).append("]]></cell>");
+                allCkxzXml.append("<cell><![CDATA[").append(ckdx.getCbr()).append("]]></cell>");
+                allCkxzXml.append("<cell><![CDATA[").append(ckdx.getSjy()).append("]]></cell>");
                 allCkxzXml.append("</row>");
             }
             allCkxzXml.append("</rows>");
@@ -413,5 +444,19 @@ public class CkxzServiceImpl implements CkxzService {
      */
     private String getUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
+    /**
+     * 使用HashSet实现List去重(无序)
+     *
+     * @param list
+     */
+    private List removeDuplicationByHashSet(List<String> list) {
+        HashSet set = new HashSet(list);
+        //把List集合所有元素清空
+        list.clear();
+        //把HashSet对象添加至List集合
+        list.addAll(set);
+        return list;
     }
 }
