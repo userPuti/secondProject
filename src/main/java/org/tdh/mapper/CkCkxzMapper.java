@@ -1,5 +1,6 @@
 package org.tdh.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.tdh.domain.CkCkxz;
 import org.tdh.dto.HomePageDto;
 
@@ -33,7 +34,7 @@ public interface CkCkxzMapper {
      * @param bdhms 表单号码
      * @return 删除的条数
      */
-    public int batchDel(String bdhms);
+    public int batchDel(String[] bdhms);
 
     /**
      * 根据表单号码查询查控协执信息
@@ -48,6 +49,36 @@ public interface CkCkxzMapper {
      * @return 插入成功返回1，否则返回0
      */
     public int insertSelective(CkCkxz ckxz);
+
+
+    /**
+     * 根据登记批次查询查控协执对象
+     * @param djpc 登记批次
+     * @return 查询到的查控协执信息，如果没有则返回null
+     */
+    List<CkCkxz> selectAllByDjpc(String djpc);
+
+
+    /**
+     * 根据登记批次查询协执说明
+     * @param djpc 登记批次
+     * @return 查询到的协执说明信息
+     */
+    String selectXzsmByDjpc(String djpc);
+
+    /**
+     * 根据登记批次查询协执单位代码
+     * @param djpc 登记批次
+     * @return 查询到的协执单位代码，否则返回null
+     */
+    List<String> selectXzdwdmByDjpc(String djpc);
+
+    /**
+     * 根据登记批次查询信息
+     * @param djpc 登记批次
+     * @return 删除的条数
+     */
+    int deleteByDjpc(String djpc);
 }
 
 

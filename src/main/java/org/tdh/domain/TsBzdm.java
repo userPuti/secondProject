@@ -9,211 +9,211 @@ import java.util.Date;
  */
 public class TsBzdm implements Serializable {
     /**
-     * 种类@@
+     * 种类
      */
     private String kind;
 
     /**
-     * 代码@@
+     * 代码
      */
     private String code;
 
     /**
-     * 09种类@@
+     * 09种类
      */
     private String kin09;
 
     /**
-     * 标题@@
+     * 标题
      */
     private String bt;
 
     /**
-     * 最后更新日期@@
+     * 最后更新日期
      */
     private Date lastupdate;
 
     /**
-     * 新代码@@
+     * 新代码
      */
     private String codenow;
 
     /**
-     * 是否禁用@@
+     * 是否禁用
      */
     private String sfjy;
 
     /**
-     * 版本@@
+     * 版本
      */
     private String ver;
 
     /**
-     * 名称@@
+     * 名称
      */
     private String mc;
 
     /**
-     * 父代码@@
+     * 父代码
      */
     private String fdm;
 
     /**
-     * 排序号@@
+     * 排序号
      */
     private Integer pxh;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 种类@@
+     * 种类
      */
     public String getKind() {
         return kind;
     }
 
     /**
-     * 种类@@
+     * 种类
      */
     public void setKind(String kind) {
         this.kind = kind;
     }
 
     /**
-     * 代码@@
+     * 代码
      */
     public String getCode() {
         return code;
     }
 
     /**
-     * 代码@@
+     * 代码
      */
     public void setCode(String code) {
         this.code = code;
     }
 
     /**
-     * 09种类@@
+     * 09种类
      */
     public String getKin09() {
         return kin09;
     }
 
     /**
-     * 09种类@@
+     * 09种类
      */
     public void setKin09(String kin09) {
         this.kin09 = kin09;
     }
 
     /**
-     * 标题@@
+     * 标题
      */
     public String getBt() {
         return bt;
     }
 
     /**
-     * 标题@@
+     * 标题
      */
     public void setBt(String bt) {
         this.bt = bt;
     }
 
     /**
-     * 最后更新日期@@
+     * 最后更新日期
      */
     public Date getLastupdate() {
         return lastupdate;
     }
 
     /**
-     * 最后更新日期@@
+     * 最后更新日期
      */
     public void setLastupdate(Date lastupdate) {
         this.lastupdate = lastupdate;
     }
 
     /**
-     * 新代码@@
+     * 新代码
      */
     public String getCodenow() {
         return codenow;
     }
 
     /**
-     * 新代码@@
+     * 新代码
      */
     public void setCodenow(String codenow) {
         this.codenow = codenow;
     }
 
     /**
-     * 是否禁用@@
+     * 是否禁用
      */
     public String getSfjy() {
         return sfjy;
     }
 
     /**
-     * 是否禁用@@
+     * 是否禁用
      */
     public void setSfjy(String sfjy) {
         this.sfjy = sfjy;
     }
 
     /**
-     * 版本@@
+     * 版本
      */
     public String getVer() {
         return ver;
     }
 
     /**
-     * 版本@@
+     * 版本
      */
     public void setVer(String ver) {
         this.ver = ver;
     }
 
     /**
-     * 名称@@
+     * 名称
      */
     public String getMc() {
         return mc;
     }
 
     /**
-     * 名称@@
+     * 名称
      */
     public void setMc(String mc) {
         this.mc = mc;
     }
 
     /**
-     * 父代码@@
+     * 父代码
      */
     public String getFdm() {
         return fdm;
     }
 
     /**
-     * 父代码@@
+     * 父代码
      */
     public void setFdm(String fdm) {
         this.fdm = fdm;
     }
 
     /**
-     * 排序号@@
+     * 排序号
      */
     public Integer getPxh() {
         return pxh;
     }
 
     /**
-     * 排序号@@
+     * 排序号
      */
     public void setPxh(Integer pxh) {
         this.pxh = pxh;

@@ -25,7 +25,7 @@
                 <input value="${ckdx.cklsh}" class="inputCheck tableInpChk" type="checkbox"/>
             </td>
             <td class="tdTitle">案号<i class="required">*</i></td>
-            <td class="tdCont"><input name="ckCkdxMap['${ckdx.cklsh}'].ah" class="inputText validate" type="text"
+            <td class="tdCont"><input id="ah" name="ckCkdxMap['${ckdx.cklsh}'].ah" class="inputText validate" type="text"
                                       value="${ckdx.ah}"/></td>
             <td class="tdTitle">承办人<i class="required">*</i></td>
             <td class="tdCont"><input id="cbr" name="ckCkdxMap['${ckdx.cklsh}'].cbr" class="inputText validate"
@@ -45,8 +45,7 @@
                 <select class="inputSel sasf" name="ckCkdxMap['${ckdx.cklsh}'].ssdw">
                     <option value=""></option>
                     <c:forEach items="${sasf}" var="ssdw">
-                        <%--使用el表达式和三目运算符根据下拉框的值选中Option ${zjlx.code==ckCkdx.zjlx?'selected':''}--%>
-                        <option value="${ssdw.code}">${ssdw.mc}</option>
+                        <option value="${ssdw.code}" ${ssdw.code==ckdx.ssdw?'selected':''}>${ssdw.mc}</option>
                     </c:forEach>
                 </select>
             </td>
@@ -60,14 +59,14 @@
                     <option value=""></option>
                     <c:forEach items="${zjfl}" var="zjlx">
                         <%--使用el表达式和三目运算符根据下拉框的值选中Option ${zjlx.code==ckCkdx.zjlx?'selected':''}--%>
-                        <option value="${zjlx.code}">${zjlx.mc}</option>
+                        <option value="${zjlx.code}" ${zjlx.code==ckdx.zjlx?'selected':''}>${zjlx.mc}</option>
                     </c:forEach>
                 </select>
             </td>
             <td class="tdTitle">证件号码<i class="required">*</i></td>
             <td class="tdCont" colspan="3"><input id="zjhm" name="ckCkdxMap['${ckdx.cklsh}'].zjhm"
                                                   class="inputText validate" type="text"
-                                                  value="${ckxz.zjhm}"/></td>
+                                                  value="${ckdx.zjhm}"/></td>
         </tr>
         <tr>
             <td class="tdTitle">国家或地区</td>
@@ -75,14 +74,14 @@
                 <select class="inputSel gj" name="ckCkdxMap['${ckdx.cklsh}'].gj">
                     <option value=""></option>
                     <c:forEach items="${gj}" var="gjdq">
-                        <option value="${gjdq.code}">${gjdq.mc}</option>
+                        <option value="${gjdq.code}" ${gjdq.code==ckdx.gj?'selected':''}>${gjdq.mc}</option>
                     </c:forEach>
                 </select>
             </td>
             <td class="tdTitle">户籍地<i class="required">*</i></td>
             <td class="tdCont" colspan="3"><input id="hjszd" name="ckCkdxMap['${ckdx.cklsh}'].hjszd"
                                                   class="inputText validate" type="text"
-                                                  value="${ckxz.hjszd}"/></td>
+                                                  value="${ckdx.hjszd}"/></td>
         </tr>
     </table>
 </c:forEach>

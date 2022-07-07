@@ -87,7 +87,7 @@ public class MainPageController {
         log.debug("正在批量删除表单号码为 {} 的信息",bdhms);
         String[] idArray = bdhms.trim().split(",");
         int total = idArray.length;
-        int succCount = ckxzService.batchDel(bdhms);
+        int succCount = ckxzService.batchDel(idArray);
         int fail = total - succCount;
         if (succCount > 0) {
             log.debug("删除成功，并向后端返回成功信息！");

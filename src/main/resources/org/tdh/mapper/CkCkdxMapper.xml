@@ -137,9 +137,64 @@
         </trim>
     </insert>
 
+    <update id="updateCkdxByCklsh">
+        update ck_ckdx
+        <set>
+            <if test="zjlx != null">
+                zjlx = #{zjlx},
+            </if>
+            <if test="zjhm != null">
+                zjhm = #{zjhm},
+            </if>
+            <if test="mc != null">
+                mc = #{mc},
+            </if>
+            <if test="cbr != null">
+                cbr = #{cbr},
+            </if>
+            <if test="sjy != null">
+                sjy = #{sjy},
+            </if>
+            <if test="hjszd != null">
+                hjszd = #{hjszd},
+            </if>
+            <if test="gj != null">
+                gj = #{gj},
+            </if>
+            <if test="zt != null">
+                zt = #{zt},
+            </if>
+            <if test="ah != null">
+                ah = #{ah},
+            </if>
+            <if test="fydm != null">
+                fydm = #{fydm},
+            </if>
+            <if test="djpc != null">
+                djpc = #{djpc},
+            </if>
+            <if test="ssdw != null">
+                ssdw = #{ssdw},
+            </if>
+            <if test="ckfw != null">
+                ckfw = #{ckfw},
+            </if>
+            <if test="lastupdate != null">
+                lastupdate = #{lastupdate},
+            </if>
+        </set>
+        where cklsh = #{cklsh}
+    </update>
 
-    <select id="getAll" resultType="org.tdh.domain.CkCkdx">
-        select *
-        from ck_ckdx;
+    <delete id="deleteByDjpc">
+        delete
+        from ck_ckdx
+        where djpc = #{djpc}
+    </delete>
+
+    <select id="selectAllByDjpc" resultType="org.tdh.domain.CkCkdx">
+        select
+        <include refid="Base_Column_List"/>
+        from ck_ckdx where djpc = #{djpc}
     </select>
 </mapper>

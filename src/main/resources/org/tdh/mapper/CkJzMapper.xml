@@ -5,16 +5,68 @@
 <mapper namespace="org.tdh.mapper.CkJzMapper">
 
     <resultMap id="BaseResultMap" type="org.tdh.domain.CkJz">
-            <id property="djpc" column="DJPC" jdbcType="VARCHAR"/>
-            <id property="xh" column="XH" jdbcType="INTEGER"/>
-            <result property="wjmc" column="WJMC" jdbcType="VARCHAR"/>
-            <result property="wjlx" column="WJLX" jdbcType="VARCHAR"/>
-            <result property="path" column="PATH" jdbcType="VARCHAR"/>
-            <result property="lastupdate" column="LASTUPDATE" jdbcType="TIMESTAMP"/>
+        <id property="djpc" column="DJPC" jdbcType="VARCHAR"/>
+        <id property="xh" column="XH" jdbcType="INTEGER"/>
+        <result property="wjmc" column="WJMC" jdbcType="VARCHAR"/>
+        <result property="wjlx" column="WJLX" jdbcType="VARCHAR"/>
+        <result property="path" column="PATH" jdbcType="VARCHAR"/>
+        <result property="lastupdate" column="LASTUPDATE" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        DJPC,XH,WJMC,
+        DJPC
+        ,XH,WJMC,
         WJLX,PATH,LASTUPDATE
     </sql>
+    <insert id="insertSelective">
+        insert into ck_jz
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="djpc != null">
+                djpc,
+            </if>
+            <if test="xh != null">
+                xh,
+            </if>
+            <if test="wjmc != null">
+                wjmc,
+            </if>
+            <if test="wjlx != null">
+                wjlx,
+            </if>
+            <if test="path != null">
+                path,
+            </if>
+            <if test="lastupdate != null">
+                lastupdate,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="djpc != null">
+                #{djpc},
+            </if>
+            <if test="xh != null">
+                #{xh},
+            </if>
+            <if test="wjmc != null">
+                #{wjmc},
+            </if>
+            <if test="wjlx != null">
+                #{wjlx},
+            </if>
+            <if test="path != null">
+                #{path},
+            </if>
+            <if test="lastupdate != null">
+                #{lastupdate},
+            </if>
+        </trim>
+    </insert>
+    <delete id="deleteByDjpc">
+        delete from ck_jz where djpc=#{djpc}
+    </delete>
+    <select id="selectAllByDjpc" resultType="org.tdh.domain.CkJz">
+        select
+        <include refid="Base_Column_List"/>
+        from ck_jz where djpc=#{djpc}
+    </select>
 </mapper>

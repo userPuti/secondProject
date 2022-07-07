@@ -1,5 +1,7 @@
 package org.tdh.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,18 +15,19 @@ import org.tdh.cache.CkxzdwCache;
 import org.tdh.cache.TsBzdmCache;
 import org.tdh.cache.TsDmCache;
 import org.tdh.domain.CkCkdx;
-import org.tdh.domain.CkCkxz;
+import org.tdh.domain.CkJz;
 import org.tdh.domain.CkXzdw;
 import org.tdh.domain.TsDm;
-import org.tdh.dto.CkxzDto;
+import org.tdh.dto.CxsqDto;
 import org.tdh.service.CkxzService;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
+import org.tdh.vo.CkjzVO;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import javax.servlet.http.HttpServletRequest;
+import java.io.*;
+import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -52,6 +55,8 @@ public class CxdjController {
         ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
         loadChkBox(modelAndView);
         modelAndView.addObject("func", "add");
+        String djpc = getUUID();
+        modelAndView.addObject("djpc", djpc);
         log.debug("跳转到查询登记信息页面");
         return modelAndView;
     }
@@ -60,16 +65,30 @@ public class CxdjController {
     /**
      * 根据bdhm来查询协执的信息，并传递给前端相应的数据
      *
-     * @param bdhm 表单号码
+     * @param djpc 登记批次
      * @param func 只能是view和edit
      * @return ModelAndView
      */
     @RequestMapping("/viewXzInfo.do")
-    public ModelAndView viewXzInfo(String bdhm, String func) {
+    public ModelAndView viewXzInfo(String djpc, String func) {
         ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
         modelAndView.addObject("func", func);
-        CkCkxz ckxz = ckxzService.viewCkxzInfo(bdhm);
-        modelAndView.addObject("ckxz", ckxz);
+        modelAndView.addObject("djpc", djpc);
+
+        List<String> xzdwdms = ckxzService.getXzdwdm(djpc);
+        String xzsm = ckxzService.getXzsm(djpc);
+
+        try {
+            List<CkJz> ckjzs = ckxzService.getCkJz(djpc);
+            String ckjzsJson = new ObjectMapper().writeValueAsString(ckjzs).replaceAll("\"", "&quot;");
+            modelAndView.addObject("ckjzs", ckjzsJson);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        modelAndView.addObject("xzdwdms", xzdwdms);
+        modelAndView.addObject("xzsm", xzsm);
+
         loadSel(modelAndView);
         loadChkBox(modelAndView);
         return modelAndView;
@@ -82,33 +101,82 @@ public class CxdjController {
      * @return
      */
     @RequestMapping("getCxdxTab.do")
-    public ModelAndView getCxdxTab() {
+    public ModelAndView getCxdxTab(String djpc) {
         ModelAndView modelAndView = new ModelAndView("commonTable");
         loadSel(modelAndView);
-        List<CkCkdx> ckCkdxList = new ArrayList<>();
+        List<CkCkdx> ckCkdxList = null;
 
-        CkCkdx ckdx = new CkCkdx();
-        String cklsh = UUID.randomUUID().toString().replaceAll("-", "");
-        ckdx.setCklsh(cklsh);
-        ckCkdxList.add(ckdx);
+        if (djpc == null || "".equals(djpc)) {
+            ckCkdxList = new ArrayList<>();
+
+            CkCkdx ckdx = new CkCkdx();
+            String cklsh = getUUID();
+            ckdx.setCklsh(cklsh);
+            ckCkdxList.add(ckdx);
+        } else {
+            ckCkdxList = ckxzService.viewCkdxInfo(djpc);
+        }
 
         modelAndView.addObject("ckCkdxList", ckCkdxList);
         return modelAndView;
     }
 
     /**
-     * @param ckxzDto
+     * @param cxsqDto
      * @return
      */
-    @RequestMapping("saveCkxz.do")
+    @RequestMapping("updateCxsqdj.do")
     @ResponseBody
-    public ResponseVO saveCkxz(CkxzDto ckxzDto) {
-        if (ckxzDto != null && !"".equals(ckxzDto)) {
-            String xzdwmc = ckxzDto.getXzdwdm();
+    public ResponseVO updateCxsqdj(CxsqDto cxsqDto, HttpServletRequest request) {
+        if (cxsqDto != null && !"".equals(cxsqDto)) {
+            String xzdwmc = cxsqDto.getXzdwdm();
             //去除多余的一个逗号
             xzdwmc = xzdwmc.substring(0, xzdwmc.length() - 1);
-            ckxzDto.setXzdwdm(xzdwmc);
-            boolean isSuccess = ckxzService.insertCkxz(ckxzDto);
+            cxsqDto.setXzdwdm(xzdwmc);
+        }
+        return ResResult.fail();
+    }
+
+
+    /**
+     * 保存查控申请
+     *
+     * @param cxsqDto 查控申请入参对象
+     * @return 成功返回ResponseVO.success,否则返回ResponseVO.fail
+     */
+    @RequestMapping("saveCksq.do")
+    @ResponseBody
+    public ResponseVO saveCksq(CxsqDto cxsqDto, HttpServletRequest request) {
+        if (cxsqDto != null && !"".equals(cxsqDto)) {
+            String xzdwmc = cxsqDto.getXzdwdm();
+            //去除多余的一个逗号
+            xzdwmc = xzdwmc.substring(0, xzdwmc.length() - 1);
+            cxsqDto.setXzdwdm(xzdwmc);
+
+            String fileDestPath = request.getSession().getServletContext().getRealPath("fileDestPath");
+            File fileDir = new File(fileDestPath);
+
+            if (!fileDir.exists()) {
+                fileDir.mkdir();
+            }
+
+            int xh = 0;
+            //将文件从临时文件复制到最终文件
+            for (CkJz file : cxsqDto.getFiles()) {
+                String filePath = fileDestPath + File.separator + getUUID() + "." + file.getWjlx();
+
+                //将文件复制到最终地址
+                copyFileUsingFileChannels(new File(file.getPath()), new File(filePath));
+
+                //更新文件的最终地址
+                file.setPath(filePath);
+                file.setXh(xh++);
+                file.setDjpc(cxsqDto.getDjpc());
+                file.setLastupdate(new Date());
+            }
+
+            boolean isSuccess = ckxzService.insertCksq(cxsqDto);
+
             if (isSuccess) {
                 return ResResult.success();
             } else {
@@ -120,29 +188,58 @@ public class CxdjController {
 
 
     /**
+     * 文件批量上传,创建一个临时文件，用于上传
      *
-     * @param desc
-     * @param files
+     * @param file
      * @return
      * @throws IOException
      */
     @RequestMapping("upload.do")
     @ResponseBody
-    public String testMutiUpload(@RequestParam("desc") String desc, @RequestParam("file") MultipartFile[] files) throws IOException {
-        System.out.println("文件描述：" + desc);
-        for (MultipartFile file : files) {
-            InputStream inputStream = file.getInputStream();
-            String fileName = file.getOriginalFilename();
-            OutputStream outputStream = new FileOutputStream("C:\\tmp\\" + fileName);
-            byte[] bs = new byte[1024];
-            int len = -1;
-            while ((len = inputStream.read(bs)) != -1) {
-                outputStream.write(bs, 0, len);
-            }
-            inputStream.close();
-            outputStream.close();
+    public ResponseVO uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        String fileId = getUUID();
+
+        String fileName = file.getOriginalFilename();
+        String wjlx = fileName.substring(fileName.lastIndexOf(".") + 1);
+        String wjmc = fileName.substring(0, fileName.lastIndexOf('.'));
+
+        String tempFilePath = request.getSession().getServletContext().getRealPath("tempFile");
+        File fileDir = new File(tempFilePath);
+
+        if (!fileDir.exists()) {
+            fileDir.mkdir();
         }
-        return "success";
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String date = sdf.format(new Date());
+
+        //根据日期生成一个文件夹保存临时文件
+        String finalPath = tempFilePath + File.separator + date + File.separator + fileId + "." + wjlx;
+
+        try {
+            file.transferTo(new File(finalPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String fileInfo = "";
+
+        try {
+            List<CkjzVO> ckJzVOs = new ArrayList<>();
+
+            CkjzVO tempJz = new CkjzVO();
+            tempJz.setWjlx(wjlx);
+            tempJz.setWjmc(wjmc);
+            tempJz.setPath(finalPath);
+            tempJz.setTmepUuid(fileId);
+            ckJzVOs.add(tempJz);
+
+            fileInfo = new ObjectMapper().writeValueAsString(ckJzVOs);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        return ResResult.successWithData(fileInfo);
     }
 
 
@@ -179,6 +276,48 @@ public class CxdjController {
             modelAndView.addObject("ckxzdwMap", ckxzdwMap);
         } else {
             log.info("缓存里面的东西为空，无法传递协执单位信息！");
+        }
+    }
+
+
+    /**
+     * 获取一个32位的uuid
+     *
+     * @return 一个随机的32位uuid
+     */
+    private String getUUID() {
+        return UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
+
+    /**
+     * 文件复制
+     *
+     * @param source 文件源地址
+     * @param dest   文件目的地址
+     */
+    private void copyFileUsingFileChannels(File source, File dest) {
+        FileChannel inputChannel = null;
+        FileChannel outputChannel = null;
+        try {
+            inputChannel = new FileInputStream(source).getChannel();
+            outputChannel = new FileOutputStream(dest).getChannel();
+            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                inputChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                outputChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

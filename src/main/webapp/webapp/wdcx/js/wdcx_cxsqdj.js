@@ -3,16 +3,20 @@ let countCkdx = 0;
 $(
     function () {
         let func = $("#func").val();
-        addCxdx();
         selectAllXzdw();
 
         if (func === "view") {
-            doView();
+            doView("view");
         } else if (func === "edit") {
             doEdit();
             uploadFile();
-        }
-        if (func === "add") {
+        } else if (func === "add") {
+            getCkdxTab("");
+
+            $("#addCxdx").click(function () {
+                getCkdxTab("");
+            });
+
             cxsqdjSave();
             uploadFile();
         }
@@ -20,39 +24,69 @@ $(
 )
 
 //查看信息
-function doView() {
-    let hSasf = $("#hSasf").val();
-    let hZjlx = $("#hZjlx").val();
-    let hGj = $("#hGj").val();
-    setSelVal("#sasf", hSasf);
-    setSelVal("#zjlx", hZjlx);
-    setSelVal("#gj", hGj);
+function doView(type) {
+    let djpc = $("#djpc").val();
+    console.info("djpc", djpc);
+    getCkdxTab(djpc);
 
-    inputDisable("#ah", true);
-    inputDisable("#cbr", true);
-    inputDisable("#sjy", true);
-    inputDisable("#mc", true);
-    selDisable("#sasf", true);
-    selDisable("#zjlx", true);
-    inputDisable("#zjhm", true);
-    selDisable("#gj", true);
-    inputDisable("#hjszd", true);
+    let xzdwdms = $("#xzdwdms").val();
+    console.info(xzdwdms);
+    xzdwdms = xzdwdms.substr(1, xzdwdms.length - 2).split(", ");
+    console.info("xzdwdms", xzdwdms);
+
+    for (let i in xzdwdms) {
+        console.info(xzdwdms[i]);
+        setCheckVal("#xzdwdm_" + xzdwdms[i], true);
+    }
+
+    let xzsm = $("#xzsm").val();
+    console.info("xzsm", xzsm);
+    $("#xzsmText").val(xzsm);
+
+    let ckjzs = $("#ckjzs").val();
+    console.info("ckjzs", ckjzs);
+    ckjzs = JSON.parse(ckjzs);
+    console.info(ckjzs);
+
+
+    //todo 这里会丢失临时文件的id，保存的时候需要根据临时文件的id复制文件，所以会在更新时报错
+    for (let index in ckjzs) {
+        console.info(ckjzs[index].wjmc + "." + ckjzs[index].wjlx);
+        let fileInfo = '';
+        let jzId = ckjzs[index].djpc + "_" + ckjzs[index].xh;
+        fileInfo += '<li id="' + jzId + '">' +
+            '<label><input class="filechkbox inputCheck" type="checkbox" value="' + jzId + '">' + ckjzs[index].wjmc + "." + ckjzs[index].wjlx + '</label>' +
+            '<a class="tdh_icon icon_download form_upload_close" onclick=""></a>' +
+            '<input type="hidden" name="fileInfo[' + jzId + '].wjmc" value="' + ckjzs[index].wjmc + '"/>' +
+            '<input type="hidden" name="fileInfo[' + jzId + '].wjlx" value="' + ckjzs[index].wjlx + '"/>' +
+            '<input type="hidden" name="fileInfo[' + jzId + '].path" value="' + ckjzs[index].path + '"/>' +
+            '</li>';
+        $('#fileList').append(fileInfo);
+    }
+    checkboxInit("#fileList .filechkbox");
+
+    if (type === "view") {
+        editDisable();
+    }
+}
+
+function editDisable() {
+    inputDisable("input", true);
+    selDisable("select", true);
+    inputDisable("textarea", true);
+    checkDisable("type=['checkbox']", true);
+    $(".tdh_btn").hide();
 }
 
 
 //编辑信息
 function doEdit() {
-    let hSasf = $("#hSasf").val();
-    let hZjlx = $("#hZjlx").val();
-    let hGj = $("#hGj").val();
-    setSelVal("#sasf", hSasf);
-    setSelVal("#zjlx", hZjlx);
-    setSelVal("#gj", hGj);
-    inputDisable("#ah", true);
+    doView();
+    cxsqdjUpdate();
 }
 
-//查控申请登记的保存
-function cxsqdjSave() {
+//todo 编辑信息
+function cxsqdjUpdate() {
     $("#cxsqdjSave").click(function () {
         let valid = validateForm();
         if (valid === false) {
@@ -64,24 +98,37 @@ function cxsqdjSave() {
             return valid;
         }
 
-        let params = serialize("#ckxz");
-        console.info(params);
-
+        let params = serialize("#cxsq");
 
         let chkStr = "";
         $(".xzdwmc:checked").each(function () {
             chkStr += $(this).val() + ",";
         })
 
-        console.info("chkStr", chkStr);
 
         $.ajax({
-            url: CONTEXT_PATH + "webapp/wdcx/saveCkxz.do",
+            url: CONTEXT_PATH + "webapp/wdcx/updateCxsqdj.do",
             type: "post",
             dataType: "json",
             data: params + "&xzdwdm=" + chkStr,
             success: function (data) {
-                console.info("data", data);
+                if (data.code === 0) {
+                    layer.msg("保存成功！", {
+                        icon: 1,
+                        shade: 0.000001, //不展示遮罩，但是要有遮罩效果
+                        time: 2000
+                    }, function () {
+                        layerClose(true);
+                    });
+                } else {
+                    layer.msg("保存失败！", {
+                        icon: 0,
+                        shade: 0.000001, //不展示遮罩，但是要有遮罩效果
+                        time: 2000
+                    }, function () {
+                        layerClose(true);
+                    });
+                }
             },
             error: function () {
                 layer.msg("新增对象页面请求出现错误，请联系管理员！", {
@@ -96,9 +143,71 @@ function cxsqdjSave() {
     });
 }
 
-function addCxdx() {
+
+//查控申请登记的保存
+function cxsqdjSave() {
+    $("#cxsqdjSave").click(function () {
+        let valid = validateForm();
+        if (valid === false) {
+            layer.alert("请检查必填项！", {
+                icon: 7,
+                shade: 0.000001, //不展示遮罩，但是要有遮罩效果
+                time: 2000
+            });
+            return valid;
+        }
+
+        let params = serialize("#cxsq");
+
+        console.info(params);
+
+        let chkStr = "";
+        $(".xzdwmc:checked").each(function () {
+            chkStr += $(this).val() + ",";
+        })
+
+        $.ajax({
+            url: CONTEXT_PATH + "webapp/wdcx/saveCksq.do",
+            type: "post",
+            dataType: "json",
+            data: params + "&xzdwdm=" + chkStr,
+            success: function (data) {
+                if (data.code === 0) {
+                    layer.msg("保存成功！", {
+                        icon: 1,
+                        shade: 0.000001, //不展示遮罩，但是要有遮罩效果
+                        time: 2000
+                    }, function () {
+                        layerClose(true);
+                    });
+                } else {
+                    layer.msg("保存失败！", {
+                        icon: 0,
+                        shade: 0.000001, //不展示遮罩，但是要有遮罩效果
+                        time: 2000
+                    }, function () {
+                        layerClose(true);
+                    });
+                }
+            },
+            error: function () {
+                layer.msg("新增对象页面请求出现错误，请联系管理员！", {
+                    icon: 0,
+                    shade: 0.000001, //不展示遮罩，但是要有遮罩效果
+                    time: 2000
+                }, function () {
+                    layerClose(true);
+                });
+            }
+        })
+    });
+}
+
+
+//获取查控对象表格
+function getCkdxTab(djpc) {
     $.ajax({
-        url: CONTEXT_PATH + "webapp/wdcx/getCxdxTab.do",
+        url: CONTEXT_PATH + "webapp/wdcx/getCxdxTab.do?djpc=" + djpc,
         type: "post",
         dataType: "html",
         success: function (data) {
@@ -119,6 +228,7 @@ function addCxdx() {
     })
 }
 
+//删除查控对象表格
 function delCxdx() {
     let count = $(".tableInpChk:checked").size();
 
@@ -137,7 +247,6 @@ function delCxdx() {
             count = 0;
         })
     }
-
 }
 
 //验证表单必填项
@@ -187,42 +296,42 @@ function allchk() {
 }
 
 
-function chkXzdw(obj,index){
+function chkXzdw(obj, index) {
     console.info(index);
     if (obj.checked) {
-        setCheckVal(".xzdw_"+index, true);
+        setCheckVal(".xzdw_" + index, true);
     } else {
-        setCheckVal(".xzdw_"+index, false);
+        setCheckVal(".xzdw_" + index, false);
     }
 }
 
 function allXzdwchk(index) {
-    var chknum = $(".xzdw_"+index).size();//选项总个数
-    console.info("chknum",chknum);
+    var chknum = $(".xzdw_" + index).size();//选项总个数
     var chk = 0;
-    $(".xzdw_"+index).each(function () {
+    $(".xzdw_" + index).each(function () {
         if ($(this).attr("checked")) {
             chk++;
         }
     });
     if (chknum == chk) {//全选
-        setCheckVal("#xzdw_"+index, true);
+        setCheckVal("#xzdw_" + index, true);
     } else {//不全选
-        setCheckVal("#xzdw_"+index, false);
+        setCheckVal("#xzdw_" + index, false);
     }
 }
 
+let i = 0;
 
 //上传文件
 function uploadFile() {
     let uploader = new plupload.Uploader({
         browse_button: "fileUpload",
-        url: CONTEXT_PATH + "upload.do",
+        url: CONTEXT_PATH + "webapp/wdcx/upload.do",
         //最大文件限制
         max_file_size: "10mb",
         //一次上传数据大小
         chunk_size: "10mb",
-        unique_names: false,    //是否自动生成唯一名称
+        unique_names: true,    //是否自动生成唯一名称
         flash_swf_url: CONTEXT_PATH + "resources/static/js/Moxie.swf",
         silverlight_xap_url: CONTEXT_PATH + "resources/static/js/Moxie.xap",
         filters: [                //文件类型限制
@@ -230,25 +339,8 @@ function uploadFile() {
         ],
 
         init: {
-            PostInit: function () {
-                $('#fileList').html('');
-
-                $('#fileUpload').onclick = function () {
-                    uploader.start();
-                    return false;
-                };
-            },
-
             FilesAdded: function (up, files) {
-                let fileInfo = '';
-                plupload.each(files, function (file) {
-                    fileInfo += '<div id="' + file.id + '">' + file.name + ' (' + plupload.formatSize(file.size) + ') <b></b></div>';
-                    $('#fileList').append(fileInfo);
-                });
-            },
-
-            UploadProgress: function (up, file) {
-                $('#' + file.id).find('b')[0].html('<span>' + file.percent + "%</span>");
+                uploader.start();
             },
 
             Error: function (up, err) {
@@ -257,6 +349,34 @@ function uploadFile() {
                     shade: 0.000001, //不展示遮罩，但是要有遮罩效果
                     time: 2000
                 });
+            },
+
+            FileUploaded: function (uploader, file, result) {
+                console.info(result.response);
+                let res = JSON.parse(result.response);
+                let fileInfo = JSON.parse(res.data)[0];
+                console.info(fileInfo);
+                console.info(fileInfo.wjlx);
+
+                let fileData = '';
+
+                let fileName = file.name;
+                if (fileName.length > 10) {
+                    fileName = fileName.substr(0, 10) + "...";
+                }
+
+                let jzID = fileInfo.tempUuid;
+                ;
+
+                fileData += '<li id="' + jzID + '">' +
+                    '<label><input class="filechkbox inputCheck" type="checkbox" value="' + jzID + ' title="' + fileName + '">' + fileName + '</label>' +
+                    '<input type="hidden" name="files[' + i + '].wjmc" value="' + fileInfo.wjmc + '"/>' +
+                    '<input type="hidden" name="files[' + i + '].wjlx" value="' + fileInfo.wjlx + '"/>' +
+                    '<input type="hidden" name="files[' + i + '].path" value="' + fileInfo.path + '"/>' +
+                    '</li>';
+                i++;
+                $('#fileList').append(fileData);
+                checkboxInit("#fileList .filechkbox");
             }
         }
     });
@@ -264,5 +384,11 @@ function uploadFile() {
     uploader.init();
 }
 
-
-
+//删除文件，但是没有删除上传到临时文件中的文件信息
+function fileDel() {
+    let chkStr = "";
+    $('.fileChkbox:checked').each(function () {
+        chkStr += $(this).val();
+        $('#' + chkStr).remove();
+    })
+}

@@ -1,14 +1,16 @@
 package org.tdh.dto;
 
 import org.tdh.domain.CkCkdx;
+import org.tdh.domain.CkJz;
 
+import java.util.List;
 import java.util.Map;
 
 /**
  * @author Puti
  * @date 2022/5/25 15:41
  */
-public class CkxzDto {
+public class CxsqDto {
     /**
      * key——查控流水号
      * value--对应的查控对象
@@ -18,16 +20,31 @@ public class CkxzDto {
     private String xzdwdm;
     //协执说明
     private String xzsm;
+    //登记批次
+    private String djpc;
+    /**
+     * key -- 文件的uuid
+     * value -- 查控卷宗的临时对象
+     */
+//    private Map<String, CkJz> fileInfo;
 
-    public CkxzDto() {
+    private List<CkJz> files;
+
+    public List<CkJz> getFiles() {
+        return files;
     }
 
-    public CkxzDto(Map<String, CkCkdx> ckCkdxMap, String xzdwdm, String xzsm) {
-        this.ckCkdxMap = ckCkdxMap;
-        this.xzdwdm = xzdwdm;
-        this.xzsm = xzsm;
+    public void setFiles(List<CkJz> files) {
+        this.files = files;
     }
 
+    public String getDjpc() {
+        return djpc;
+    }
+
+    public void setDjpc(String djpc) {
+        this.djpc = djpc;
+    }
 
     public String getXzdwdm() {
         return xzdwdm;
@@ -56,10 +73,12 @@ public class CkxzDto {
 
     @Override
     public String toString() {
-        return "CkxzDto{" +
-                ", ckCkdxMap=" + ckCkdxMap +
-                ", xzdwmc='" + xzdwdm + '\'' +
+        return "CxsqDto{" +
+                "ckCkdxMap=" + ckCkdxMap +
+                ", xzdwdm='" + xzdwdm + '\'' +
                 ", xzsm='" + xzsm + '\'' +
+                ", djpc='" + djpc + '\'' +
+                ", files=" + files +
                 '}';
     }
 }

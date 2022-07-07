@@ -9,154 +9,154 @@ import java.util.Date;
  */
 public class TsDm implements Serializable {
     /**
-     * 代码@@
+     * 代码
      */
     private String code;
 
     /**
-     * 种类@@
+     * 种类
      */
     private String kind;
 
     /**
-     * 标志@@
+     * 标志
      */
     private String bz;
 
     /**
-     * 最后更新日期@@
+     * 最后更新日期
      */
     private Date lastupdate;
 
     /**
-     * 标题@@
+     * 标题
      */
     private String bt;
 
     /**
-     * 名称@@
+     * 名称
      */
     private String mc;
 
     /**
-     * 是否禁用@@
+     * 是否禁用
      */
     private String sfjy;
 
     /**
-     * 排序号@@
+     * 排序号
      */
     private Integer pxh;
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 代码@@
+     * 代码
      */
     public String getCode() {
         return code;
     }
 
     /**
-     * 代码@@
+     * 代码
      */
     public void setCode(String code) {
         this.code = code;
     }
 
     /**
-     * 种类@@
+     * 种类
      */
     public String getKind() {
         return kind;
     }
 
     /**
-     * 种类@@
+     * 种类
      */
     public void setKind(String kind) {
         this.kind = kind;
     }
 
     /**
-     * 标志@@
+     * 标志
      */
     public String getBz() {
         return bz;
     }
 
     /**
-     * 标志@@
+     * 标志
      */
     public void setBz(String bz) {
         this.bz = bz;
     }
 
     /**
-     * 最后更新日期@@
+     * 最后更新日期
      */
     public Date getLastupdate() {
         return lastupdate;
     }
 
     /**
-     * 最后更新日期@@
+     * 最后更新日期
      */
     public void setLastupdate(Date lastupdate) {
         this.lastupdate = lastupdate;
     }
 
     /**
-     * 标题@@
+     * 标题
      */
     public String getBt() {
         return bt;
     }
 
     /**
-     * 标题@@
+     * 标题
      */
     public void setBt(String bt) {
         this.bt = bt;
     }
 
     /**
-     * 名称@@
+     * 名称
      */
     public String getMc() {
         return mc;
     }
 
     /**
-     * 名称@@
+     * 名称
      */
     public void setMc(String mc) {
         this.mc = mc;
     }
 
     /**
-     * 是否禁用@@
+     * 是否禁用
      */
     public String getSfjy() {
         return sfjy;
     }
 
     /**
-     * 是否禁用@@
+     * 是否禁用
      */
     public void setSfjy(String sfjy) {
         this.sfjy = sfjy;
     }
 
     /**
-     * 排序号@@
+     * 排序号
      */
     public Integer getPxh() {
         return pxh;
     }
 
     /**
-     * 排序号@@
+     * 排序号
      */
     public void setPxh(Integer pxh) {
         this.pxh = pxh;

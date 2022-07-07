@@ -1,5 +1,3 @@
-let pageSize = 10;
-let pageNum = 1;
 let mygrid;
 
 $(function () {
@@ -111,7 +109,7 @@ function deleted(bdhms) {
                     shade: 0.000001, //不展示遮罩，但是要有遮罩效果
                     time: 2000
                 }, function () {
-                    mygrid.loadPage();
+                    mygrid.loadPage(true);
                 })
             } else if (data.code === 1) {
                 layer.msg("删除失败，请联系管理员！", {
@@ -145,11 +143,11 @@ function addInfoCallback(rtn) {
 }
 
 //查看
-function view(bdhm) {
-    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewXzInfo.do?bdhm="+bdhm+"&func=view", "查看协执信息", 700, 600);
+function view(djpc) {
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewXzInfo.do?djpc="+djpc+"&func=view", "查看协执信息", 700, 600);
 }
 
 //编辑
-function edit(bdhm) {
-    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewXzInfo.do?bdhm="+bdhm+"&func=edit", "编辑协执信息", 700, 600);
+function edit(djpc) {
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewXzInfo.do?djpc="+djpc+"&func=edit", "编辑协执信息", 700, 600);
 }
