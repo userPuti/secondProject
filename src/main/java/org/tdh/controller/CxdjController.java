@@ -19,12 +19,14 @@ import org.tdh.domain.CkJz;
 import org.tdh.domain.CkXzdw;
 import org.tdh.domain.TsDm;
 import org.tdh.dto.CxsqDto;
-import org.tdh.service.CkxzService;
+import org.tdh.service.CxsqService;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
 import org.tdh.vo.CkjzVO;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
@@ -40,7 +42,7 @@ public class CxdjController {
     private Logger log = LoggerFactory.getLogger(CxdjController.class);
 
     @Autowired
-    private CkxzService ckxzService;
+    private CxsqService cxsqService;
 
 
     /**
@@ -69,17 +71,17 @@ public class CxdjController {
      * @param func 只能是view和edit
      * @return ModelAndView
      */
-    @RequestMapping("/viewXzInfo.do")
-    public ModelAndView viewXzInfo(String djpc, String func) {
+    @RequestMapping("/viewSqInfo.do")
+    public ModelAndView viewSqInfo(String djpc, String func) {
         ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
         modelAndView.addObject("func", func);
         modelAndView.addObject("djpc", djpc);
 
-        List<String> xzdwdms = ckxzService.getXzdwdm(djpc);
-        String xzsm = ckxzService.getXzsm(djpc);
+        List<String> xzdwdms = cxsqService.getXzdwdm(djpc);
+        String xzsm = cxsqService.getXzsm(djpc);
 
         try {
-            List<CkJz> ckjzs = ckxzService.getCkJz(djpc);
+            List<CkJz> ckjzs = cxsqService.getCkJz(djpc);
             String ckjzsJson = new ObjectMapper().writeValueAsString(ckjzs).replaceAll("\"", "&quot;");
             modelAndView.addObject("ckjzs", ckjzsJson);
         } catch (JsonProcessingException e) {
@@ -114,7 +116,7 @@ public class CxdjController {
             ckdx.setCklsh(cklsh);
             ckCkdxList.add(ckdx);
         } else {
-            ckCkdxList = ckxzService.viewCkdxInfo(djpc);
+            ckCkdxList = cxsqService.viewCkdxInfo(djpc);
         }
 
         modelAndView.addObject("ckCkdxList", ckCkdxList);
@@ -142,7 +144,7 @@ public class CxdjController {
      * 保存查控申请
      *
      * @param cxsqDto 查控申请入参对象
-     * @return 成功返回ResponseVO.success,否则返回ResponseVO.fail
+     * @return 成功返回ResponseVO.success, 否则返回ResponseVO.fail
      */
     @RequestMapping("saveCksq.do")
     @ResponseBody
@@ -153,29 +155,32 @@ public class CxdjController {
             xzdwmc = xzdwmc.substring(0, xzdwmc.length() - 1);
             cxsqDto.setXzdwdm(xzdwmc);
 
-            String fileDestPath = request.getSession().getServletContext().getRealPath("fileDestPath");
-            File fileDir = new File(fileDestPath);
+            Optional files = Optional.ofNullable(cxsqDto.getFiles());
+            if (files.isPresent()) {
+                String fileDestPath = request.getSession().getServletContext().getRealPath("fileDestPath");
+                fileDestPath = fileDestPath + File.separator + getFormattedDate("yyyyMMdd");
+                File fileDir = new File(fileDestPath);
 
-            if (!fileDir.exists()) {
-                fileDir.mkdir();
+                if (!fileDir.exists()) {
+                    fileDir.mkdir();
+                }
+                int xh = 0;
+                //将文件从临时文件复制到最终文件
+                for (CkJz file : cxsqDto.getFiles()) {
+                    String filePath = fileDestPath + File.separator + getUUID() + "." + file.getWjlx();
+
+                    //将文件复制到最终地址
+                    copyFileUsingFileChannels(new File(file.getPath()), new File(filePath));
+
+                    //更新文件的最终地址
+                    file.setPath(filePath);
+                    file.setXh(xh++);
+                    file.setDjpc(cxsqDto.getDjpc());
+                    file.setLastupdate(new Date());
+                }
             }
 
-            int xh = 0;
-            //将文件从临时文件复制到最终文件
-            for (CkJz file : cxsqDto.getFiles()) {
-                String filePath = fileDestPath + File.separator + getUUID() + "." + file.getWjlx();
-
-                //将文件复制到最终地址
-                copyFileUsingFileChannels(new File(file.getPath()), new File(filePath));
-
-                //更新文件的最终地址
-                file.setPath(filePath);
-                file.setXh(xh++);
-                file.setDjpc(cxsqDto.getDjpc());
-                file.setLastupdate(new Date());
-            }
-
-            boolean isSuccess = ckxzService.insertCksq(cxsqDto);
+            boolean isSuccess = cxsqService.insertCksq(cxsqDto);
 
             if (isSuccess) {
                 return ResResult.success();
@@ -210,8 +215,7 @@ public class CxdjController {
             fileDir.mkdir();
         }
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String date = sdf.format(new Date());
+        String date = getFormattedDate("yyyyMMdd");
 
         //根据日期生成一个文件夹保存临时文件
         String finalPath = tempFilePath + File.separator + date + File.separator + fileId + "." + wjlx;
@@ -240,6 +244,53 @@ public class CxdjController {
         }
 
         return ResResult.successWithData(fileInfo);
+    }
+
+
+    /**
+     * 文件下载
+     *
+     * @param fileName 文件名
+     * @param response
+     */
+    @RequestMapping("/downloadFile.do")
+    public void downloadFile(String fileName, HttpSession session, HttpServletResponse response) {
+        //获取服务器文件夹的地址
+        String fileDestPath = session.getServletContext().getRealPath("fileDestPath");
+        //定位到要下载的文件
+        String finalPath = fileDestPath + File.separator + fileName;
+        String wjlx = fileName.substring(fileName.lastIndexOf("."));
+
+        response.reset();
+        response.setCharacterEncoding("UTF-8");
+        response.setContentType("multipart/form-data");
+        response.setHeader("Content-Disposition", "attachment;fileName=" + getUUID() + "." + wjlx);
+        FileInputStream fileInputStream = null;
+        try {
+            fileInputStream = new FileInputStream(finalPath);
+            //通过response获取ServletOutputStream对象(out)
+            int b = 0;
+            byte[] buffer = new byte[1024];
+            while (b != -1) {
+                b = fileInputStream.read(buffer);
+                if (b != -1) {
+                    response.getOutputStream().write(buffer, 0, b);//4.写到输出流(out)中
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fileInputStream != null) {
+                    fileInputStream.close();
+                }
+                response.getOutputStream().flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
@@ -319,5 +370,16 @@ public class CxdjController {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 获取一个日期字符串
+     *
+     * @param pattern 格式化
+     * @return 时间字符串
+     */
+    private String getFormattedDate(String pattern) {
+        SimpleDateFormat smf = new SimpleDateFormat(pattern);
+        return smf.format(new Date());
     }
 }

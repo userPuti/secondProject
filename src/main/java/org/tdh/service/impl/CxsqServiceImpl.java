@@ -18,7 +18,7 @@ import org.tdh.dto.HomePageDto;
 import org.tdh.mapper.CkCkdxMapper;
 import org.tdh.mapper.CkCkxzMapper;
 import org.tdh.mapper.CkJzMapper;
-import org.tdh.service.CkxzService;
+import org.tdh.service.CxsqService;
 
 import java.util.*;
 
@@ -27,8 +27,8 @@ import java.util.*;
  * @date 2022/5/24 17:34
  */
 @Service
-public class CkxzServiceImpl implements CkxzService {
-    private Logger log = LoggerFactory.getLogger(CkxzServiceImpl.class);
+public class CxsqServiceImpl implements CxsqService {
+    private Logger log = LoggerFactory.getLogger(CxsqServiceImpl.class);
 
     @Autowired
     private CkCkdxMapper ckdxMapper;

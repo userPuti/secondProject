@@ -11,7 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tdh.cache.TsDmCache;
 import org.tdh.domain.TsDm;
 import org.tdh.dto.HomePageDto;
-import org.tdh.service.CkxzService;
+import org.tdh.service.CxsqService;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
 
@@ -27,7 +27,7 @@ public class MainPageController {
     private Logger log = LoggerFactory.getLogger(MainPageController.class);
 
     @Autowired
-    private CkxzService ckxzService;
+    private CxsqService cxsqService;
 
     /**
      * 加载查控协执信息
@@ -38,7 +38,7 @@ public class MainPageController {
     @ResponseBody
     public String listWdcx(HomePageDto homePageDto, HttpServletRequest request) {
         log.debug("加载查控协执表格");
-        String ckxzXml = ckxzService.showCksqInfo(homePageDto);
+        String ckxzXml = cxsqService.showCksqInfo(homePageDto);
         if (ckxzXml != null) {
             log.debug("表格加载完毕,{}", ckxzXml);
             return ckxzXml;
@@ -87,7 +87,7 @@ public class MainPageController {
         log.debug("正在批量删除表单号码为 {} 的信息",bdhms);
         String[] idArray = bdhms.trim().split(",");
         int total = idArray.length;
-        int succCount = ckxzService.batchDel(idArray);
+        int succCount = cxsqService.batchDel(idArray);
         int fail = total - succCount;
         if (succCount > 0) {
             log.debug("删除成功，并向后端返回成功信息！");

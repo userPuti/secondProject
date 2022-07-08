@@ -11,7 +11,7 @@ import java.util.List;
  * @author Puti
  * @date 2022/5/24 17:34
  */
-public interface CkxzService {
+public interface CxsqService {
     /**
      * ckckxz表中的所有信息
      *

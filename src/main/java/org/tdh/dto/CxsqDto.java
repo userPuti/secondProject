@@ -22,13 +22,19 @@ public class CxsqDto {
     private String xzsm;
     //登记批次
     private String djpc;
-    /**
-     * key -- 文件的uuid
-     * value -- 查控卷宗的临时对象
-     */
-//    private Map<String, CkJz> fileInfo;
-
+    //文件信息
     private List<CkJz> files;
+
+    public CxsqDto() {
+    }
+
+    public CxsqDto(Map<String, CkCkdx> ckCkdxMap, String xzdwdm, String xzsm, String djpc, List<CkJz> files) {
+        this.ckCkdxMap = ckCkdxMap;
+        this.xzdwdm = xzdwdm;
+        this.xzsm = xzsm;
+        this.djpc = djpc;
+        this.files = files;
+    }
 
     public List<CkJz> getFiles() {
         return files;

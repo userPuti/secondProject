@@ -80,7 +80,7 @@
                 </tr>
                 <tr>
                     <td class="tdCont" colspan="2">
-                        <label><input id="selAll" class="inputCheck" type="checkbox"/>所有单位(选择下列单位发起财产查询通知,
+                        <label><input id="selAllChk" class="inputCheck" type="checkbox" onchange="selectAllXzdw()"/>所有单位(选择下列单位发起财产查询通知,
                             至少选择一个协助执行单位)</label>
                     </td>
                 </tr>

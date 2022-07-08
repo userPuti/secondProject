@@ -1,5 +1,5 @@
 let countCkdx = 0;
-
+let isUploadedFile = false;
 $(
     function () {
         let func = $("#func").val();
@@ -17,8 +17,8 @@ $(
                 getCkdxTab("");
             });
 
-            cxsqdjSave();
             uploadFile();
+            cxsqdjSave();
         }
     }
 )
@@ -26,44 +26,34 @@ $(
 //查看信息
 function doView(type) {
     let djpc = $("#djpc").val();
-    console.info("djpc", djpc);
     getCkdxTab(djpc);
 
     let xzdwdms = $("#xzdwdms").val();
-    console.info(xzdwdms);
     xzdwdms = xzdwdms.substr(1, xzdwdms.length - 2).split(", ");
-    console.info("xzdwdms", xzdwdms);
 
     for (let i in xzdwdms) {
-        console.info(xzdwdms[i]);
         setCheckVal("#xzdwdm_" + xzdwdms[i], true);
     }
 
     let xzsm = $("#xzsm").val();
-    console.info("xzsm", xzsm);
     $("#xzsmText").val(xzsm);
 
     let ckjzs = $("#ckjzs").val();
-    console.info("ckjzs", ckjzs);
     ckjzs = JSON.parse(ckjzs);
-    console.info(ckjzs);
 
-
-    //todo 这里会丢失临时文件的id，保存的时候需要根据临时文件的id复制文件，所以会在更新时报错
     for (let index in ckjzs) {
-        console.info(ckjzs[index].wjmc + "." + ckjzs[index].wjlx);
+        let path = ckjzs[index].path;
+        let fileName = path.substr(path.lastIndexOf("\\") + 1);
+        console.info("fileName", fileName);
+
         let fileInfo = '';
         let jzId = ckjzs[index].djpc + "_" + ckjzs[index].xh;
-        fileInfo += '<li id="' + jzId + '">' +
-            '<label><input class="filechkbox inputCheck" type="checkbox" value="' + jzId + '">' + ckjzs[index].wjmc + "." + ckjzs[index].wjlx + '</label>' +
-            '<a class="tdh_icon icon_download form_upload_close" onclick=""></a>' +
-            '<input type="hidden" name="fileInfo[' + jzId + '].wjmc" value="' + ckjzs[index].wjmc + '"/>' +
-            '<input type="hidden" name="fileInfo[' + jzId + '].wjlx" value="' + ckjzs[index].wjlx + '"/>' +
-            '<input type="hidden" name="fileInfo[' + jzId + '].path" value="' + ckjzs[index].path + '"/>' +
-            '</li>';
+        fileInfo += '<li id="' + jzId + '">' + ckjzs[index].wjmc + "." + ckjzs[index].wjlx +
+            '<a class="tdh_icon icon_download form_upload_close" onclick="downloadFile(\'' + fileName + '\')"></a>' +
+            '<input type="hidden" value="' + ckjzs[index].xh + '"/>'
+        '</li>';
         $('#fileList').append(fileInfo);
     }
-    checkboxInit("#fileList .filechkbox");
 
     if (type === "view") {
         editDisable();
@@ -158,9 +148,6 @@ function cxsqdjSave() {
         }
 
         let params = serialize("#cxsq");
-
-        console.info(params);
-
         let chkStr = "";
         $(".xzdwmc:checked").each(function () {
             chkStr += $(this).val() + ",";
@@ -209,6 +196,7 @@ function getCkdxTab(djpc) {
     $.ajax({
         url: CONTEXT_PATH + "webapp/wdcx/getCxdxTab.do?djpc=" + djpc,
         type: "post",
+        async: false,
         dataType: "html",
         success: function (data) {
             $("#cxdxTab").append(data);
@@ -262,7 +250,6 @@ function validateForm() {
     return zt;
 }
 
-
 //复选框全选和取消全选
 function selectAllXzdw() {
     $("#selAll").on("change", function () {
@@ -282,12 +269,14 @@ function selectAllXzdw() {
 //如果协执单位复选框全部被手动选中，所有单位的复选框会自动勾选
 function allchk() {
     var chknum = $(".xzdw").size();//选项总个数
+    console.info("chknum",chknum);
     var chk = 0;
     $(".xzdw").each(function () {
         if ($(this).attr("checked")) {
             chk++;
         }
-    });
+    })
+    console.info("chk",chk);
     if (chknum == chk) {//全选
         setCheckVal("#selAll", true);
     } else {//不全选
@@ -297,7 +286,6 @@ function allchk() {
 
 
 function chkXzdw(obj, index) {
-    console.info(index);
     if (obj.checked) {
         setCheckVal(".xzdw_" + index, true);
     } else {
@@ -320,10 +308,10 @@ function allXzdwchk(index) {
     }
 }
 
-let i = 0;
 
 //上传文件
 function uploadFile() {
+    let i = 0;
     let uploader = new plupload.Uploader({
         browse_button: "fileUpload",
         url: CONTEXT_PATH + "webapp/wdcx/upload.do",
@@ -352,11 +340,8 @@ function uploadFile() {
             },
 
             FileUploaded: function (uploader, file, result) {
-                console.info(result.response);
                 let res = JSON.parse(result.response);
                 let fileInfo = JSON.parse(res.data)[0];
-                console.info(fileInfo);
-                console.info(fileInfo.wjlx);
 
                 let fileData = '';
 
@@ -366,10 +351,9 @@ function uploadFile() {
                 }
 
                 let jzID = fileInfo.tempUuid;
-                ;
 
                 fileData += '<li id="' + jzID + '">' +
-                    '<label><input class="filechkbox inputCheck" type="checkbox" value="' + jzID + ' title="' + fileName + '">' + fileName + '</label>' +
+                    '<label><input class="filechkbox inputCheck" type="checkbox" value="' + jzID + '" title="' + fileName + '">' + fileName + '</label>' +
                     '<input type="hidden" name="files[' + i + '].wjmc" value="' + fileInfo.wjmc + '"/>' +
                     '<input type="hidden" name="files[' + i + '].wjlx" value="' + fileInfo.wjlx + '"/>' +
                     '<input type="hidden" name="files[' + i + '].path" value="' + fileInfo.path + '"/>' +
@@ -377,6 +361,7 @@ function uploadFile() {
                 i++;
                 $('#fileList').append(fileData);
                 checkboxInit("#fileList .filechkbox");
+                isUploadedFile = true;
             }
         }
     });
@@ -391,4 +376,9 @@ function fileDel() {
         chkStr += $(this).val();
         $('#' + chkStr).remove();
     })
+}
+
+function downloadFile(fileName) {
+    console.info("fileName", fileName);
+    window.location.href = CONTEXT_PATH + "webapp/wdcx/downloadFile.do?fileName=" + fileName;
 }
