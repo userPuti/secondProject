@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.*;
+import java.net.URLDecoder;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -250,31 +251,38 @@ public class CxdjController {
     /**
      * 文件下载
      *
-     * @param fileName 文件名
+     * @param path     文件名
      * @param response
      */
     @RequestMapping("/downloadFile.do")
-    public void downloadFile(String fileName, HttpSession session, HttpServletResponse response) {
+    public void downloadFile(String path, HttpSession session, HttpServletResponse response) {
+        log.info("正在下载文件...");
+        try {
+            path = URLDecoder.decode(path, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("文件地址解码错误！", e);
+        }
         //获取服务器文件夹的地址
         String fileDestPath = session.getServletContext().getRealPath("fileDestPath");
         //定位到要下载的文件
-        String finalPath = fileDestPath + File.separator + fileName;
-        String wjlx = fileName.substring(fileName.lastIndexOf("."));
+//        //todo 注意这里的finalpath不对，这里的finalpath需要加上一个日期的文件夹
+//        String finalPath = fileDestPath + File.separator + fileName;
+        String wjlx = path.substring(path.lastIndexOf("."));
 
         response.reset();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("multipart/form-data");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + getUUID() + "." + wjlx);
+        response.setHeader("Content-Disposition", "attachment;fileName=" + getUUID() + wjlx);
         FileInputStream fileInputStream = null;
         try {
-            fileInputStream = new FileInputStream(finalPath);
+            fileInputStream = new FileInputStream(path);
             //通过response获取ServletOutputStream对象(out)
             int b = 0;
             byte[] buffer = new byte[1024];
             while (b != -1) {
                 b = fileInputStream.read(buffer);
                 if (b != -1) {
-                    response.getOutputStream().write(buffer, 0, b);//4.写到输出流(out)中
+                    response.getOutputStream().write(buffer, 0, b);//写到输出流(out)中
                 }
             }
         } catch (FileNotFoundException e) {

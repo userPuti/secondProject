@@ -42,6 +42,7 @@ function doView(type) {
 
     let ckjzs = $("#ckjzs").val();
     ckjzs = JSON.parse(ckjzs);
+    console.info(ckjzs);
 
     for (let index in ckjzs) {
         let path = ckjzs[index].path;
@@ -51,7 +52,7 @@ function doView(type) {
         let fileInfo = '';
         let jzId = ckjzs[index].djpc + "_" + ckjzs[index].xh;
         fileInfo += '<li id="' + jzId + '">' + ckjzs[index].wjmc + "." + ckjzs[index].wjlx +
-            '<a class="tdh_icon icon_download form_upload_close" onclick="downloadFile(\'' + fileName + '\')"></a>' +
+            '<a class="tdh_icon icon_download form_upload_close" onclick="downloadFile(\'' + path + '\')"></a>' +
             '<input type="hidden" name="files[' + fileIndex + '].wjmc" value="' + ckjzs[index].wjmc + '"/>' +
             '<input type="hidden" name="files[' + fileIndex + '].wjlx" value="' + ckjzs[index].wjlx + '"/>' +
             '<input type="hidden" name="files[' + fileIndex + '].path" value="' + ckjzs[index].path + '"/>' +
@@ -385,7 +386,7 @@ function fileDel() {
     })
 }
 
-function downloadFile(fileName) {
-    console.info("fileName", fileName);
-    window.location.href = CONTEXT_PATH + "webapp/wdcx/downloadFile.do?fileName=" + fileName;
+function downloadFile(path) {
+    console.info("path", path);
+    window.location.href = CONTEXT_PATH + "webapp/wdcx/downloadFile.do?path=" + encodeURIComponent(path);
 }

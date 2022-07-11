@@ -20,6 +20,8 @@ import org.tdh.mapper.CkCkxzMapper;
 import org.tdh.mapper.CkJzMapper;
 import org.tdh.service.CxsqService;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -181,6 +183,14 @@ public class CxsqServiceImpl implements CxsqService {
     public List<CkJz> getCkJz(String djpc) {
         if (djpc != null && !"".equals(djpc)) {
             List<CkJz> ckJzs = ckJzMapper.selectAllByDjpc(djpc);
+
+            for (CkJz ckJz : ckJzs) {
+                try {
+                    ckJz.setPath(URLEncoder.encode(ckJz.getPath(), "UTF-8"));
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
 
             if (ckJzs != null) {
                 return ckJzs;
