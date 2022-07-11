@@ -1,5 +1,7 @@
 let countCkdx = 0;
 let isUploadedFile = false;
+let fileIndex = 0;
+
 $(
     function () {
         let func = $("#func").val();
@@ -41,7 +43,6 @@ function doView(type) {
     let ckjzs = $("#ckjzs").val();
     ckjzs = JSON.parse(ckjzs);
 
-    let i = 0;
     for (let index in ckjzs) {
         let path = ckjzs[index].path;
         let fileName = path.substr(path.lastIndexOf("\\") + 1);
@@ -51,12 +52,12 @@ function doView(type) {
         let jzId = ckjzs[index].djpc + "_" + ckjzs[index].xh;
         fileInfo += '<li id="' + jzId + '">' + ckjzs[index].wjmc + "." + ckjzs[index].wjlx +
             '<a class="tdh_icon icon_download form_upload_close" onclick="downloadFile(\'' + fileName + '\')"></a>' +
-            '<input type="hidden" name="files[' + i + '].wjmc" value="' + ckjzs[index].wjmc + '"/>' +
-            '<input type="hidden" name="files[' + i + '].wjlx" value="' + ckjzs[index].wjlx + '"/>' +
-            '<input type="hidden" name="files[' + i + '].path" value="' + ckjzs[index].path + '"/>' +
-            '<input type="hidden" name="files[' + i + '].xh" value="' + ckjzs[index].xh + '"/>'
+            '<input type="hidden" name="files[' + fileIndex + '].wjmc" value="' + ckjzs[index].wjmc + '"/>' +
+            '<input type="hidden" name="files[' + fileIndex + '].wjlx" value="' + ckjzs[index].wjlx + '"/>' +
+            '<input type="hidden" name="files[' + fileIndex + '].path" value="' + ckjzs[index].path + '"/>' +
+            '<input type="hidden" name="files[' + fileIndex + '].xh" value="' + ckjzs[index].xh + '"/>'
         '</li>';
-        i++;
+        fileIndex++;
         $('#fileList').append(fileInfo);
     }
 
@@ -359,12 +360,12 @@ function uploadFile() {
 
                 fileData += '<li id="' + jzID + '">' +
                     '<label><input class="filechkbox inputCheck" type="checkbox" value="' + jzID + '" title="' + fileName + '">' + fileName + '</label>' +
-                    '<input type="hidden" name="files[' + i + '].wjmc" value="' + fileInfo.wjmc + '"/>' +
-                    '<input type="hidden" name="files[' + i + '].wjlx" value="' + fileInfo.wjlx + '"/>' +
-                    '<input type="hidden" name="files[' + i + '].path" value="' + fileInfo.path + '"/>' +
-                    '<input type="hidden" name="files[' + i + '].xh" value=""/>' +
+                    '<input type="hidden" name="files[' + fileIndex + '].wjmc" value="' + fileInfo.wjmc + '"/>' +
+                    '<input type="hidden" name="files[' + fileIndex + '].wjlx" value="' + fileInfo.wjlx + '"/>' +
+                    '<input type="hidden" name="files[' + fileIndex + '].path" value="' + fileInfo.path + '"/>' +
+                    '<input type="hidden" name="files[' + fileIndex + '].xh" value=""/>' +
                     '</li>';
-                i++;
+                fileIndex++;
                 $('#fileList').append(fileData);
                 checkboxInit("#fileList .filechkbox");
                 isUploadedFile = true;

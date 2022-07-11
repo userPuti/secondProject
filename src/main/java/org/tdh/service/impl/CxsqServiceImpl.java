@@ -326,9 +326,7 @@ public class CxsqServiceImpl implements CxsqService {
      */
     private boolean insertCkjz(List<CkJz> ckjzs, String djpc) {
         if (ckjzs != null) {
-            int xh = 1;
             for (CkJz ckjz : ckjzs) {
-                ckjz.setXh(xh++);
                 ckjz.setLastupdate(new Date());
                 if (1 != ckJzMapper.insertSelective(ckjz)) {
                     return false;

@@ -140,11 +140,12 @@ public class CxdjController {
             Optional fileOption = Optional.ofNullable(cxsqDto.getFiles());
             if (fileOption.isPresent()) {
                 List<CkJz> files = cxsqDto.getFiles();
-                for (CkJz file : files) {
-                    Optional<Integer> xhOption = Optional.ofNullable(file.getXh());
+
+                for (int i = files.size() - 1; i >= 0; i--) {
+                    Optional<Integer> xhOption = Optional.ofNullable(files.get(i).getXh());
                     //有序号，表明在数据库中已经存在该文件信息了，将它从List中删除
                     if (xhOption.isPresent()) {
-                        files.remove(file);
+                        files.remove(i);
                     }
                 }
                 cxsqDto.setFiles(files);
@@ -355,7 +356,7 @@ public class CxdjController {
                 fileDir.mkdir();
             }
 
-            int xh = cxsqService.getMaxXh(cxsqDto.getDjpc());
+            int xh = cxsqService.getMaxXh(cxsqDto.getDjpc()) + 1;
 
             //将文件从临时文件复制到最终文件
             for (CkJz file : cxsqDto.getFiles()) {
