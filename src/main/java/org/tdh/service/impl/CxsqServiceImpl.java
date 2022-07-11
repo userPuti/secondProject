@@ -202,35 +202,52 @@ public class CxsqServiceImpl implements CxsqService {
     public boolean updateSqInfo(CxsqDto cxsqDto) {
         if (cxsqDto != null) {
             String djpc = cxsqDto.getDjpc();
-            if (deleteCkxzInfo(djpc)) {
-                List<CkCkdx> ckdxes = (List<CkCkdx>) cxsqDto.getCkCkdxMap().values();
 
-                for (CkCkdx ckdx : ckdxes) {
-                    if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
-                        return false;
-                    }
-                }
+            List<CkCkdx> ckdxes = new ArrayList<>();
+            for (Map.Entry<String, CkCkdx> ckdxEntry : cxsqDto.getCkCkdxMap().entrySet()) {
+                ckdxes.add(ckdxEntry.getValue());
+            }
 
-                String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
-
-                CkCkxz ckxz = new CkCkxz();
-                ckxz.setDjpc(djpc);
-
-
-                for (String xzdwdm : xzdwdms) {
-                    String bdhm = getUUID();
-                    ckxz.setBdhm(bdhm);
-                    ckxz.setXzdwdm(xzdwdm);
-                    ckxz.setXzdwfl(CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm).getXzdwfl());
-                    ckxz.setDjpc(djpc);
-                    int insertCount = ckxzMapper.insertSelective(ckxz);
-                    if (1 != insertCount) {
-                        return false;
-                    }
+            for (CkCkdx ckdx : ckdxes) {
+                if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
+                    return false;
                 }
             }
+
+            if (deleteCkxzInfo(djpc)) {
+                String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
+
+                if (!insertCkxz(djpc, ckdxes, xzdwdms, cxsqDto.getXzsm())) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
+            if (!insertCkjz(cxsqDto.getFiles(), djpc)) {
+                return false;
+            }
         }
-        return false;
+        return true;
+    }
+
+    /**
+     * 根据登记批次查询当前批次最大的序号
+     *
+     * @param djpc 登记批次
+     * @return 当前批次的最大序号值
+     */
+    @Override
+    public int getMaxXh(String djpc) {
+        if (null != djpc && !"".equals(djpc)) {
+            Integer xh = ckJzMapper.selectMaxXhByDjpc(djpc);
+            if (xh != null) {
+                return xh;
+            } else {
+                return 0;
+            }
+        }
+        return 0;
     }
 
 

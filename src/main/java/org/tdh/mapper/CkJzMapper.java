@@ -25,6 +25,13 @@ public interface CkJzMapper {
      */
     List<CkJz> selectAllByDjpc(String djpc);
 
+    /**
+     * 根据登记批次去查询当前批次的最大序号
+     *
+     * @param djpc 登记批次
+     * @return 当前登记批次的最大值
+     */
+    int selectMaxXhByDjpc(String djpc);
 }
 
 

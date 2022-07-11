@@ -76,4 +76,12 @@ public interface CxsqService {
      * @return 更新成功返回true，否则返回false
      */
     boolean updateSqInfo(CxsqDto cxsqDto);
+
+    /**
+     * 根据登记批次查询当前批次最大的序号
+     *
+     * @param djpc 登记批次
+     * @return 当前批次的最大序号值
+     */
+    int getMaxXh(String djpc);
 }

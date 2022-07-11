@@ -62,11 +62,18 @@
         </trim>
     </insert>
     <delete id="deleteByDjpc">
-        delete from ck_jz where djpc=#{djpc}
+        delete
+        from ck_jz
+        where djpc = #{djpc}
     </delete>
     <select id="selectAllByDjpc" resultType="org.tdh.domain.CkJz">
         select
         <include refid="Base_Column_List"/>
         from ck_jz where djpc=#{djpc}
+    </select>
+    <select id="selectMaxXhByDjpc" resultType="java.lang.Integer">
+        select IFNULL(MAX(XH), 0) as XH
+        from ck_jz
+        where DJPC = #{djpc};
     </select>
 </mapper>

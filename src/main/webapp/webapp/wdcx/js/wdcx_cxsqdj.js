@@ -41,6 +41,7 @@ function doView(type) {
     let ckjzs = $("#ckjzs").val();
     ckjzs = JSON.parse(ckjzs);
 
+    let i = 0;
     for (let index in ckjzs) {
         let path = ckjzs[index].path;
         let fileName = path.substr(path.lastIndexOf("\\") + 1);
@@ -50,8 +51,12 @@ function doView(type) {
         let jzId = ckjzs[index].djpc + "_" + ckjzs[index].xh;
         fileInfo += '<li id="' + jzId + '">' + ckjzs[index].wjmc + "." + ckjzs[index].wjlx +
             '<a class="tdh_icon icon_download form_upload_close" onclick="downloadFile(\'' + fileName + '\')"></a>' +
-            '<input type="hidden" value="' + ckjzs[index].xh + '"/>'
+            '<input type="hidden" name="files[' + i + '].wjmc" value="' + ckjzs[index].wjmc + '"/>' +
+            '<input type="hidden" name="files[' + i + '].wjlx" value="' + ckjzs[index].wjlx + '"/>' +
+            '<input type="hidden" name="files[' + i + '].path" value="' + ckjzs[index].path + '"/>' +
+            '<input type="hidden" name="files[' + i + '].xh" value="' + ckjzs[index].xh + '"/>'
         '</li>';
+        i++;
         $('#fileList').append(fileInfo);
     }
 
@@ -269,14 +274,14 @@ function selectAllXzdw() {
 //如果协执单位复选框全部被手动选中，所有单位的复选框会自动勾选
 function allchk() {
     var chknum = $(".xzdw").size();//选项总个数
-    console.info("chknum",chknum);
+    console.info("chknum", chknum);
     var chk = 0;
     $(".xzdw").each(function () {
         if ($(this).attr("checked")) {
             chk++;
         }
     })
-    console.info("chk",chk);
+    console.info("chk", chk);
     if (chknum == chk) {//全选
         setCheckVal("#selAll", true);
     } else {//不全选
@@ -357,6 +362,7 @@ function uploadFile() {
                     '<input type="hidden" name="files[' + i + '].wjmc" value="' + fileInfo.wjmc + '"/>' +
                     '<input type="hidden" name="files[' + i + '].wjlx" value="' + fileInfo.wjlx + '"/>' +
                     '<input type="hidden" name="files[' + i + '].path" value="' + fileInfo.path + '"/>' +
+                    '<input type="hidden" name="files[' + i + '].xh" value=""/>' +
                     '</li>';
                 i++;
                 $('#fileList').append(fileData);

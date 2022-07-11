@@ -135,6 +135,28 @@ public class CxdjController {
             //去除多余的一个逗号
             xzdwmc = xzdwmc.substring(0, xzdwmc.length() - 1);
             cxsqDto.setXzdwdm(xzdwmc);
+
+
+            Optional fileOption = Optional.ofNullable(cxsqDto.getFiles());
+            if (fileOption.isPresent()) {
+                List<CkJz> files = cxsqDto.getFiles();
+                for (CkJz file : files) {
+                    Optional<Integer> xhOption = Optional.ofNullable(file.getXh());
+                    //有序号，表明在数据库中已经存在该文件信息了，将它从List中删除
+                    if (xhOption.isPresent()) {
+                        files.remove(file);
+                    }
+                }
+                cxsqDto.setFiles(files);
+            }
+
+            copyFileToFinalPath(cxsqDto, request);
+
+            if (cxsqService.updateSqInfo(cxsqDto)) {
+                return ResResult.success();
+            } else {
+                return ResResult.fail();
+            }
         }
         return ResResult.fail();
     }
@@ -155,30 +177,7 @@ public class CxdjController {
             xzdwmc = xzdwmc.substring(0, xzdwmc.length() - 1);
             cxsqDto.setXzdwdm(xzdwmc);
 
-            Optional files = Optional.ofNullable(cxsqDto.getFiles());
-            if (files.isPresent()) {
-                String fileDestPath = request.getSession().getServletContext().getRealPath("fileDestPath");
-                fileDestPath = fileDestPath + File.separator + getFormattedDate("yyyyMMdd");
-                File fileDir = new File(fileDestPath);
-
-                if (!fileDir.exists()) {
-                    fileDir.mkdir();
-                }
-                int xh = 0;
-                //将文件从临时文件复制到最终文件
-                for (CkJz file : cxsqDto.getFiles()) {
-                    String filePath = fileDestPath + File.separator + getUUID() + "." + file.getWjlx();
-
-                    //将文件复制到最终地址
-                    copyFileUsingFileChannels(new File(file.getPath()), new File(filePath));
-
-                    //更新文件的最终地址
-                    file.setPath(filePath);
-                    file.setXh(xh++);
-                    file.setDjpc(cxsqDto.getDjpc());
-                    file.setLastupdate(new Date());
-                }
-            }
+            copyFileToFinalPath(cxsqDto, request);
 
             boolean isSuccess = cxsqService.insertCksq(cxsqDto);
 
@@ -338,6 +337,41 @@ public class CxdjController {
      */
     private String getUUID() {
         return UUID.randomUUID().toString().replaceAll("-", "");
+    }
+
+
+    /**
+     * @param cxsqDto
+     * @param request
+     */
+    private void copyFileToFinalPath(CxsqDto cxsqDto, HttpServletRequest request) {
+        Optional files = Optional.ofNullable(cxsqDto.getFiles());
+        if (files.isPresent()) {
+            String fileDestPath = request.getSession().getServletContext().getRealPath("fileDestPath");
+            fileDestPath = fileDestPath + File.separator + getFormattedDate("yyyyMMdd");
+            File fileDir = new File(fileDestPath);
+
+            if (!fileDir.exists()) {
+                fileDir.mkdir();
+            }
+
+            int xh = cxsqService.getMaxXh(cxsqDto.getDjpc());
+
+            //将文件从临时文件复制到最终文件
+            for (CkJz file : cxsqDto.getFiles()) {
+                String filePath = fileDestPath + File.separator + getUUID() + "." + file.getWjlx();
+
+                //将文件复制到最终地址
+                copyFileUsingFileChannels(new File(file.getPath()), new File(filePath));
+
+                //更新文件的最终地址
+                file.setPath(filePath);
+                file.setXh(xh++);
+                file.setDjpc(cxsqDto.getDjpc());
+                file.setLastupdate(new Date());
+            }
+        }
+
     }
 
 
