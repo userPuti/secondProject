@@ -66,6 +66,14 @@
         from ck_jz
         where djpc = #{djpc}
     </delete>
+
+    <delete id="deleteByXhAndDjpc">
+        delete from ck_jz where DJPC= #{djpc} and XH in
+        <foreach collection="xhs" item="xh" separator="," open="(" close=")">
+            #{xh}
+        </foreach>
+    </delete>
+
     <select id="selectAllByDjpc" resultType="org.tdh.domain.CkJz">
         select
         <include refid="Base_Column_List"/>
@@ -75,5 +83,10 @@
         select IFNULL(MAX(XH), 0) as XH
         from ck_jz
         where DJPC = #{djpc};
+    </select>
+    <select id="selectXhByDjpc" resultType="java.lang.Integer">
+        select XH
+        from ck_jz
+        where DJPC = #{djpc}
     </select>
 </mapper>

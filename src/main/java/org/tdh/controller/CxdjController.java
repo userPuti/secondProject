@@ -130,14 +130,16 @@ public class CxdjController {
      */
     @RequestMapping("updateCxsqdj.do")
     @ResponseBody
-    public ResponseVO updateCxsqdj(CxsqDto cxsqDto, HttpServletRequest request) {
+    public ResponseVO updateCxsqdj(CxsqDto cxsqDto, String delFileXh, HttpServletRequest request) {
         if (cxsqDto != null && !"".equals(cxsqDto)) {
             String xzdwmc = cxsqDto.getXzdwdm();
             //去除多余的一个逗号
             xzdwmc = xzdwmc.substring(0, xzdwmc.length() - 1);
             cxsqDto.setXzdwdm(xzdwmc);
 
+            List<CkJz> updateFiles = new ArrayList<>();
 
+            //不上传文件的时候，getFiles()可能会报空指针异常
             Optional fileOption = Optional.ofNullable(cxsqDto.getFiles());
             if (fileOption.isPresent()) {
                 List<CkJz> files = cxsqDto.getFiles();
@@ -145,7 +147,8 @@ public class CxdjController {
                 for (int i = files.size() - 1; i >= 0; i--) {
                     Optional<Integer> xhOption = Optional.ofNullable(files.get(i).getXh());
                     //有序号，表明在数据库中已经存在该文件信息了，将它从List中删除
-                    if (xhOption.isPresent()) {
+                    if (!xhOption.isPresent()) {
+                        //如果序号为null，则表明了该文件已经被删除了
                         files.remove(i);
                     }
                 }
@@ -154,7 +157,18 @@ public class CxdjController {
 
             copyFileToFinalPath(cxsqDto, request);
 
-            if (cxsqService.updateSqInfo(cxsqDto)) {
+
+            List<Integer> xhs = new ArrayList<>();
+            if (delFileXh.length() > 0) {
+                delFileXh = delFileXh.substring(0, delFileXh.length() - 1);
+                String[] tempXh = delFileXh.split(",");
+                for (String xh : tempXh) {
+                    xh = xh.substring(3);
+                    xhs.add(Integer.parseInt(xh));
+                }
+            }
+
+            if (cxsqService.updateSqInfo(cxsqDto, xhs)) {
                 return ResResult.success();
             } else {
                 return ResResult.fail();
@@ -236,7 +250,7 @@ public class CxdjController {
             tempJz.setWjlx(wjlx);
             tempJz.setWjmc(wjmc);
             tempJz.setPath(finalPath);
-            tempJz.setTmepUuid(fileId);
+            tempJz.setTempUuid(fileId);
             ckJzVOs.add(tempJz);
 
             fileInfo = new ObjectMapper().writeValueAsString(ckJzVOs);
@@ -263,10 +277,6 @@ public class CxdjController {
             log.error("文件地址解码错误！", e);
         }
         //获取服务器文件夹的地址
-        String fileDestPath = session.getServletContext().getRealPath("fileDestPath");
-        //定位到要下载的文件
-//        //todo 注意这里的finalpath不对，这里的finalpath需要加上一个日期的文件夹
-//        String finalPath = fileDestPath + File.separator + fileName;
         String wjlx = path.substring(path.lastIndexOf("."));
 
         response.reset();
@@ -382,7 +392,6 @@ public class CxdjController {
         }
 
     }
-
 
     /**
      * 文件复制

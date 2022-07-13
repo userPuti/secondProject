@@ -209,7 +209,8 @@ public class CxsqServiceImpl implements CxsqService {
      * @return 更新成功返回true，否则返回false
      */
     @Override
-    public boolean updateSqInfo(CxsqDto cxsqDto) {
+    @Transactional
+    public boolean updateSqInfo(CxsqDto cxsqDto, List<Integer> xhs) {
         if (cxsqDto != null) {
             String djpc = cxsqDto.getDjpc();
 
@@ -220,7 +221,7 @@ public class CxsqServiceImpl implements CxsqService {
 
             for (CkCkdx ckdx : ckdxes) {
                 if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
-                    return false;
+                    throw new RuntimeException();
                 }
             }
 
@@ -228,15 +229,23 @@ public class CxsqServiceImpl implements CxsqService {
                 String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
 
                 if (!insertCkxz(djpc, ckdxes, xzdwdms, cxsqDto.getXzsm())) {
-                    return false;
+                    throw new RuntimeException();
                 }
             } else {
-                return false;
+                throw new RuntimeException();
             }
 
-            if (!insertCkjz(cxsqDto.getFiles(), djpc)) {
-                return false;
+            if(!(0 == xhs.size())) {
+                if (!deleteFile(djpc, xhs)) {
+                    throw new RuntimeException();
+                }
             }
+
+            List<CkJz> files = cxsqDto.getFiles();
+            if (!insertCkjz(files, djpc)) {
+                throw new RuntimeException();
+            }
+
         }
         return true;
     }
@@ -260,6 +269,27 @@ public class CxsqServiceImpl implements CxsqService {
         return 0;
     }
 
+    /**
+     * 根据登记批次和序号删除文件信息
+     *
+     * @param djpc       登记批次
+     * @param delFileXhs 需要删除的卷宗序号
+     * @return 删除成功返回true，否则返回false
+     */
+    private boolean deleteFile(String djpc, List<Integer> delFileXhs) {
+        if (null != djpc && !"".equals(djpc)) {
+            //没有需要删除的文件，直接返回
+            if (0 == delFileXhs.size()) {
+                return true;
+            }
+
+            if (0 == ckJzMapper.deleteByXhAndDjpc(djpc, delFileXhs)) {
+                throw new RuntimeException();
+            }
+        }
+        return true;
+    }
+
 
     /**
      * 根据登记批次删除所有此登记批次的信息
@@ -267,7 +297,7 @@ public class CxsqServiceImpl implements CxsqService {
      * @param djpc 登记批次
      * @return 是否删除成功
      */
-    public boolean deleteCkxzInfo(String djpc) {
+    private boolean deleteCkxzInfo(String djpc) {
         if (djpc != null && !"".equals(djpc)) {
             int xzdel = ckxzMapper.deleteByDjpc(djpc);
 

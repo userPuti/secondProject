@@ -1,7 +1,5 @@
 package org.tdh.vo;
 
-import java.util.Date;
-
 /**
  * @author Puti
  * @date 2022/7/6 9:45
@@ -35,7 +33,8 @@ public class CkjzVO {
     /**
      * 临时文件标识
      */
-    private String tmepUuid;
+    private String tempUuid;
+
 
     public String getDjpc() {
         return djpc;
@@ -77,11 +76,11 @@ public class CkjzVO {
         this.path = path;
     }
 
-    public String getTmepUuid() {
-        return tmepUuid;
+    public String getTempUuid() {
+        return tempUuid;
     }
 
-    public void setTmepUuid(String tmepUuid) {
-        this.tmepUuid = tmepUuid;
+    public void setTempUuid(String tempUuid) {
+        this.tempUuid = tempUuid;
     }
 }
