@@ -191,6 +191,12 @@
         from ck_ckdx
         where djpc = #{djpc}
     </delete>
+    <delete id="deleteByCklsh">
+        delete from ck_ckdx where CKLSH in
+        <foreach collection="array" item="cklsh" open="(" close=")" separator=",">
+            #{cklsh}
+        </foreach>
+    </delete>
 
     <select id="selectAllByDjpc" resultType="org.tdh.domain.CkCkdx">
         select

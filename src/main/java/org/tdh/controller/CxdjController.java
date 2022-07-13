@@ -14,10 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.tdh.cache.CkxzdwCache;
 import org.tdh.cache.TsBzdmCache;
 import org.tdh.cache.TsDmCache;
-import org.tdh.domain.CkCkdx;
-import org.tdh.domain.CkJz;
-import org.tdh.domain.CkXzdw;
-import org.tdh.domain.TsDm;
+import org.tdh.domain.*;
 import org.tdh.dto.CxsqDto;
 import org.tdh.service.CxsqService;
 import org.tdh.util.response.ResResult;
@@ -54,13 +51,13 @@ public class CxdjController {
      */
     @RequestMapping("/cxsfdj.do")
     public ModelAndView cxsfdj(String func) {
-        log.debug("为跳往查询登记信息页面做准备！");
+        log.info("为跳往查询登记信息页面做准备！");
         ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
         loadChkBox(modelAndView);
         modelAndView.addObject("func", "add");
         String djpc = getUUID();
         modelAndView.addObject("djpc", djpc);
-        log.debug("跳转到查询登记信息页面");
+        log.info("跳转到查询登记信息页面");
         return modelAndView;
     }
 
@@ -74,6 +71,8 @@ public class CxdjController {
      */
     @RequestMapping("/viewSqInfo.do")
     public ModelAndView viewSqInfo(String djpc, String func) {
+        log.info("查看查询登记表!");
+        log.debug("当前查询登记表的批次为：{}", djpc);
         ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
         modelAndView.addObject("func", func);
         modelAndView.addObject("djpc", djpc);
@@ -86,7 +85,7 @@ public class CxdjController {
             String ckjzsJson = new ObjectMapper().writeValueAsString(ckjzs).replaceAll("\"", "&quot;");
             modelAndView.addObject("ckjzs", ckjzsJson);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("查看时json解析出现错误：{}", e);
         }
 
         modelAndView.addObject("xzdwdms", xzdwdms);
@@ -105,6 +104,8 @@ public class CxdjController {
      */
     @RequestMapping("getCxdxTab.do")
     public ModelAndView getCxdxTab(String djpc) {
+        log.info("加载查控对象的表格...,当前批次为：{}", djpc);
+
         ModelAndView modelAndView = new ModelAndView("commonTable");
         loadSel(modelAndView);
         List<CkCkdx> ckCkdxList = null;
@@ -121,6 +122,7 @@ public class CxdjController {
         }
 
         modelAndView.addObject("ckCkdxList", ckCkdxList);
+        log.debug("{} 批次的查控对象信息为：{}", djpc, ckCkdxList);
         return modelAndView;
     }
 
@@ -131,7 +133,10 @@ public class CxdjController {
     @RequestMapping("updateCxsqdj.do")
     @ResponseBody
     public ResponseVO updateCxsqdj(CxsqDto cxsqDto, String delFileXh, HttpServletRequest request) {
+        log.info("更新的信息中...");
         if (cxsqDto != null && !"".equals(cxsqDto)) {
+            log.debug("更新批次为 {} 的信息", cxsqDto.getDjpc());
+
             String xzdwmc = cxsqDto.getXzdwdm();
             //去除多余的一个逗号
             xzdwmc = xzdwmc.substring(0, xzdwmc.length() - 1);
@@ -157,7 +162,6 @@ public class CxdjController {
 
             copyFileToFinalPath(cxsqDto, request);
 
-
             List<Integer> xhs = new ArrayList<>();
             if (delFileXh.length() > 0) {
                 delFileXh = delFileXh.substring(0, delFileXh.length() - 1);
@@ -169,12 +173,15 @@ public class CxdjController {
             }
 
             if (cxsqService.updateSqInfo(cxsqDto, xhs)) {
+                log.info("更新成功！");
                 return ResResult.success();
             } else {
+                log.info("更新失败！");
                 return ResResult.fail();
             }
         }
-        return ResResult.fail();
+        log.info("无须更新操作！");
+        return ResResult.success();
     }
 
 
@@ -187,6 +194,7 @@ public class CxdjController {
     @RequestMapping("saveCksq.do")
     @ResponseBody
     public ResponseVO saveCksq(CxsqDto cxsqDto, HttpServletRequest request) {
+        log.info("保存查控申请表信息中...");
         if (cxsqDto != null && !"".equals(cxsqDto)) {
             String xzdwmc = cxsqDto.getXzdwdm();
             //去除多余的一个逗号
@@ -198,11 +206,14 @@ public class CxdjController {
             boolean isSuccess = cxsqService.insertCksq(cxsqDto);
 
             if (isSuccess) {
+                log.info("查控申请表保存成功！");
                 return ResResult.success();
             } else {
+                log.info("查控申请表保存失败！");
                 return ResResult.fail();
             }
         }
+        log.info("没有需要保存的信息!");
         return ResResult.fail();
     }
 
@@ -217,6 +228,7 @@ public class CxdjController {
     @RequestMapping("upload.do")
     @ResponseBody
     public ResponseVO uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
+        log.info("将文件上传到临时文件！");
         String fileId = getUUID();
 
         String fileName = file.getOriginalFilename();
@@ -238,7 +250,7 @@ public class CxdjController {
         try {
             file.transferTo(new File(finalPath));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("文件上传出现错误：{}", e);
         }
 
         String fileInfo = "";
@@ -255,9 +267,10 @@ public class CxdjController {
 
             fileInfo = new ObjectMapper().writeValueAsString(ckJzVOs);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            log.error("数据转换为json格式是出现错误 ：{}", e);
         }
 
+        log.debug("文件上传成功传回到后台的信息：{}", fileInfo);
         return ResResult.successWithData(fileInfo);
     }
 
@@ -295,10 +308,8 @@ public class CxdjController {
                     response.getOutputStream().write(buffer, 0, b);//写到输出流(out)中
                 }
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("文件下载时出现错误 ：{}", e);
         } finally {
             try {
                 if (fileInputStream != null) {
@@ -306,7 +317,7 @@ public class CxdjController {
                 }
                 response.getOutputStream().flush();
             } catch (IOException e) {
-                e.printStackTrace();
+                log.info("文件流操作失败：e", e);
             }
         }
     }
@@ -318,9 +329,14 @@ public class CxdjController {
      * @param modelAndView
      */
     private void loadSel(ModelAndView modelAndView) {
-        modelAndView.addObject("zjfl", TsDmCache.KIND_TSDM_MAP.get("ZJFL"));
-        modelAndView.addObject("sasf", TsBzdmCache.KIND_TSBZDM_MAP.get("05036"));
-        modelAndView.addObject("gj", TsBzdmCache.KIND_TSBZDM_MAP.get("00004"));
+        List<TsDm> zjfl = TsDmCache.KIND_TSDM_MAP.get("ZJFL");
+        List<TsBzdm> sasf = TsBzdmCache.KIND_TSBZDM_MAP.get("05036");
+        List<TsBzdm> gj = TsBzdmCache.KIND_TSBZDM_MAP.get("00004");
+
+        log.debug("加载下拉框信息：{},{},{}", zjfl, sasf, gj);
+        modelAndView.addObject("zjfl", zjfl);
+        modelAndView.addObject("sasf", sasf);
+        modelAndView.addObject("gj", gj);
     }
 
 
@@ -330,7 +346,7 @@ public class CxdjController {
      * @param modelAndView
      */
     private void loadChkBox(ModelAndView modelAndView) {
-        log.debug("正在加载复选框的信息！");
+        log.info("正在加载复选框的信息！");
         Map<String, List<CkXzdw>> ckxzdwMap = new HashMap<>();
         List<CkXzdw> ckxzdwList = new ArrayList<>();
 

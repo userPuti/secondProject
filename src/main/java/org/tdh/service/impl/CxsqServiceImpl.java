@@ -64,7 +64,7 @@ public class CxsqServiceImpl implements CxsqService {
             List<CkJz> files = cxsqDto.getFiles();
 
             if (!insertCkdx(ckdxes, xzdwdms, djpc) || !insertCkxz(djpc, ckdxes, xzdwdms, xzsm) || !insertCkjz(files, djpc)) {
-                return false;
+                throw new RuntimeException("插入查控申请失败！");
             }
 
             return true;
@@ -97,15 +97,21 @@ public class CxsqServiceImpl implements CxsqService {
     /**
      * 批量删除
      *
-     * @param bdhms 表单号码
+     * @param cklsh 表单号码
      * @return 删除的数量
      */
     @Override
     @Transactional
-    public int batchDel(String[] bdhms) {
-        if (bdhms != null && !"".equals(bdhms)) {
-            log.warn("正在删除查控协执信息： 表单号码是： {}", bdhms);
-            return ckxzMapper.batchDel(bdhms);
+    public int batchDel(String[] cklsh) {
+        if (cklsh != null && !"".equals(cklsh)) {
+            log.warn("正在删除查控协执信息： 表单号码是： {}", cklsh);
+            int batchDel = ckdxMapper.deleteByCklsh(cklsh);
+
+            if (cklsh.length == batchDel) {
+                return batchDel;
+            } else {
+                throw new RuntimeException("批量删除出现异常！");
+            }
         }
         return 0;
     }
@@ -179,7 +185,6 @@ public class CxsqServiceImpl implements CxsqService {
      * @return 根据登记批次查询到的卷宗对象信息，没有返回null
      */
     @Override
-    @Transactional
     public List<CkJz> getCkJz(String djpc) {
         if (djpc != null && !"".equals(djpc)) {
             List<CkJz> ckJzs = ckJzMapper.selectAllByDjpc(djpc);
@@ -221,7 +226,7 @@ public class CxsqServiceImpl implements CxsqService {
 
             for (CkCkdx ckdx : ckdxes) {
                 if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
-                    throw new RuntimeException();
+                    throw new RuntimeException("更新查控对象出现问题！");
                 }
             }
 
@@ -229,21 +234,21 @@ public class CxsqServiceImpl implements CxsqService {
                 String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
 
                 if (!insertCkxz(djpc, ckdxes, xzdwdms, cxsqDto.getXzsm())) {
-                    throw new RuntimeException();
+                    throw new RuntimeException("更新时插入查控协执出现问题！");
                 }
             } else {
-                throw new RuntimeException();
+                throw new RuntimeException("删除查控协执信息出现问题！");
             }
 
-            if(!(0 == xhs.size())) {
+            if (!(0 == xhs.size())) {
                 if (!deleteFile(djpc, xhs)) {
-                    throw new RuntimeException();
+                    throw new RuntimeException("删除文件出现问题！");
                 }
             }
 
             List<CkJz> files = cxsqDto.getFiles();
             if (!insertCkjz(files, djpc)) {
-                throw new RuntimeException();
+                throw new RuntimeException("插入查控卷宗出现问题！");
             }
 
         }

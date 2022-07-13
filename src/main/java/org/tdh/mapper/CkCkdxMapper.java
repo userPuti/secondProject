@@ -1,7 +1,6 @@
 package org.tdh.mapper;
 
 import org.tdh.domain.CkCkdx;
-import org.tdh.domain.CkCkxz;
 import org.tdh.dto.HomePageDto;
 
 import java.util.List;
@@ -15,7 +14,6 @@ import java.util.List;
 public interface CkCkdxMapper {
 
     /**
-     *
      * @param homePageDto
      * @return
      */
@@ -61,4 +59,12 @@ public interface CkCkdxMapper {
      * @return 更新条数
      */
     int updateCkdxByCklsh(CkCkdx ckdx);
+
+    /**
+     * 根据查控流水号删除信息
+     *
+     * @param cklsh 查控流水号
+     * @return 删除的条数
+     */
+    int deleteByCklsh(String[] cklsh);
 }

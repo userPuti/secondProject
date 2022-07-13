@@ -22,10 +22,10 @@ public interface CxsqService {
     /**
      * 批量删除
      *
-     * @param bdhms 表单号码
+     * @param cklsh 表单号码
      * @return 删除的数量
      */
-    int batchDel(String[] bdhms);
+    int batchDel(String[] cklsh);
 
     /**
      * 插入一条查控协执信息

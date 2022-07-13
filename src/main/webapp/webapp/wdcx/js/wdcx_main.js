@@ -62,6 +62,7 @@ function batchDel() {
     }
 
     delZt = delZt.join(',');
+    console.info(delZt);
 
     if (0 === count) {
         layer.msg('未选择登记状态的记录，无法删除', {
@@ -135,9 +136,9 @@ function addInfo() {
     openLayerModal(CONTEXT_PATH + "webapp/wdcx/cxsfdj.do?func=add", "查询申请登记", 700, 600, "addInfoCallback");
 }
 
-//查询申请登记的回调函数，用于刷新
+//新增查询申请登记的回调函数，用于刷新
 function addInfoCallback(rtn) {
-    console.info("查询");
+    console.info("rtn", rtn);
     if (rtn === "success") {
         return mygrid.loadXML(CONTEXT_PATH + "webapp/wdcx/listwdcx.do");
     }
@@ -145,10 +146,10 @@ function addInfoCallback(rtn) {
 
 //查看
 function view(djpc) {
-    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewSqInfo.do?djpc="+djpc+"&func=view", "查看协执信息", 700, 600);
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewSqInfo.do?djpc=" + djpc + "&func=view", "查看协执信息", 700, 600);
 }
 
 //编辑
 function edit(djpc) {
-    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewSqInfo.do?djpc="+djpc+"&func=edit", "编辑协执信息", 700, 600);
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewSqInfo.do?djpc=" + djpc + "&func=edit", "编辑协执信息", 700, 600);
 }
