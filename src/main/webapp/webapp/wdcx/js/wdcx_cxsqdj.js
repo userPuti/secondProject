@@ -41,15 +41,24 @@ function doView(type) {
 
     let ckjzs = $("#ckjzs").val();
     ckjzs = JSON.parse(ckjzs);
+    console.info(ckjzs);
 
     for (let index in ckjzs) {
         let path = ckjzs[index].path;
-        let fileName = path.substr(path.lastIndexOf("\\") + 1);
+        let fileName = ckjzs[index].wjmc + "." + ckjzs[index].wjlx;
+        let viewFileName = '';
+
+        if (fileName.length > 30) {
+            viewFileName = fileName.substr(0, 30) + "...";
+        } else {
+            viewFileName = fileName;
+        }
+
         let fileInfo = '';
         //用卷宗的序号去当id
         let jzId = "xh_" + ckjzs[index].xh;
         fileInfo += '<li id="' + jzId + '">' +
-            '<label><input class="filechkbox inputCheck viewchkbox" type="checkbox" value="' + jzId + '" title="' + fileName + '">' + ckjzs[index].wjmc + "." + ckjzs[index].wjlx + '</label>' +
+            '<label title="' + fileName + '"><input class="filechkbox inputCheck viewchkbox" type="checkbox" value="' + jzId + '">' + viewFileName + '</label>' +
             '<a class="tdh_icon icon_download form_upload_close" onclick="downloadFile(\'' + path + '\')"></a>' +
             '</li>';
         $('#fileList').append(fileInfo);
@@ -105,6 +114,7 @@ function cxsqdjUpdate() {
             }
         });
 
+        console.info("update delFileXh", delFileXh);
 
         $.ajax({
             url: CONTEXT_PATH + "webapp/wdcx/updateCxsqdj.do",
@@ -279,12 +289,14 @@ function selectAllXzdw() {
 //如果协执单位复选框全部被手动选中，所有单位的复选框会自动勾选
 function allchk() {
     var chknum = $(".xzdw").size();//选项总个数
+    console.info("chknum", chknum);
     var chk = 0;
     $(".xzdw").each(function () {
         if ($(this).attr("checked")) {
             chk++;
         }
     })
+    console.info("chk", chk);
     if (chknum == chk) {//全选
         setCheckVal("#selAll", true);
     } else {//不全选
@@ -351,17 +363,18 @@ function uploadFile() {
                 let res = JSON.parse(result.response);
                 let fileInfo = JSON.parse(res.data)[0];
 
+                console.info(fileInfo);
 
                 let fileName = file.name;
-                if (fileName.length > 10) {
-                    fileName = fileName.substr(0, 10) + "...";
+                if (fileName.length > 30) {
+                    fileName = fileName.substr(0, 30) + "...";
                 }
 
                 let jzID = fileInfo.tempUuid;
 
                 let fileData = '';
                 fileData += '<li id="' + jzID + '">' +
-                    '<label><input class="filechkbox inputCheck" type="checkbox" value="' + jzID + '" title="' + fileName + '">' + fileName + '</label>' +
+                    '<label title="' + fileName + '"><input class="filechkbox inputCheck" type="checkbox" value="' + jzID + '" >' + fileName + '</label>' +
                     '<input type="hidden" name="files[' + fileIndex + '].wjmc" value="' + fileInfo.wjmc + '"/>' +
                     '<input type="hidden" name="files[' + fileIndex + '].djpc" value="-1"/>' +
                     '<input type="hidden" name="files[' + fileIndex + '].wjlx" value="' + fileInfo.wjlx + '"/>' +
@@ -390,10 +403,12 @@ function fileDel() {
             delFileXh += jzId + ",";
         }
 
+        console.info("delFileXh", delFileXh);
         $("#" + jzId).remove();
     });
 }
 
 function downloadFile(path) {
+    console.info("path", path);
     window.location.href = CONTEXT_PATH + "webapp/wdcx/downloadFile.do?path=" + encodeURIComponent(path);
 }

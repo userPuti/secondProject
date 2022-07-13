@@ -90,8 +90,8 @@ public class CxsqServiceImpl implements CxsqService {
 
             return ckxzListXml(ckdxes, total);
         }
-        log.info("ckxzDto为null");
-        return null;
+        log.info("ckxzDto为空");
+        return "";
     }
 
     /**
@@ -432,7 +432,7 @@ public class CxsqServiceImpl implements CxsqService {
     private String ckxzListXml(List<CkCkdx> ckdxes, int count) {
         StringBuilder allCkxzXml = new StringBuilder("<?xml version=\"1.0\" encoding=\"UTF-8\" ?>");
         if (ckdxes != null && count > 0) {
-            log.debug("正在构建表格的xml的String！");
+            log.debug("正在构建表格的！");
             allCkxzXml.append("<rows>");
             allCkxzXml.append("<userdata name='totalnumber'><![CDATA[").append(count).append("]]></userdata>");
 
