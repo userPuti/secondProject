@@ -185,6 +185,11 @@
         </set>
         where cklsh = #{cklsh}
     </update>
+    <update id="updateZtByDjpc">
+        update ck_ckdx
+        set zt='60'
+        where DJPC = #{djpc}
+    </update>
 
     <delete id="deleteByDjpc">
         delete
@@ -223,5 +228,18 @@
             </if>
         </where>
         order by lastupdate desc
+    </select>
+    <select id="selectByCklsh" resultType="java.lang.Boolean">
+        select exists(select 1 from ck_ckdx where CKLSH = #{cklsh})
+    </select>
+    <select id="selectCklshByDjpc" resultType="java.lang.String">
+        select CKLSH
+        from ck_ckdx
+        where DJPC = #{djpc};
+    </select>
+    <select id="countByDjpc" resultType="java.lang.Integer">
+        select count(CKLSH)
+        from ck_ckdx
+        where DJPC = #{djpc}
     </select>
 </mapper>

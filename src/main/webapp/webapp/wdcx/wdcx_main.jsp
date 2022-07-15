@@ -20,45 +20,49 @@
             type="application/javascript" charset="utf-8"></script>
     <script src="${pageContext.request.contextPath}/webapp/wdcx/js/wdcx_main.js"
             type="application/javascript" charset="utf-8"></script>
+    <script src="${pageContext.request.contextPath}/resources/static/js/jquery.serialize.js"
+            type="text/javascript"></script>
 </head>
 <body>
 
 <div class="content">
     <div class="listwrapper">
         <div class="searchbar">
-            <div class="searchbar_row">
-                <em class="searchbar_name">状态：</em>
-                <select class="inputSel" id="zt" name="zt" multiple="multiple" data-checkall="true"
-                        style="width: 190px">
-                    ${ztOption}
-                </select>
-            </div>
-            <div class="searchbar_row">
-                <em class="searchbar_name">案号：</em>
-                <input id="ah" name="ah" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
-            </div>
-            <div class="searchbar_row">
-                <em class="searchbar_name">被执行人：</em>
-                <input id="mc" name="mc" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
-            </div>
-            <div class="searchbar_row">
-                <em class="searchbar_name">证件号码：</em>
-                <input id="zjhm" name="zjhm" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
-            </div>
+            <form id="homePage" action="#">
+                <div class="searchbar_row">
+                    <em class="searchbar_name">状态：</em>
+                    <select class="inputSel" id="zt" name="zt" multiple="multiple" data-checkall="true"
+                            style="width: 190px">
+                        ${ztOption}
+                    </select>
+                </div>
+                <div class="searchbar_row">
+                    <em class="searchbar_name">案号：</em>
+                    <input id="ah" name="ah" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
+                </div>
+                <div class="searchbar_row">
+                    <em class="searchbar_name">被执行人：</em>
+                    <input id="mc" name="mc" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
+                </div>
+                <div class="searchbar_row">
+                    <em class="searchbar_name">证件号码：</em>
+                    <input id="zjhm" name="zjhm" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
+                </div>
 
-            <div class="searchbar_row searchbar_row_fr">
-                <a class="tdh_btn mgr8" href="javascript:void(0);" id="query" onclick="queryInfo()">
-                    <i class="tdh_icon icon_search"></i>查询
-                </a>
+                <div class="searchbar_row searchbar_row_fr">
+                    <a class="tdh_btn mgr8" href="javascript:void(0);" id="query" onclick="queryInfo()">
+                        <i class="tdh_icon icon_search"></i>查询
+                    </a>
 
-                <a class="tdh_btn mgr8" href="javascript:void(0);" id="addInfo" onclick="addInfo()">
-                    <i class="tdh_icon icon_add"></i>新增
-                </a>
+                    <a class="tdh_btn mgr8" href="javascript:void(0);" id="addInfo" onclick="addInfo()">
+                        <i class="tdh_icon icon_add"></i>新增
+                    </a>
 
-                <a class="tdh_btn mgr8" href="javascript:void(0);" id="delUsers" onclick="batchDel()">
-                    <i class="tdh_icon icon_del"></i>删除
-                </a>
-            </div>
+                    <a class="tdh_btn mgr8" href="javascript:void(0);" id="delUsers" onclick="batchDel()">
+                        <i class="tdh_icon icon_del"></i>删除
+                    </a>
+                </div>
+            </form>
         </div>
         <div class="list">
             <div id="grid" style="width: 100%; height: 100%;"></div>

@@ -84,16 +84,16 @@ public class MainPageController {
     @RequestMapping(value = "/batchDel.do", produces = "application/json;charset=utf-8")
     @ResponseBody
     public ResponseVO batchDel(@RequestParam("bdhms") String bdhms) {
-        log.debug("正在批量删除表单号码为 {} 的信息",bdhms);
+        log.warn("正在批量删除表单号码为 {} 的信息",bdhms);
         String[] idArray = bdhms.trim().split(",");
         int total = idArray.length;
         int succCount = cxsqService.batchDel(idArray);
         int fail = total - succCount;
         if (succCount > 0) {
-            log.debug("删除成功，并向后端返回成功信息！");
+            log.info("删除成功，并向后端返回成功信息！");
             return ResResult.successWithData("成功删除了" + succCount + "条数据,失败了" + fail + "条");
         } else {
-            log.debug("删除失败，并向前端返回失败信息！");
+            log.info("删除失败，并向前端返回失败信息！");
             return ResResult.fail();
         }
     }

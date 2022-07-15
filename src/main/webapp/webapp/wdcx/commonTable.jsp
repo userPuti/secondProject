@@ -85,5 +85,3 @@
         </tr>
     </table>
 </c:forEach>
-
-

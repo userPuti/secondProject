@@ -73,10 +73,10 @@ public interface CxsqService {
      * 更新查询申请信息
      *
      * @param cxsqDto 查控协执参数
-     * @param  delFileXh 数据库中等待更新的文件
+     * @param xhs     数据库需要删除的文件的序号
      * @return 更新成功返回true，否则返回false
      */
-    boolean updateSqInfo(CxsqDto cxsqDto,List<Integer> xhs);
+    boolean updateSqInfo(CxsqDto cxsqDto, List<Integer> xhs);
 
     /**
      * 根据登记批次查询当前批次最大的序号
@@ -85,5 +85,13 @@ public interface CxsqService {
      * @return 当前批次的最大序号值
      */
     int getMaxXh(String djpc);
+
+    /**
+     * 发送查询申请
+     *
+     * @param djpc 登记批次
+     * @return 成功返回true，失败返回false
+     */
+    boolean sendCxsq(String djpc);
 
 }

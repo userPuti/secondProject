@@ -157,6 +157,11 @@
             </if>
         </trim>
     </insert>
+    <update id="updateZtByDjpc">
+        update ck_ckxz
+        set zt='60'
+        where DJPC = #{djpc}
+    </update>
     <delete id="batchDel">
         delete
         from ck_ckxz
@@ -166,7 +171,9 @@
         </foreach>
     </delete>
     <delete id="deleteByDjpc">
-        delete from ck_ckxz where djpc=#{djpc}
+        delete
+        from ck_ckxz
+        where djpc = #{djpc}
     </delete>
     <select id="selectAll" resultMap="BaseResultMap">
         select
@@ -214,5 +221,10 @@
         select xzsm
         from ck_ckxz
         where djpc = #{djpc} limit 1
+    </select>
+    <select id="countByDjpc" resultType="java.lang.Integer">
+        select count(BDHM)
+        from ck_ckxz
+        where DJPC = #{djpc}
     </select>
 </mapper>

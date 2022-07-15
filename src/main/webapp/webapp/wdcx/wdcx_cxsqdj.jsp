@@ -25,10 +25,6 @@
     <script type="application/javascript"
             src="${pageContext.request.contextPath}/resources/static/js/jquery.plupload.queue/jquery.plupload.queue.min.js"></script>
     <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/webapp/wdcx/css/list.css"/>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/v2/static/tdh/btn/css/btn.css"/>
-    <script type="text/javascript"
-            src="${pageContext.request.contextPath}/resources/static/v2/static/tdh/btn/js/tdh.btn.js"></script>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/static/v2/static/tdh/form/css/form.css"/>
 </head>
 <body style="padding: 0 10px;box-sizing: border-box; overflow-x: hidden;overflow-y: auto">
 
@@ -37,7 +33,7 @@
         <i class="tdh_icon icon_save"></i>保存
     </a>
 
-    <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="cxsqdjSend">
+    <a class="tdh_btn tdh_btn_white" href="javascript:void(0);" id="cxsqdjSend" onclick="send()">
         <i class="tdh_icon icon_send"></i>发送
     </a>
 </div>
@@ -87,15 +83,15 @@
                 <c:forEach items="${ckxzdwMap}" var="xzdws" varStatus="idxStatus">
                     <tr>
                         <td class="tdCont">
-                            <label><input class="inputCheck xzdw" type="checkbox" id="xzdw_${idxStatus.index}"
-                                          onchange="chkXzdw(this,${idxStatus.index})"/>${xzdws.key}</label>
+                            <label><input class="inputCheck xzdw xz" type="checkbox" id="xzdw_${idxStatus.index}"
+                                          onchange="chkXzdw(this,${idxStatus.index})" value="xzdw_${idxStatus.index}"/>${xzdws.key}</label>
                         </td>
                         <td class="tdCont">
                             <c:forEach items="${xzdws.value}" var="xzdw">
                                 <div style="width: 100px;padding: 0px 5px 0px 5px; float: left">
                                     <label><input
                                             id = "xzdwdm_${xzdw.xzdwdm}"
-                                            class="inputCheck xzdw_${idxStatus.index} xzdw xzdwmc"
+                                            class="inputCheck xzdw_${idxStatus.index} xzdwmc xz"
                                             type="checkbox" value="${xzdw.xzdwdm}"
                                             onchange="allXzdwchk(${idxStatus.index})"/>${xzdw.mc}</label>
                                 </div>
@@ -114,7 +110,7 @@
                 <tr rowspan="4">
                     <td align="center">协<br/>执<br/>说<br/>明<br/></td>
                     <td class="tdCont_pd">
-                        <textarea id="xzsmText" class="inputArea" name="xzsm"></textarea>
+                        <textarea id="xzsmText" class="inputArea" name="xzsm">${xzsm}</textarea>
                     </td>
                 </tr>
             </table>
@@ -153,7 +149,6 @@
 </div>
 <input id="func" type="hidden" value="${func}"/>
 <input id="xzdwdms" type="hidden" value="${xzdwdms}"/>
-<input id="xzsm" type="hidden" value="${xzsm}"/>
 <input id="ckjzs" type="hidden" value="${ckjzs}"/>
 </body>
 </html>

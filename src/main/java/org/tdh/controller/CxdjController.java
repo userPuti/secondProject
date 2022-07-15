@@ -17,6 +17,7 @@ import org.tdh.cache.TsDmCache;
 import org.tdh.domain.*;
 import org.tdh.dto.CxsqDto;
 import org.tdh.service.CxsqService;
+import org.tdh.util.Utils;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
 import org.tdh.vo.CkjzVO;
@@ -39,6 +40,7 @@ import java.util.*;
 public class CxdjController {
     private Logger log = LoggerFactory.getLogger(CxdjController.class);
 
+    //查控申请对应的service
     @Autowired
     private CxsqService cxsqService;
 
@@ -100,7 +102,7 @@ public class CxdjController {
     /**
      * 查控对象信息框
      *
-     * @return
+     * @return ModelAndView
      */
     @RequestMapping("getCxdxTab.do")
     public ModelAndView getCxdxTab(String djpc) {
@@ -127,9 +129,14 @@ public class CxdjController {
     }
 
     /**
-     * @param cxsqDto
-     * @return
+     * 更新查控申请表
+     *
+     * @param cxsqDto   查控申请数据传输对象
+     * @param delFileXh 被删除文件的序号
+     * @param request
+     * @return 成功返回ResResult.success()，否则返回ResResult.fail()
      */
+
     @RequestMapping("updateCxsqdj.do")
     @ResponseBody
     public ResponseVO updateCxsqdj(CxsqDto cxsqDto, String delFileXh, HttpServletRequest request) {
@@ -180,8 +187,8 @@ public class CxdjController {
                 return ResResult.fail();
             }
         }
-        log.info("无须更新操作！");
-        return ResResult.success();
+        log.info("更新对象为空，无法更新！");
+        return ResResult.fail();
     }
 
 
@@ -223,7 +230,6 @@ public class CxdjController {
      *
      * @param file
      * @return
-     * @throws IOException
      */
     @RequestMapping("upload.do")
     @ResponseBody
@@ -242,7 +248,7 @@ public class CxdjController {
             fileDir.mkdir();
         }
 
-        String date = getFormattedDate("yyyyMMdd");
+        String date = Utils.getFormattedDate("yyyyMMdd");
 
         //根据日期生成一个文件夹保存临时文件
         String finalPath = tempFilePath + File.separator + date + File.separator + fileId + "." + wjlx;
@@ -283,7 +289,6 @@ public class CxdjController {
      */
     @RequestMapping("/downloadFile.do")
     public void downloadFile(String path, HttpSession session, HttpServletResponse response) {
-        log.info("正在下载文件...");
         try {
             path = URLDecoder.decode(path, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -320,6 +325,20 @@ public class CxdjController {
                 log.info("文件流操作失败：e", e);
             }
         }
+    }
+
+
+    @RequestMapping("/send.do")
+    @ResponseBody
+    public ResponseVO sendCxsq(String djpc) {
+        if (null != djpc && !"".equals(djpc)) {
+            if (cxsqService.sendCxsq(djpc)) {
+                return ResResult.success();
+            } else {
+                return ResResult.fail();
+            }
+        }
+        return ResResult.fail();
     }
 
 
@@ -376,14 +395,16 @@ public class CxdjController {
 
 
     /**
-     * @param cxsqDto
+     * 将临时文件复制到最终的文件位置
+     *
+     * @param cxsqDto 查询申请的数据传输对象
      * @param request
      */
     private void copyFileToFinalPath(CxsqDto cxsqDto, HttpServletRequest request) {
         Optional files = Optional.ofNullable(cxsqDto.getFiles());
         if (files.isPresent()) {
             String fileDestPath = request.getSession().getServletContext().getRealPath("fileDestPath");
-            fileDestPath = fileDestPath + File.separator + getFormattedDate("yyyyMMdd");
+            fileDestPath = fileDestPath + File.separator + Utils.getFormattedDate("yyyyMMdd");
             File fileDir = new File(fileDestPath);
 
             if (!fileDir.exists()) {
@@ -438,16 +459,5 @@ public class CxdjController {
                 e.printStackTrace();
             }
         }
-    }
-
-    /**
-     * 获取一个日期字符串
-     *
-     * @param pattern 格式化
-     * @return 时间字符串
-     */
-    private String getFormattedDate(String pattern) {
-        SimpleDateFormat smf = new SimpleDateFormat(pattern);
-        return smf.format(new Date());
     }
 }

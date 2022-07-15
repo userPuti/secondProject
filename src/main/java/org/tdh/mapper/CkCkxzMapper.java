@@ -79,6 +79,21 @@ public interface CkCkxzMapper {
      * @return 删除的条数
      */
     int deleteByDjpc(String djpc);
+
+    /**
+     * 发送时将状态设置为60
+     *
+     * @param djpc 登记批次
+     * @return 更新的数据条数
+     */
+    int updateZtByDjpc(String djpc);
+
+    /**
+     * 查询统一批次的查控协执的数量
+     * @param djpc 登记批次
+     * @return 一个批次的查控协执信息数量
+     */
+    int countByDjpc(String djpc);
 }
 
 

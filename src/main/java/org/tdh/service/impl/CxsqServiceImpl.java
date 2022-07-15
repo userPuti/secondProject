@@ -19,6 +19,7 @@ import org.tdh.mapper.CkCkdxMapper;
 import org.tdh.mapper.CkCkxzMapper;
 import org.tdh.mapper.CkJzMapper;
 import org.tdh.service.CxsqService;
+import org.tdh.util.Utils;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -32,12 +33,15 @@ import java.util.*;
 public class CxsqServiceImpl implements CxsqService {
     private Logger log = LoggerFactory.getLogger(CxsqServiceImpl.class);
 
+    //查控对象对应的mapper
     @Autowired
     private CkCkdxMapper ckdxMapper;
 
+    //查控协执对应的mapper
     @Autowired
     private CkCkxzMapper ckxzMapper;
 
+    //查控卷宗对应的mappper
     @Autowired
     private CkJzMapper ckJzMapper;
 
@@ -211,6 +215,7 @@ public class CxsqServiceImpl implements CxsqService {
      * 更新查询申请信息
      *
      * @param cxsqDto 查控协执参数
+     * @param xhs     数据库需要删除的文件的序号
      * @return 更新成功返回true，否则返回false
      */
     @Override
@@ -218,21 +223,57 @@ public class CxsqServiceImpl implements CxsqService {
     public boolean updateSqInfo(CxsqDto cxsqDto, List<Integer> xhs) {
         if (cxsqDto != null) {
             String djpc = cxsqDto.getDjpc();
+            String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
+            String xzsm = cxsqDto.getXzsm();
+            List<CkJz> files = cxsqDto.getFiles();
 
             List<CkCkdx> ckdxes = new ArrayList<>();
             for (Map.Entry<String, CkCkdx> ckdxEntry : cxsqDto.getCkCkdxMap().entrySet()) {
                 ckdxes.add(ckdxEntry.getValue());
             }
 
+            //先提前查询出在数据库中的查控对象的查控流水号信息，给后面判断查控对象是否在数据库中
+            List<String> cklshsInDB = ckdxMapper.selectCklshByDjpc(djpc);
+            List<CkCkdx> insertedCkdx = new ArrayList<>();
+
             for (CkCkdx ckdx : ckdxes) {
-                if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
-                    throw new RuntimeException("更新查控对象出现问题！");
+                String tempCklsh = ckdx.getCklsh();
+                if (cklshsInDB.contains(tempCklsh)) {
+                    //这条数据在数据库中存在，那么直接更新这条数据的信息，然后将他从list中删除，留下来的是需要从数据库中删除的
+                    if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
+                        throw new RuntimeException("更新查控对象出现问题！");
+                    }
+
+                    Iterator<String> cklshIt = cklshsInDB.iterator();
+                    while (cklshIt.hasNext()) {
+                        String s = cklshIt.next();
+                        if (s.equals(tempCklsh)) {
+                            cklshIt.remove();
+                        }
+                    }
+                } else {
+                    //这条数据不在数据库中，需要插入一条新的数据
+                    insertedCkdx.add(ckdx);
                 }
             }
 
-            if (deleteCkxzInfo(djpc)) {
-                String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
+            //插入新添加的对象
+            if (!insertCkdx(insertedCkdx, xzdwdms, djpc) || !insertCkxz(djpc, insertedCkdx, xzdwdms, xzsm) || !insertCkjz(files, djpc)) {
+                throw new RuntimeException("插入查控对象的时候出现错误");
+            }
 
+            //如果查控流水号里面还有多余的值，那么表示这个是已经被删除掉的查控对象
+            if (0 != cklshsInDB.size()) {
+                int length = cklshsInDB.size();
+                String[] cklshs = cklshsInDB.toArray(new String[length]);
+                if (length != ckdxMapper.deleteByCklsh(cklshs)) {
+                    throw new RuntimeException("删除多余的查控对象时出现了错误！");
+                }
+            }
+
+            //先删除之前的查控协执信息，在重新插入新的查控协执信息
+            if (deleteCkxzInfo(djpc)) {
+                //插入新的查控协执信息
                 if (!insertCkxz(djpc, ckdxes, xzdwdms, cxsqDto.getXzsm())) {
                     throw new RuntimeException("更新时插入查控协执出现问题！");
                 }
@@ -240,13 +281,14 @@ public class CxsqServiceImpl implements CxsqService {
                 throw new RuntimeException("删除查控协执信息出现问题！");
             }
 
+            //如果被删除的需要不为空，则删除对应序号的文件
             if (!(0 == xhs.size())) {
                 if (!deleteFile(djpc, xhs)) {
                     throw new RuntimeException("删除文件出现问题！");
                 }
             }
 
-            List<CkJz> files = cxsqDto.getFiles();
+            //插入新上传的文件信息
             if (!insertCkjz(files, djpc)) {
                 throw new RuntimeException("插入查控卷宗出现问题！");
             }
@@ -272,6 +314,39 @@ public class CxsqServiceImpl implements CxsqService {
             }
         }
         return 0;
+    }
+
+    /**
+     * 发送查询申请
+     *
+     * @param djpc 登记批次
+     * @return 成功返回true，失败返回false
+     */
+    @Override
+    @Transactional
+    public boolean sendCxsq(String djpc) {
+        log.info("发送查询申请！");
+        if (null != djpc && !"".equals(djpc)) {
+            log.debug("发送的登记批次为：{}", djpc);
+
+            int countCkxz = ckxzMapper.countByDjpc(djpc);
+
+            //将查控协执中的状态设置为60
+            if (countCkxz != ckxzMapper.updateZtByDjpc(djpc)) {
+                log.error("查控协执更新状态失败！");
+                throw new RuntimeException("发送失败！");
+            }
+
+            int countCkdx = ckdxMapper.countByDjpc(djpc);
+            //将查控对象中的状态设置为60
+            if (countCkdx != ckdxMapper.updateZtByDjpc(djpc)) {
+                log.error("查控对象更新状态失败！");
+                throw new RuntimeException("发送失败！");
+            }
+            return true;
+        }
+        log.info("发送申请的登记批次信息为空！");
+        return false;
     }
 
     /**
@@ -346,7 +421,7 @@ public class CxsqServiceImpl implements CxsqService {
             ckxz.setLastupdate(new Date());
 
             for (String xzdwdm : xzdwdms) {
-                String bdhm = getUUID();
+                String bdhm = Utils.getUUID();
                 ckxz.setBdhm(bdhm);
                 ckxz.setXzdwdm(xzdwdm);
                 ckxz.setXzdwfl(CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm).getXzdwfl());
@@ -496,15 +571,6 @@ public class CxsqServiceImpl implements CxsqService {
         return allCkxzXml.toString();
     }
 
-
-    /**
-     * 获取一个32位的uuid
-     *
-     * @return 32位的uuid
-     */
-    private String getUUID() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
-    }
 
     /**
      * 使用HashSet实现List去重(无序)

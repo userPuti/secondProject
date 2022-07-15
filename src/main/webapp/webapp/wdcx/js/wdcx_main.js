@@ -19,33 +19,28 @@ function initGrid() {
     mygrid.pagingLimits("10,20,50");
     mygrid.enablePagingon(true, 20);
     mygrid.init();
-    mygrid.loadXML(CONTEXT_PATH + "webapp/wdcx/listwdcx.do");
+    queryInfo();
 }
 
 
 //查询
 function queryInfo() {
-    let zt = $('#zt').val();
-    if (zt === null) {
-        zt = '';
-    }
-    let ah = $('#ah').val();
-    let mc = $('#mc').val();
-    let zjhm = $('#zjhm').val();
+    let param = serialize("#homePage");
 
-    mygrid.loadXML(CONTEXT_PATH + "webapp/wdcx/listwdcx.do?zt=" + zt + "&ah=" + ah + "&mc=" + mc + "&zjhm=" + zjhm);
+    mygrid.loadXML(CONTEXT_PATH + "webapp/wdcx/listwdcx.do?" + param);
 }
 
 //删除
 function batchDel() {
     let gridlist = mygrid.getCheckedRows(0);
-
+//todo
     if (gridlist === null || gridlist === '') {
-        layer.msg('未选择登记状态的记录，无法删除', {
+        layer.msg('未选择记录，无法删除', {
             icon: 7,
             shade: 0.000001, //不展示遮罩，但是要有遮罩效果
             time: 2000
         })
+        return false;
     }
 
     let bdhms = gridlist.split(",");
@@ -62,7 +57,6 @@ function batchDel() {
     }
 
     delZt = delZt.join(',');
-    console.info(delZt);
 
     if (0 === count) {
         layer.msg('未选择登记状态的记录，无法删除', {
@@ -133,12 +127,11 @@ function deleted(bdhms) {
 
 //新增
 function addInfo() {
-    openLayerModal(CONTEXT_PATH + "webapp/wdcx/cxsfdj.do?func=add", "查询申请登记", 700, 600, "addInfoCallback");
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/cxsfdj.do?func=add", "查询申请登记", 700, 600, "callback");
 }
 
 //新增查询申请登记的回调函数，用于刷新
-function addInfoCallback(rtn) {
-    console.info("rtn", rtn);
+function callback(rtn) {
     if (rtn === "success") {
         return mygrid.loadXML(CONTEXT_PATH + "webapp/wdcx/listwdcx.do");
     }
@@ -151,5 +144,5 @@ function view(djpc) {
 
 //编辑
 function edit(djpc) {
-    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewSqInfo.do?djpc=" + djpc + "&func=edit", "编辑协执信息", 700, 600);
+    openLayerModal(CONTEXT_PATH + "webapp/wdcx/viewSqInfo.do?djpc=" + djpc + "&func=edit", "编辑协执信息", 700, 600, "callback");
 }
