@@ -258,6 +258,7 @@ public class CxsqServiceImpl implements CxsqService {
             }
 
             //插入新添加的对象
+            //todo 需要测试一下这里是否会出现一个插入出错，但是事务不会回滚的情况
             if (!insertCkdx(insertedCkdx, xzdwdms, djpc) || !insertCkxz(djpc, insertedCkdx, xzdwdms, xzsm) || !insertCkjz(files, djpc)) {
                 throw new RuntimeException("插入查控对象的时候出现错误");
             }
@@ -448,9 +449,11 @@ public class CxsqServiceImpl implements CxsqService {
         if (ckjzs != null) {
             for (CkJz ckjz : ckjzs) {
                 ckjz.setLastupdate(new Date());
+
                 if (1 != ckJzMapper.insertSelective(ckjz)) {
                     return false;
                 }
+
             }
         }
         return true;

@@ -82,6 +82,7 @@ function editDisable() {
 //编辑信息
 function doEdit() {
     doView();
+
     $("#addCxdx").click(function () {
         getCkdxTab("");
     })
@@ -216,7 +217,7 @@ function getCkdxTab(djpc) {
             $("#cxdxTab").append(data);
             selectInit("#cxdxTab .inputSel");
             checkboxInit("#cxdxTab .inputCheck");
-            countCkdx++;
+            countCkdx += $("#countCkdx").val();
         },
         error: function () {
             layer.msg("新增对象页面请求出现错误，请联系管理员！", {
@@ -229,6 +230,7 @@ function getCkdxTab(djpc) {
         }
     });
 }
+
 
 //删除查控对象表格
 function delCxdx() {
@@ -251,6 +253,7 @@ function delCxdx() {
     }
 }
 
+
 //验证表单必填项
 function validateForm() {
     var zt = true;
@@ -264,6 +267,7 @@ function validateForm() {
     return zt;
 }
 
+
 //复选框全选和取消全选
 function selectAllXzdw() {
     if ($("#selAllChk").prop("checked")) {
@@ -274,6 +278,7 @@ function selectAllXzdw() {
         setCheckVal(".xzdwmc", false);
     }
 }
+
 
 //如果协执单位复选框全部被手动选中，所有单位的复选框会自动勾选
 function allchk() {
@@ -305,6 +310,7 @@ function chkXzdw(obj, index) {
     allchk();
 }
 
+
 //分类中的协执单位在全选了之后，小类别的那个复选框会自动勾选
 function allXzdwchk(index) {
     var chknum = $(".xzdw_" + index).size();//选项总个数
@@ -321,6 +327,7 @@ function allXzdwchk(index) {
     }
     allchk();
 }
+
 
 //在编辑和查看的时候需要模拟出发一次change事件
 function isChanged() {

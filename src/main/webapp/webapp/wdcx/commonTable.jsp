@@ -25,7 +25,8 @@
                 <input value="${ckdx.cklsh}" class="inputCheck tableInpChk" type="checkbox"/>
             </td>
             <td class="tdTitle">案号<i class="required">*</i></td>
-            <td class="tdCont"><input id="ah" name="ckCkdxMap['${ckdx.cklsh}'].ah" class="inputText validate" type="text"
+            <td class="tdCont"><input id="ah" name="ckCkdxMap['${ckdx.cklsh}'].ah" class="inputText validate"
+                                      type="text"
                                       value="${ckdx.ah}"/></td>
             <td class="tdTitle">承办人<i class="required">*</i></td>
             <td class="tdCont"><input id="cbr" name="ckCkdxMap['${ckdx.cklsh}'].cbr" class="inputText validate"
@@ -85,3 +86,4 @@
         </tr>
     </table>
 </c:forEach>
+<input type="hidden" id="countCkdx" value="${count}"/>

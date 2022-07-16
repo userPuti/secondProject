@@ -119,11 +119,14 @@ public class CxdjController {
             String cklsh = getUUID();
             ckdx.setCklsh(cklsh);
             ckCkdxList.add(ckdx);
+            modelAndView.addObject("count",1);
         } else {
             ckCkdxList = cxsqService.viewCkdxInfo(djpc);
+            modelAndView.addObject("count",ckCkdxList.size());
         }
 
         modelAndView.addObject("ckCkdxList", ckCkdxList);
+
         log.debug("{} 批次的查控对象信息为：{}", djpc, ckCkdxList);
         return modelAndView;
     }
