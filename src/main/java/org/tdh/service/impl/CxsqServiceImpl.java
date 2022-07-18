@@ -20,6 +20,7 @@ import org.tdh.mapper.CkCkxzMapper;
 import org.tdh.mapper.CkJzMapper;
 import org.tdh.service.CxsqService;
 import org.tdh.util.Utils;
+import org.tdh.util.translate.TsdmTranslate;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -453,7 +454,6 @@ public class CxsqServiceImpl implements CxsqService {
                 if (1 != ckJzMapper.insertSelective(ckjz)) {
                     return false;
                 }
-
             }
         }
         return true;
@@ -519,7 +519,7 @@ public class CxsqServiceImpl implements CxsqService {
                 allCkxzXml.append("<userdata name='zt'><![CDATA[").append(ckdx.getZt()).append("]]></userdata>");
                 allCkxzXml.append("<cell>0</cell>");
 
-                List<TsDm> ckzts = TsDmCache.KIND_TSDM_MAP.get("CKZT");
+                List<TsDm> ckzts = TsdmTranslate.getTsDmByKind("ckzt");
                 for (TsDm dm : ckzts) {
                     if (ckdx.getZt().equals(dm.getCode())) {
                         allCkxzXml.append("<cell><![CDATA[").append(dm.getMc()).append("]]></cell>");

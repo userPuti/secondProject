@@ -20,6 +20,9 @@ import org.tdh.service.CxsqService;
 import org.tdh.util.Utils;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
+import org.tdh.util.translate.CkxzdwTranslate;
+import org.tdh.util.translate.TsBzdmTranslate;
+import org.tdh.util.translate.TsdmTranslate;
 import org.tdh.vo.CkjzVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -154,6 +157,7 @@ public class CxdjController {
 
             List<CkJz> updateFiles = new ArrayList<>();
 
+            //进行一下简单的判断，根据传递过来的序号信息来进行判断是否在数据库中
             List<CkJz> tempFiles = cxsqDto.getFiles();
             if( null != tempFiles){
                 for (int i = tempFiles.size() - 1; i >= 0; i--){
@@ -164,8 +168,10 @@ public class CxdjController {
                 cxsqDto.setFiles(tempFiles);
             }
 
+            //不在数据库中存在的文件，需要将他移动到最终的文件位置
             copyFileToFinalPath(cxsqDto, request);
 
+            //这是需要被删除的文件序号，进行简单的处理，然后传递到service层中
             List<Integer> xhs = new ArrayList<>();
             if (delFileXh.length() > 0) {
                 delFileXh = delFileXh.substring(0, delFileXh.length() - 1);
@@ -176,6 +182,7 @@ public class CxdjController {
                 }
             }
 
+            //将简单处理过的需要的数据带到service中去进行处理
             if (cxsqService.updateSqInfo(cxsqDto, xhs)) {
                 log.info("更新成功！");
                 return ResResult.success();
@@ -254,6 +261,7 @@ public class CxdjController {
             file.transferTo(new File(finalPath));
         } catch (IOException e) {
             log.error("文件上传出现错误：{}", e);
+            throw new RuntimeException("文件上传失败！");
         }
 
         String fileInfo = "";
@@ -271,6 +279,7 @@ public class CxdjController {
             fileInfo = new ObjectMapper().writeValueAsString(ckJzVOs);
         } catch (JsonProcessingException e) {
             log.error("数据转换为json格式是出现错误 ：{}", e);
+            throw new RuntimeException("数据转换为json格式是出现错误!");
         }
 
         log.debug("文件上传成功传回到后台的信息：{}", fileInfo);
@@ -345,9 +354,9 @@ public class CxdjController {
      * @param modelAndView
      */
     private void loadSel(ModelAndView modelAndView) {
-        List<TsDm> zjfl = TsDmCache.KIND_TSDM_MAP.get("ZJFL");
-        List<TsBzdm> sasf = TsBzdmCache.KIND_TSBZDM_MAP.get("05036");
-        List<TsBzdm> gj = TsBzdmCache.KIND_TSBZDM_MAP.get("00004");
+        List<TsDm> zjfl = TsdmTranslate.getTsDmByKind("zjfl");
+        List<TsBzdm> sasf = TsBzdmTranslate.getTsbzdmByKind("05036");
+        List<TsBzdm> gj = TsBzdmTranslate.getTsbzdmByKind("00004");
 
         log.debug("加载下拉框信息：{},{},{}", zjfl, sasf, gj);
         modelAndView.addObject("zjfl", zjfl);
@@ -367,10 +376,10 @@ public class CxdjController {
         List<CkXzdw> ckxzdwList = new ArrayList<>();
 
         if (CkxzdwCache.XZDWFL_XZDW_MAP != null) {
-            List<TsDm> tsDmList = TsDmCache.KIND_TSDM_MAP.get("CKLB");
+            List<TsDm> tsDmList = TsdmTranslate.getTsDmByKind("cklb");
 
             for (TsDm tsDm : tsDmList) {
-                ckxzdwMap.put(tsDm.getBz(), CkxzdwCache.XZDWFL_XZDW_MAP.get(tsDm.getCode()));
+                ckxzdwMap.put(tsDm.getBz(), CkxzdwTranslate.getCkxzdwByCode(tsDm.getCode()));
             }
 
             log.debug("复选框的信息：{}", ckxzdwMap);
