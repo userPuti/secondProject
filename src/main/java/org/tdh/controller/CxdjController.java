@@ -154,20 +154,14 @@ public class CxdjController {
 
             List<CkJz> updateFiles = new ArrayList<>();
 
-            //不上传文件的时候，getFiles()可能会报空指针异常
-            Optional fileOption = Optional.ofNullable(cxsqDto.getFiles());
-            if (fileOption.isPresent()) {
-                List<CkJz> files = cxsqDto.getFiles();
-
-                for (int i = files.size() - 1; i >= 0; i--) {
-                    Optional<Integer> xhOption = Optional.ofNullable(files.get(i).getXh());
-                    //有序号，表明在数据库中已经存在该文件信息了，将它从List中删除
-                    if (!xhOption.isPresent()) {
-                        //如果序号为null，则表明了该文件已经被删除了
-                        files.remove(i);
+            List<CkJz> tempFiles = cxsqDto.getFiles();
+            if( null != tempFiles){
+                for (int i = tempFiles.size() - 1; i >= 0; i--){
+                    if(-1 != tempFiles.get(i).getXh()) {
+                        tempFiles.remove(i);
                     }
                 }
-                cxsqDto.setFiles(files);
+                cxsqDto.setFiles(tempFiles);
             }
 
             copyFileToFinalPath(cxsqDto, request);
