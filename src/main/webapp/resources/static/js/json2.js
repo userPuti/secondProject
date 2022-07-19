@@ -182,11 +182,11 @@ if (typeof JSON !== "object") {
 
             return isFinite(this.valueOf())
                 ? this.getUTCFullYear() + "-" +
-                        f(this.getUTCMonth() + 1) + "-" +
-                        f(this.getUTCDate()) + "T" +
-                        f(this.getUTCHours()) + ":" +
-                        f(this.getUTCMinutes()) + ":" +
-                        f(this.getUTCSeconds()) + "Z"
+                f(this.getUTCMonth() + 1) + "-" +
+                f(this.getUTCDate()) + "T" +
+                f(this.getUTCHours()) + ":" +
+                f(this.getUTCMinutes()) + ":" +
+                f(this.getUTCSeconds()) + "Z"
                 : null;
         };
 
@@ -211,11 +211,11 @@ if (typeof JSON !== "object") {
         rx_escapable.lastIndex = 0;
         return rx_escapable.test(string)
             ? "\"" + string.replace(rx_escapable, function (a) {
-                var c = meta[a];
-                return typeof c === "string"
-                    ? c
-                    : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
-            }) + "\""
+            var c = meta[a];
+            return typeof c === "string"
+                ? c
+                : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
+        }) + "\""
             : "\"" + string + "\"";
     }
 
@@ -235,7 +235,7 @@ if (typeof JSON !== "object") {
 // If the value has a toJSON method, call it to obtain a replacement value.
 
         if (value && typeof value === "object" &&
-                typeof value.toJSON === "function") {
+            typeof value.toJSON === "function") {
             value = value.toJSON(key);
         }
 
@@ -249,112 +249,112 @@ if (typeof JSON !== "object") {
 // What happens next depends on the value's type.
 
         switch (typeof value) {
-        case "string":
-            return quote(value);
+            case "string":
+                return quote(value);
 
-        case "number":
+            case "number":
 
 // JSON numbers must be finite. Encode non-finite numbers as null.
 
-            return isFinite(value)
-                ? String(value)
-                : "null";
+                return isFinite(value)
+                    ? String(value)
+                    : "null";
 
-        case "boolean":
-        case "null":
+            case "boolean":
+            case "null":
 
 // If the value is a boolean or null, convert it to a string. Note:
 // typeof null does not produce "null". The case is included here in
 // the remote chance that this gets fixed someday.
 
-            return String(value);
+                return String(value);
 
 // If the type is "object", we might be dealing with an object or an array or
 // null.
 
-        case "object":
+            case "object":
 
 // Due to a specification blunder in ECMAScript, typeof null is "object",
 // so watch out for that case.
 
-            if (!value) {
-                return "null";
-            }
+                if (!value) {
+                    return "null";
+                }
 
 // Make an array to hold the partial results of stringifying this object value.
 
-            gap += indent;
-            partial = [];
+                gap += indent;
+                partial = [];
 
 // Is the value an array?
 
-            if (Object.prototype.toString.apply(value) === "[object Array]") {
+                if (Object.prototype.toString.apply(value) === "[object Array]") {
 
 // The value is an array. Stringify every element. Use null as a placeholder
 // for non-JSON values.
 
-                length = value.length;
-                for (i = 0; i < length; i += 1) {
-                    partial[i] = str(i, value) || "null";
-                }
+                    length = value.length;
+                    for (i = 0; i < length; i += 1) {
+                        partial[i] = str(i, value) || "null";
+                    }
 
 // Join all of the elements together, separated with commas, and wrap them in
 // brackets.
 
-                v = partial.length === 0
-                    ? "[]"
-                    : gap
-                        ? "[\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "]"
-                        : "[" + partial.join(",") + "]";
-                gap = mind;
-                return v;
-            }
+                    v = partial.length === 0
+                        ? "[]"
+                        : gap
+                            ? "[\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "]"
+                            : "[" + partial.join(",") + "]";
+                    gap = mind;
+                    return v;
+                }
 
 // If the replacer is an array, use it to select the members to be stringified.
 
-            if (rep && typeof rep === "object") {
-                length = rep.length;
-                for (i = 0; i < length; i += 1) {
-                    if (typeof rep[i] === "string") {
-                        k = rep[i];
-                        v = str(k, value);
-                        if (v) {
-                            partial.push(quote(k) + (
-                                gap
-                                    ? ": "
-                                    : ":"
-                            ) + v);
+                if (rep && typeof rep === "object") {
+                    length = rep.length;
+                    for (i = 0; i < length; i += 1) {
+                        if (typeof rep[i] === "string") {
+                            k = rep[i];
+                            v = str(k, value);
+                            if (v) {
+                                partial.push(quote(k) + (
+                                    gap
+                                        ? ": "
+                                        : ":"
+                                ) + v);
+                            }
                         }
                     }
-                }
-            } else {
+                } else {
 
 // Otherwise, iterate through all of the keys in the object.
 
-                for (k in value) {
-                    if (Object.prototype.hasOwnProperty.call(value, k)) {
-                        v = str(k, value);
-                        if (v) {
-                            partial.push(quote(k) + (
-                                gap
-                                    ? ": "
-                                    : ":"
-                            ) + v);
+                    for (k in value) {
+                        if (Object.prototype.hasOwnProperty.call(value, k)) {
+                            v = str(k, value);
+                            if (v) {
+                                partial.push(quote(k) + (
+                                    gap
+                                        ? ": "
+                                        : ":"
+                                ) + v);
+                            }
                         }
                     }
                 }
-            }
 
 // Join all of the member texts together, separated with commas,
 // and wrap them in braces.
 
-            v = partial.length === 0
-                ? "{}"
-                : gap
-                    ? "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}"
-                    : "{" + partial.join(",") + "}";
-            gap = mind;
-            return v;
+                v = partial.length === 0
+                    ? "{}"
+                    : gap
+                        ? "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}"
+                        : "{" + partial.join(",") + "}";
+                gap = mind;
+                return v;
         }
     }
 
@@ -401,7 +401,7 @@ if (typeof JSON !== "object") {
 
             rep = replacer;
             if (replacer && typeof replacer !== "function" &&
-                    (typeof replacer !== "object" ||
+                (typeof replacer !== "object" ||
                     typeof replacer.length !== "number")) {
                 throw new Error("JSON.stringify");
             }
@@ -457,7 +457,7 @@ if (typeof JSON !== "object") {
             if (rx_dangerous.test(text)) {
                 text = text.replace(rx_dangerous, function (a) {
                     return "\\u" +
-                            ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
+                        ("0000" + a.charCodeAt(0).toString(16)).slice(-4);
                 });
             }
 

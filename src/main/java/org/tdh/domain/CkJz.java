@@ -5,40 +5,35 @@ import java.util.Date;
 
 /**
  * 查控卷宗表
+ *
  * @TableName ck_jz
  */
 public class CkJz implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * 登记批次UUID
      */
     private String djpc;
-
     /**
      * 序号
      */
     private Integer xh;
-
     /**
      * 文件名称
      */
     private String wjmc;
-
     /**
      * 文件类型
      */
     private String wjlx;
-
     /**
      * 文件文件地址
      */
     private String path;
-
     /**
      * 更新日期
      */
     private Date lastupdate;
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * 登记批次UUID
@@ -137,11 +132,11 @@ public class CkJz implements Serializable {
         }
         CkJz other = (CkJz) that;
         return (this.getDjpc() == null ? other.getDjpc() == null : this.getDjpc().equals(other.getDjpc()))
-            && (this.getXh() == null ? other.getXh() == null : this.getXh().equals(other.getXh()))
-            && (this.getWjmc() == null ? other.getWjmc() == null : this.getWjmc().equals(other.getWjmc()))
-            && (this.getWjlx() == null ? other.getWjlx() == null : this.getWjlx().equals(other.getWjlx()))
-            && (this.getPath() == null ? other.getPath() == null : this.getPath().equals(other.getPath()))
-            && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()));
+                && (this.getXh() == null ? other.getXh() == null : this.getXh().equals(other.getXh()))
+                && (this.getWjmc() == null ? other.getWjmc() == null : this.getWjmc().equals(other.getWjmc()))
+                && (this.getWjlx() == null ? other.getWjlx() == null : this.getWjlx().equals(other.getWjlx()))
+                && (this.getPath() == null ? other.getPath() == null : this.getPath().equals(other.getPath()))
+                && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()));
     }
 
     @Override

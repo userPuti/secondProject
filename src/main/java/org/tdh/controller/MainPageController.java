@@ -84,7 +84,7 @@ public class MainPageController {
     @RequestMapping(value = "/batchDel.do", produces = "application/json;charset=utf-8")
     @ResponseBody
     public ResponseVO batchDel(@RequestParam("bdhms") String bdhms) {
-        log.warn("正在批量删除表单号码为 {} 的信息",bdhms);
+        log.warn("正在批量删除表单号码为 {} 的信息", bdhms);
         String[] idArray = bdhms.trim().split(",");
         int total = idArray.length;
         int succCount = cxsqService.batchDel(idArray);

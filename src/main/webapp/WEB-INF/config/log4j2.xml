@@ -37,8 +37,8 @@
 
     <!--  配置logger -->
     <Loggers>
-<!--        <Logger name="org.springframework" level="INFO"/>-->
-<!--        <Logger name="org.mybatis" level="INFO"/>-->
+        <!--        <Logger name="org.springframework" level="INFO"/>-->
+        <!--        <Logger name="org.mybatis" level="INFO"/>-->
 
         <!-- 配置root -->
         <Root level="debug">

@@ -7,20 +7,20 @@ package org.tdh.util.response;
  * @author yef
  * @date 2018 /8/30
  */
-public class ResponseNoData extends  ResponseVO{
+public class ResponseNoData extends ResponseVO {
 
     private int code;
 
     private String msg;
 
 
-	/**
-	 * Instantiates a new Response no data.
-	 *
-	 * @param code the code
-	 * @param msg  the msg
-	 */
-	public ResponseNoData(int code, String msg) {
+    /**
+     * Instantiates a new Response no data.
+     *
+     * @param code the code
+     * @param msg  the msg
+     */
+    public ResponseNoData(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }

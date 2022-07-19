@@ -4,66 +4,54 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
  * @TableName ts_bzdm
  */
 public class TsBzdm implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * 种类
      */
     private String kind;
-
     /**
      * 代码
      */
     private String code;
-
     /**
      * 09种类
      */
     private String kin09;
-
     /**
      * 标题
      */
     private String bt;
-
     /**
      * 最后更新日期
      */
     private Date lastupdate;
-
     /**
      * 新代码
      */
     private String codenow;
-
     /**
      * 是否禁用
      */
     private String sfjy;
-
     /**
      * 版本
      */
     private String ver;
-
     /**
      * 名称
      */
     private String mc;
-
     /**
      * 父代码
      */
     private String fdm;
-
     /**
      * 排序号
      */
     private Integer pxh;
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * 种类
@@ -232,16 +220,16 @@ public class TsBzdm implements Serializable {
         }
         TsBzdm other = (TsBzdm) that;
         return (this.getKind() == null ? other.getKind() == null : this.getKind().equals(other.getKind()))
-            && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
-            && (this.getKin09() == null ? other.getKin09() == null : this.getKin09().equals(other.getKin09()))
-            && (this.getBt() == null ? other.getBt() == null : this.getBt().equals(other.getBt()))
-            && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()))
-            && (this.getCodenow() == null ? other.getCodenow() == null : this.getCodenow().equals(other.getCodenow()))
-            && (this.getSfjy() == null ? other.getSfjy() == null : this.getSfjy().equals(other.getSfjy()))
-            && (this.getVer() == null ? other.getVer() == null : this.getVer().equals(other.getVer()))
-            && (this.getMc() == null ? other.getMc() == null : this.getMc().equals(other.getMc()))
-            && (this.getFdm() == null ? other.getFdm() == null : this.getFdm().equals(other.getFdm()))
-            && (this.getPxh() == null ? other.getPxh() == null : this.getPxh().equals(other.getPxh()));
+                && (this.getCode() == null ? other.getCode() == null : this.getCode().equals(other.getCode()))
+                && (this.getKin09() == null ? other.getKin09() == null : this.getKin09().equals(other.getKin09()))
+                && (this.getBt() == null ? other.getBt() == null : this.getBt().equals(other.getBt()))
+                && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()))
+                && (this.getCodenow() == null ? other.getCodenow() == null : this.getCodenow().equals(other.getCodenow()))
+                && (this.getSfjy() == null ? other.getSfjy() == null : this.getSfjy().equals(other.getSfjy()))
+                && (this.getVer() == null ? other.getVer() == null : this.getVer().equals(other.getVer()))
+                && (this.getMc() == null ? other.getMc() == null : this.getMc().equals(other.getMc()))
+                && (this.getFdm() == null ? other.getFdm() == null : this.getFdm().equals(other.getFdm()))
+                && (this.getPxh() == null ? other.getPxh() == null : this.getPxh().equals(other.getPxh()));
     }
 
     @Override

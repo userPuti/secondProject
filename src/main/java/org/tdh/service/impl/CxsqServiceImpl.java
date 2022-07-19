@@ -15,6 +15,7 @@ import org.tdh.domain.CkJz;
 import org.tdh.domain.TsDm;
 import org.tdh.dto.CxsqDto;
 import org.tdh.dto.HomePageDto;
+import org.tdh.enums.CkztEnum;
 import org.tdh.mapper.CkCkdxMapper;
 import org.tdh.mapper.CkCkxzMapper;
 import org.tdh.mapper.CkJzMapper;
@@ -258,7 +259,7 @@ public class CxsqServiceImpl implements CxsqService {
                 }
             }
 
-            if(insertedCkdx.size() > 0) {
+            if (insertedCkdx.size() > 0) {
                 //插入新添加的对象
                 if (!insertCkdx(insertedCkdx, xzdwdms, djpc) || !insertCkxz(djpc, insertedCkdx, xzdwdms, xzsm) || !insertCkjz(files, djpc)) {
                     throw new RuntimeException("插入查控对象的时候出现错误");
@@ -471,7 +472,7 @@ public class CxsqServiceImpl implements CxsqService {
             for (CkCkdx ckdx : ckdxes) {
                 log.debug("正在插入一条查控对象数据！：{}", ckdx);
                 ckdx.setLastupdate(new Date());
-                ckdx.setZt("10");
+                ckdx.setZt(CkztEnum.DJ.getCode());
                 ckdx.setDjpc(djpc);
 
                 List<String> xzdwflList = new ArrayList<>();

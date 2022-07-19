@@ -4,31 +4,26 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
  * @TableName ck_xzdw
  */
 public class CkXzdw implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * 协助单位代码
      */
     private String xzdwdm;
-
     /**
      * 协执单位分类代码值TS_DM.KIND=CKLB
      */
     private String xzdwfl;
-
     /**
      * 单位名称
      */
     private String mc;
-
     /**
      * 更新日期
      */
     private Date lastupdate;
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * 协助单位代码
@@ -99,9 +94,9 @@ public class CkXzdw implements Serializable {
         }
         CkXzdw other = (CkXzdw) that;
         return (this.getXzdwdm() == null ? other.getXzdwdm() == null : this.getXzdwdm().equals(other.getXzdwdm()))
-            && (this.getXzdwfl() == null ? other.getXzdwfl() == null : this.getXzdwfl().equals(other.getXzdwfl()))
-            && (this.getMc() == null ? other.getMc() == null : this.getMc().equals(other.getMc()))
-            && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()));
+                && (this.getXzdwfl() == null ? other.getXzdwfl() == null : this.getXzdwfl().equals(other.getXzdwfl()))
+                && (this.getMc() == null ? other.getMc() == null : this.getMc().equals(other.getMc()))
+                && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()));
     }
 
     @Override

@@ -4,86 +4,70 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 
  * @TableName ck_ckdx
  */
 public class CkCkdx implements Serializable {
+    private static final long serialVersionUID = 1L;
     /**
      * 查控流水号UUID
      */
     private String cklsh;
-
     /**
      * 证件类型代码值TS_DM.KIND=ZJFL
      */
     private String zjlx;
-
     /**
      * 证件号码
      */
     private String zjhm;
-
     /**
      * 名称
      */
     private String mc;
-
     /**
      * 承办人中文姓名
      */
     private String cbr;
-
     /**
      * 书记员中文姓名
      */
     private String sjy;
-
     /**
      * 户籍所在地
      */
     private String hjszd;
-
     /**
      * 国籍代码值TS_BZDM.KIND=00004
      */
     private String gj;
-
     /**
      * 状态代码值TS_DM.KIND=CKZT
      */
     private String zt;
-
     /**
      * 案号
      */
     private String ah;
-
     /**
      * 法院代码
      */
     private String fydm;
-
     /**
      * 登记批次UUID
      */
     private String djpc;
-
     /**
      * 诉讼地位
      */
     private String ssdw;
-
     /**
      * 该对象涉及到的查控范围（行业），以逗号隔开，数据来源TS_DM.KIND=CKLB
      */
     private String ckfw;
-
     /**
      * 更新日期
      */
     private Date lastupdate;
-
-    private static final long serialVersionUID = 1L;
 
     /**
      * 查控流水号UUID
@@ -308,20 +292,20 @@ public class CkCkdx implements Serializable {
         }
         CkCkdx other = (CkCkdx) that;
         return (this.getCklsh() == null ? other.getCklsh() == null : this.getCklsh().equals(other.getCklsh()))
-            && (this.getZjlx() == null ? other.getZjlx() == null : this.getZjlx().equals(other.getZjlx()))
-            && (this.getZjhm() == null ? other.getZjhm() == null : this.getZjhm().equals(other.getZjhm()))
-            && (this.getMc() == null ? other.getMc() == null : this.getMc().equals(other.getMc()))
-            && (this.getCbr() == null ? other.getCbr() == null : this.getCbr().equals(other.getCbr()))
-            && (this.getSjy() == null ? other.getSjy() == null : this.getSjy().equals(other.getSjy()))
-            && (this.getHjszd() == null ? other.getHjszd() == null : this.getHjszd().equals(other.getHjszd()))
-            && (this.getGj() == null ? other.getGj() == null : this.getGj().equals(other.getGj()))
-            && (this.getZt() == null ? other.getZt() == null : this.getZt().equals(other.getZt()))
-            && (this.getAh() == null ? other.getAh() == null : this.getAh().equals(other.getAh()))
-            && (this.getFydm() == null ? other.getFydm() == null : this.getFydm().equals(other.getFydm()))
-            && (this.getDjpc() == null ? other.getDjpc() == null : this.getDjpc().equals(other.getDjpc()))
-            && (this.getSsdw() == null ? other.getSsdw() == null : this.getSsdw().equals(other.getSsdw()))
-            && (this.getCkfw() == null ? other.getCkfw() == null : this.getCkfw().equals(other.getCkfw()))
-            && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()));
+                && (this.getZjlx() == null ? other.getZjlx() == null : this.getZjlx().equals(other.getZjlx()))
+                && (this.getZjhm() == null ? other.getZjhm() == null : this.getZjhm().equals(other.getZjhm()))
+                && (this.getMc() == null ? other.getMc() == null : this.getMc().equals(other.getMc()))
+                && (this.getCbr() == null ? other.getCbr() == null : this.getCbr().equals(other.getCbr()))
+                && (this.getSjy() == null ? other.getSjy() == null : this.getSjy().equals(other.getSjy()))
+                && (this.getHjszd() == null ? other.getHjszd() == null : this.getHjszd().equals(other.getHjszd()))
+                && (this.getGj() == null ? other.getGj() == null : this.getGj().equals(other.getGj()))
+                && (this.getZt() == null ? other.getZt() == null : this.getZt().equals(other.getZt()))
+                && (this.getAh() == null ? other.getAh() == null : this.getAh().equals(other.getAh()))
+                && (this.getFydm() == null ? other.getFydm() == null : this.getFydm().equals(other.getFydm()))
+                && (this.getDjpc() == null ? other.getDjpc() == null : this.getDjpc().equals(other.getDjpc()))
+                && (this.getSsdw() == null ? other.getSsdw() == null : this.getSsdw().equals(other.getSsdw()))
+                && (this.getCkfw() == null ? other.getCkfw() == null : this.getCkfw().equals(other.getCkfw()))
+                && (this.getLastupdate() == null ? other.getLastupdate() == null : this.getLastupdate().equals(other.getLastupdate()));
     }
 
     @Override

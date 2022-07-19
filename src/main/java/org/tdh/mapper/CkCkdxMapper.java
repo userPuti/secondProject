@@ -95,6 +95,7 @@ public interface CkCkdxMapper {
 
     /**
      * 查询同一批次的查控对象的数量
+     *
      * @param djpc 登记批次
      * @return 一个批次的查控对象的数量
      */

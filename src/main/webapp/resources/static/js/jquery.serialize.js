@@ -1,4 +1,3 @@
-
 /**
  * 0次编码
  * @param formSelector
@@ -29,7 +28,7 @@ function serializeOne(formSelector, prefix) {
  * @param prefix
  * @returns
  */
-function serializeTwo(formSelector, prefix){
+function serializeTwo(formSelector, prefix) {
     if (!prefix)
         prefix = "";
 
@@ -37,31 +36,31 @@ function serializeTwo(formSelector, prefix){
 }
 
 /**
-*将一个表单对象序列化。
-*改进：由于JQuery 自带的方法，会将无值的数据部序列化到提交数据内，无法使用自动反射的方式处理数据.
-*提交方式需设置 POST,不建议使用GET方式处理.
-*@author 施健伟  2012-5-17
-*@param  formSelector  表单选择器
-*@param  prefix        表单前缀  对于多数据组的情况，方便后台处理Request
-*@param  decode        是否编码 --默认编码一次
-*/
-function serialize(formSelector,prefix,decode){
-    if(decode == undefined) decode = false;
-    if(prefix == undefined) prefix ="";
-    if(decode){
-        return reParamsSentence(searchForPms(formSelector,prefix));
-    }else{
-        return reParamsSentence(searchForPms(formSelector,prefix),null);
+ *将一个表单对象序列化。
+ *改进：由于JQuery 自带的方法，会将无值的数据部序列化到提交数据内，无法使用自动反射的方式处理数据.
+ *提交方式需设置 POST,不建议使用GET方式处理.
+ *@author 施健伟  2012-5-17
+ *@param  formSelector  表单选择器
+ *@param  prefix        表单前缀  对于多数据组的情况，方便后台处理Request
+ *@param  decode        是否编码 --默认编码一次
+ */
+function serialize(formSelector, prefix, decode) {
+    if (decode == undefined) decode = false;
+    if (prefix == undefined) prefix = "";
+    if (decode) {
+        return reParamsSentence(searchForPms(formSelector, prefix));
+    } else {
+        return reParamsSentence(searchForPms(formSelector, prefix), null);
     }
 }
 
 
 /**
-*通过AJAX方式加载一个指定表的数据，并且动态的绑定到对应的表单对象内.
-*@param formSelector  指定某个表单对象
-*@param url  数据加载地址
-*@callback   回调函数
-*返回的JSON 数据结构（兼容EXTJS):
+ *通过AJAX方式加载一个指定表的数据，并且动态的绑定到对应的表单对象内.
+ *@param formSelector  指定某个表单对象
+ *@param url  数据加载地址
+ *@callback   回调函数
+ *返回的JSON 数据结构（兼容EXTJS):
  <BR>
  {
   "success":true,
@@ -71,55 +70,55 @@ function serialize(formSelector,prefix,decode){
       "portOfDischarge": "OSL"
   }
  }
-*/
-function formLoadData(formSelector,url,callback){
-   //cache
-   if(url.indexOf('?')>-1){
-   	  url = url +'&ect='+new Date().getTime();
-   }else{
-   	  url = url +'?ect='+new Date().getTime();
-   }
-   var form = $(formSelector);
-   $.getJSON(url,function(json){
-      if(json.success){
-	   	  $.each(json.data,function(name,value){
-	   	  	 form.find("[name='"+name+"']").val($.trim(value));
-	   	  });
-	   	  //回调函数
-	   	  if(callback!=undefined){
-	   	      //默认数据传递在后续回调函数内
-	   	      //一般在联动的下拉框对象时才定义
-	   	      callback(json);
-	   	  }
-	   }else{
-	   	  alert("加载数据失败!");
-	   }
-   });
+ */
+function formLoadData(formSelector, url, callback) {
+    //cache
+    if (url.indexOf('?') > -1) {
+        url = url + '&ect=' + new Date().getTime();
+    } else {
+        url = url + '?ect=' + new Date().getTime();
+    }
+    var form = $(formSelector);
+    $.getJSON(url, function (json) {
+        if (json.success) {
+            $.each(json.data, function (name, value) {
+                form.find("[name='" + name + "']").val($.trim(value));
+            });
+            //回调函数
+            if (callback != undefined) {
+                //默认数据传递在后续回调函数内
+                //一般在联动的下拉框对象时才定义
+                callback(json);
+            }
+        } else {
+            alert("加载数据失败!");
+        }
+    });
 }
 
 /**
-*动态将JSON对象数据绑定到对应的#form对象
-*@param  formSelector  
-*@param  jsondata
-*@param  prefix
-*@param  callback   
-*/
-function formSetData(formSelector,jsondata,prefix,callback){
-     var form = $(formSelector);
-     if(prefix == undefined) prefix = "";
-	 $.each(jsondata,function(name,value){
-	         if(prefix==''){
-	   	  	 	form.find("[name='"+name+"']").val(value);
-	   	  	 }else{
-	   	  	 	form.find("[name='"+prefix+name+"']").val(value);
-	   	  	 }
-	 });
-	 //回调函数
-	 if(callback!=undefined){
-   	      //默认数据传递在后续回调函数内
-   	      //一般在联动的下拉框对象时才定义
-	   	  callback(jsondata);
-	 }
+ *动态将JSON对象数据绑定到对应的#form对象
+ *@param  formSelector
+ *@param  jsondata
+ *@param  prefix
+ *@param  callback
+ */
+function formSetData(formSelector, jsondata, prefix, callback) {
+    var form = $(formSelector);
+    if (prefix == undefined) prefix = "";
+    $.each(jsondata, function (name, value) {
+        if (prefix == '') {
+            form.find("[name='" + name + "']").val(value);
+        } else {
+            form.find("[name='" + prefix + name + "']").val(value);
+        }
+    });
+    //回调函数
+    if (callback != undefined) {
+        //默认数据传递在后续回调函数内
+        //一般在联动的下拉框对象时才定义
+        callback(jsondata);
+    }
 }
 
 /**
@@ -218,9 +217,9 @@ function reParamsSentenceNew(pms, encode, encodeCnt) {
  * 需要获取其值的其它类别表单 textarea, select
  *
  * @param {}
-    *            id 块标签的id 带#，形如"#formid"
+ *            id 块标签的id 带#，形如"#formid"
  */
-function searchForPms(selector,prefix) {
+function searchForPms(selector, prefix) {
     var pms = new Object();
     if (prefix == undefined) {
         prefix = "";
@@ -229,25 +228,25 @@ function searchForPms(selector,prefix) {
     // 查找块标签内的 input（不包括radio、checkbox等）, textarea, select
     obj.find(":input:not(button,:submit,:image,:reset,:button,:file,:radio,:checkbox)")
         .each(function () {
-            if ($.trim($(this).attr("name")) != '' ) {
-                if(pms[prefix+ $(this).attr("name")]){ 
-                  if(pms[prefix+ $(this).attr("name")]!=''){	
-                    //如果name 重复 且不为空，则不覆盖.
-                  }
-                }else{
-                	pms[prefix+ $(this).attr("name")] = $.trim($(this).val());
+            if ($.trim($(this).attr("name")) != '') {
+                if (pms[prefix + $(this).attr("name")]) {
+                    if (pms[prefix + $(this).attr("name")] != '') {
+                        //如果name 重复 且不为空，则不覆盖.
+                    }
+                } else {
+                    pms[prefix + $(this).attr("name")] = $.trim($(this).val());
                 }
             }
-            
+
         });
     // 查找块标签内的 checked
     obj.find(":checkbox")
         .each(function () {
             if ($.trim($(this).attr("name")) != '') {
-                if($(this).attr('checked')){
-                	pms[prefix+$(this).attr("name")] = $.trim($(this).val());
-                }else{
-                	pms[prefix+$(this).attr("name")] = '';
+                if ($(this).attr('checked')) {
+                    pms[prefix + $(this).attr("name")] = $.trim($(this).val());
+                } else {
+                    pms[prefix + $(this).attr("name")] = '';
                 }
             }
         });
@@ -255,7 +254,7 @@ function searchForPms(selector,prefix) {
     obj.find(":radio:checked")
         .each(function () {
             if ($.trim($(this).attr("name")) != '') {
-                pms[prefix+$(this).attr("name")] = $.trim($(this).val());
+                pms[prefix + $(this).attr("name")] = $.trim($(this).val());
             }
         });
     return pms;
@@ -271,6 +270,7 @@ function searchForPms(selector,prefix) {
  * $("#select").find("option:selected").text();   选中下拉框的text
  * $("#select option:selected").text();   选中下拉框的text
  */
+
 /**
  * $(":input[name=id],[name=password],[name=name]").val('');
  * 将表单name为id、password、name的值清空
@@ -298,9 +298,9 @@ function clearForm(context) {
 
 
 /**
-*
-*  COMM  StringBuilder
-*/
+ *
+ *  COMM  StringBuilder
+ */
 
 // 类似java的StringBuilder，有属性方法length,append,appendFormat,size,toString,valueOf
 function StringBuilder() {
@@ -310,15 +310,16 @@ function StringBuilder() {
         this.append.apply(this, arguments);
     }
 }
+
 StringBuilder.prototype = function () {
     var join = Array.prototype.join, slice = Array.prototype.slice, RegExp = /\{(\d+)\}/g, toString = function () {
         return join.call(this, "");
     };
     return {
-        constructor:StringBuilder,
-        length:0,
-        append:Array.prototype.push,
-        appendFormat:function (String) {
+        constructor: StringBuilder,
+        length: 0,
+        append: Array.prototype.push,
+        appendFormat: function (String) {
             var i = 0, args = slice.call(arguments, 1);
             this.append(RegExp.test(String) ? String.replace(RegExp, function (String, i) {
                 return args[i];
@@ -327,11 +328,11 @@ StringBuilder.prototype = function () {
             }));
             return this;
         },
-        size:function () {
+        size: function () {
             return this.toString().length;
         },
-        toString:toString,
-        valueOf:toString
+        toString: toString,
+        valueOf: toString
     };
 }();
 

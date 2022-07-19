@@ -2,6 +2,8 @@ package org.tdh.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.tdh.cache.CkxzdwCache;
-import org.tdh.cache.TsBzdmCache;
-import org.tdh.cache.TsDmCache;
 import org.tdh.domain.*;
 import org.tdh.dto.CxsqDto;
 import org.tdh.service.CxsqService;
@@ -28,10 +28,12 @@ import org.tdh.vo.CkjzVO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.channels.FileChannel;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -122,10 +124,10 @@ public class CxdjController {
             String cklsh = getUUID();
             ckdx.setCklsh(cklsh);
             ckCkdxList.add(ckdx);
-            modelAndView.addObject("count",1);
+            modelAndView.addObject("count", 1);
         } else {
             ckCkdxList = cxsqService.viewCkdxInfo(djpc);
-            modelAndView.addObject("count",ckCkdxList.size());
+            modelAndView.addObject("count", ckCkdxList.size());
         }
 
         modelAndView.addObject("ckCkdxList", ckCkdxList);
@@ -159,9 +161,9 @@ public class CxdjController {
 
             //进行一下简单的判断，根据传递过来的序号信息来进行判断是否在数据库中
             List<CkJz> tempFiles = cxsqDto.getFiles();
-            if( null != tempFiles){
-                for (int i = tempFiles.size() - 1; i >= 0; i--){
-                    if(-1 != tempFiles.get(i).getXh()) {
+            if (null != tempFiles) {
+                for (int i = tempFiles.size() - 1; i >= 0; i--) {
+                    if (-1 != tempFiles.get(i).getXh()) {
                         tempFiles.remove(i);
                     }
                 }
@@ -446,24 +448,13 @@ public class CxdjController {
         FileChannel inputChannel = null;
         FileChannel outputChannel = null;
         try {
-            inputChannel = new FileInputStream(source).getChannel();
-            outputChannel = new FileOutputStream(dest).getChannel();
-            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            //todo
+            FileUtils.copyFile(source, dest);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            try {
-                inputChannel.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                outputChannel.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            IOUtils.closeQuietly(inputChannel);
+            IOUtils.closeQuietly(outputChannel);
         }
     }
 }

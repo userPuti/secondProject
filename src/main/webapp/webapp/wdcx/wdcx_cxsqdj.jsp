@@ -84,13 +84,14 @@
                     <tr>
                         <td class="tdCont">
                             <label><input class="inputCheck xzdw xz" type="checkbox" id="xzdw_${idxStatus.index}"
-                                          onchange="chkXzdw(this,${idxStatus.index})" value="xzdw_${idxStatus.index}"/>${xzdws.key}</label>
+                                          onchange="chkXzdw(this,${idxStatus.index})"
+                                          value="xzdw_${idxStatus.index}"/>${xzdws.key}</label>
                         </td>
                         <td class="tdCont">
                             <c:forEach items="${xzdws.value}" var="xzdw">
                                 <div style="width: 100px;padding: 0px 5px 0px 5px; float: left">
                                     <label><input
-                                            id = "xzdwdm_${xzdw.xzdwdm}"
+                                            id="xzdwdm_${xzdw.xzdwdm}"
                                             class="inputCheck xzdw_${idxStatus.index} xzdwmc xz"
                                             type="checkbox" value="${xzdw.xzdwdm}"
                                             onchange="allXzdwchk(${idxStatus.index})"/>${xzdw.mc}</label>

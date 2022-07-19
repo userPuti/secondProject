@@ -43,7 +43,7 @@ public class TsDmCache {
         }
 
         for (TsDm cklb : KIND_TSDM_MAP.get("CKLB")) {
-            CODE_BZ_MAP.put(cklb.getCode(),cklb.getBz());
+            CODE_BZ_MAP.put(cklb.getCode(), cklb.getBz());
         }
     }
 }

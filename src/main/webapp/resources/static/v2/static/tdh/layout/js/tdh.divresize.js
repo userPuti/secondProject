@@ -1,4 +1,4 @@
-(function($, h, c) {
+(function ($, h, c) {
     var a = $([]),
         e = $.resize = $.extend($.resize, {}),
         i,
@@ -10,7 +10,7 @@
     e[b] = 250;
     e[f] = true;
     $.event.special[j] = {
-        setup: function() {
+        setup: function () {
             if (!e[f] && this[k]) {
                 return false;
             }
@@ -24,7 +24,7 @@
                 g();
             }
         },
-        teardown: function() {
+        teardown: function () {
             if (!e[f] && this[k]) {
                 return false;
             }
@@ -35,18 +35,20 @@
                 clearTimeout(i);
             }
         },
-        add: function(l) {
+        add: function (l) {
             if (!e[f] && this[k]) {
                 return false;
             }
             var n;
+
             function m(s, o, p) {
                 var q = $(this),
                     r = $.data(this, d);
-                r.w = o !== c ? o: q.width();
-                r.h = p !== c ? p: q.height();
+                r.w = o !== c ? o : q.width();
+                r.h = p !== c ? p : q.height();
                 n.apply(this, arguments);
             }
+
             if ($.isFunction(l)) {
                 n = l;
                 return m;
@@ -56,9 +58,10 @@
             }
         }
     };
+
     function g() {
-        i = h[k](function() {
-                a.each(function() {
+        i = h[k](function () {
+                a.each(function () {
                     var n = $(this),
                         m = n.width(),
                         l = n.height(),

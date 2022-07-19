@@ -7,7 +7,7 @@ package org.tdh.util.response;
  * @author yef
  * @date 2018 /8/30
  */
-public class ResponseWithData extends  ResponseVO{
+public class ResponseWithData extends ResponseVO {
 
     private int code;
 
@@ -16,14 +16,14 @@ public class ResponseWithData extends  ResponseVO{
     private Object data;
 
 
-	/**
-	 * Instantiates a new Response with data.
-	 *
-	 * @param code the code
-	 * @param msg  the msg
-	 * @param data the data
-	 */
-	public ResponseWithData(int code, String msg, Object data) {
+    /**
+     * Instantiates a new Response with data.
+     *
+     * @param code the code
+     * @param msg  the msg
+     * @param data the data
+     */
+    public ResponseWithData(int code, String msg, Object data) {
         this.code = code;
         this.msg = msg;
         this.data = data;

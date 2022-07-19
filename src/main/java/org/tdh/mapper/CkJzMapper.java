@@ -53,7 +53,7 @@ public interface CkJzMapper {
      * @param xhs  序号信息
      * @return 删除的条数
      */
-    int deleteByXhAndDjpc(@Param("djpc") String djpc, @Param("xhs")List<Integer> xhs);
+    int deleteByXhAndDjpc(@Param("djpc") String djpc, @Param("xhs") List<Integer> xhs);
 }
 
 
