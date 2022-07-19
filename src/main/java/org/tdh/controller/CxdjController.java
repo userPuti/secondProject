@@ -3,7 +3,6 @@ package org.tdh.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +16,10 @@ import org.tdh.cache.CkxzdwCache;
 import org.tdh.domain.*;
 import org.tdh.dto.CxsqDto;
 import org.tdh.service.CxsqService;
+import org.tdh.util.TranslateUtils;
 import org.tdh.util.Utils;
 import org.tdh.util.response.ResResult;
 import org.tdh.util.response.ResponseVO;
-import org.tdh.util.translate.CkxzdwTranslate;
-import org.tdh.util.translate.TsBzdmTranslate;
-import org.tdh.util.translate.TsdmTranslate;
 import org.tdh.vo.CkjzVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -33,7 +30,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.nio.channels.FileChannel;
 import java.util.*;
 
 /**
@@ -62,7 +58,7 @@ public class CxdjController {
         ModelAndView modelAndView = new ModelAndView("wdcx_cxsqdj");
         loadChkBox(modelAndView);
         modelAndView.addObject("func", "add");
-        String djpc = getUUID();
+        String djpc = Utils.getUUID();
         modelAndView.addObject("djpc", djpc);
         log.info("跳转到查询登记信息页面");
         return modelAndView;
@@ -121,7 +117,7 @@ public class CxdjController {
             ckCkdxList = new ArrayList<>();
 
             CkCkdx ckdx = new CkCkdx();
-            String cklsh = getUUID();
+            String cklsh = Utils.getUUID();
             ckdx.setCklsh(cklsh);
             ckCkdxList.add(ckdx);
             modelAndView.addObject("count", 1);
@@ -241,7 +237,7 @@ public class CxdjController {
     @ResponseBody
     public ResponseVO uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest request) {
         log.info("将文件上传到临时文件！");
-        String fileId = getUUID();
+        String fileId = Utils.getUUID();
 
         String fileName = file.getOriginalFilename();
         String wjlx = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -308,7 +304,7 @@ public class CxdjController {
         response.reset();
         response.setCharacterEncoding("UTF-8");
         response.setContentType("multipart/form-data");
-        response.setHeader("Content-Disposition", "attachment;fileName=" + getUUID() + wjlx);
+        response.setHeader("Content-Disposition", "attachment;fileName=" + Utils.getUUID() + wjlx);
         FileInputStream fileInputStream = null;
         try {
             fileInputStream = new FileInputStream(path);
@@ -356,9 +352,9 @@ public class CxdjController {
      * @param modelAndView
      */
     private void loadSel(ModelAndView modelAndView) {
-        List<TsDm> zjfl = TsdmTranslate.getTsDmByKind("zjfl");
-        List<TsBzdm> sasf = TsBzdmTranslate.getTsbzdmByKind("05036");
-        List<TsBzdm> gj = TsBzdmTranslate.getTsbzdmByKind("00004");
+        List<TsDm> zjfl = TranslateUtils.getTsDmByKind("zjfl");
+        List<TsBzdm> sasf = TranslateUtils.getTsbzdmByKind("05036");
+        List<TsBzdm> gj = TranslateUtils.getTsbzdmByKind("00004");
 
         log.debug("加载下拉框信息：{},{},{}", zjfl, sasf, gj);
         modelAndView.addObject("zjfl", zjfl);
@@ -378,10 +374,10 @@ public class CxdjController {
         List<CkXzdw> ckxzdwList = new ArrayList<>();
 
         if (CkxzdwCache.XZDWFL_XZDW_MAP != null) {
-            List<TsDm> tsDmList = TsdmTranslate.getTsDmByKind("cklb");
+            List<TsDm> tsDmList = TranslateUtils.getTsDmByKind("cklb");
 
             for (TsDm tsDm : tsDmList) {
-                ckxzdwMap.put(tsDm.getBz(), CkxzdwTranslate.getCkxzdwByCode(tsDm.getCode()));
+                ckxzdwMap.put(tsDm.getBz(), TranslateUtils.getCkxzdwByCode(tsDm.getCode()));
             }
 
             log.debug("复选框的信息：{}", ckxzdwMap);
@@ -389,16 +385,6 @@ public class CxdjController {
         } else {
             log.info("缓存里面的东西为空，无法传递协执单位信息！");
         }
-    }
-
-
-    /**
-     * 获取一个32位的uuid
-     *
-     * @return 一个随机的32位uuid
-     */
-    private String getUUID() {
-        return UUID.randomUUID().toString().replaceAll("-", "");
     }
 
 
@@ -423,7 +409,7 @@ public class CxdjController {
 
             //将文件从临时文件复制到最终文件
             for (CkJz file : cxsqDto.getFiles()) {
-                String filePath = fileDestPath + File.separator + getUUID() + "." + file.getWjlx();
+                String filePath = fileDestPath + File.separator + Utils.getUUID() + "." + file.getWjlx();
 
                 //将文件复制到最终地址
                 copyFileUsingFileChannels(new File(file.getPath()), new File(filePath));
@@ -445,16 +431,16 @@ public class CxdjController {
      * @param dest   文件目的地址
      */
     private void copyFileUsingFileChannels(File source, File dest) {
-        FileChannel inputChannel = null;
-        FileChannel outputChannel = null;
-        try {
-            //todo
-            FileUtils.copyFile(source, dest);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(inputChannel);
-            IOUtils.closeQuietly(outputChannel);
+        if (null != source && null != dest) {
+            try {
+                log.debug("文件的源地址：{}, 文件的目的地址:{}", source, dest);
+                FileUtils.copyFile(source, dest);
+            } catch (IOException e) {
+                log.error("文件复制出现错误:{}", e);
+                throw new RuntimeException("文件复制出现错误!");
+            }
+        } else {
+            return;
         }
     }
 }

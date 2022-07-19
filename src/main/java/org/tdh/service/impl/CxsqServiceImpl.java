@@ -20,9 +20,8 @@ import org.tdh.mapper.CkCkdxMapper;
 import org.tdh.mapper.CkCkxzMapper;
 import org.tdh.mapper.CkJzMapper;
 import org.tdh.service.CxsqService;
+import org.tdh.util.TranslateUtils;
 import org.tdh.util.Utils;
-import org.tdh.util.translate.TsdmTranslate;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.*;
@@ -520,7 +519,7 @@ public class CxsqServiceImpl implements CxsqService {
                 allCkxzXml.append("<userdata name='zt'><![CDATA[").append(ckdx.getZt()).append("]]></userdata>");
                 allCkxzXml.append("<cell>0</cell>");
 
-                List<TsDm> ckzts = TsdmTranslate.getTsDmByKind("ckzt");
+                List<TsDm> ckzts = TranslateUtils.getTsDmByKind("ckzt");
                 for (TsDm dm : ckzts) {
                     if (ckdx.getZt().equals(dm.getCode())) {
                         allCkxzXml.append("<cell><![CDATA[").append(dm.getMc()).append("]]></cell>");
