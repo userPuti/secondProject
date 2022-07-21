@@ -216,12 +216,12 @@ public class CxsqServiceImpl implements CxsqService {
      * 更新查询申请信息
      *
      * @param cxsqDto 查控协执参数
-     * @param xhs     数据库需要删除的文件的序号
+     * @param delFileXh     数据库需要删除的文件的序号
      * @return 更新成功返回true，否则返回false
      */
     @Override
     @Transactional
-    public boolean updateSqInfo(CxsqDto cxsqDto, List<Integer> xhs) {
+    public boolean updateSqInfo(CxsqDto cxsqDto, String delFileXh) {
         if (cxsqDto != null) {
             String djpc = cxsqDto.getDjpc();
             String[] xzdwdms = cxsqDto.getXzdwdm().split(",");
@@ -241,6 +241,17 @@ public class CxsqServiceImpl implements CxsqService {
                 String tempCklsh = ckdx.getCklsh();
                 if (cklshsInDB.contains(tempCklsh)) {
                     //这条数据在数据库中存在，那么直接更新这条数据的信息，然后将他从list中删除，留下来的是需要从数据库中删除的
+                    List<String> xzdwflList = new ArrayList<>();
+                    if (xzdwflList != null && xzdwdms.length > 0) {
+                        for (String xzdwdm : xzdwdms) {
+                            xzdwflList.add(TranslateUtils.getCkxzdwByXzdwdm(xzdwdm).getXzdwfl());
+                        }
+                        xzdwflList = removeDuplicationByHashSet(xzdwflList);
+                        String ckfw = String.join(",", xzdwflList);
+                        ckdx.setCkfw(ckfw);
+                    } else {
+                        xzdwflList = null;
+                    }
                     if (1 != ckdxMapper.updateCkdxByCklsh(ckdx)) {
                         throw new RuntimeException("更新查控对象出现问题！");
                     }
@@ -281,6 +292,17 @@ public class CxsqServiceImpl implements CxsqService {
                 }
             } else {
                 throw new RuntimeException("删除查控协执信息出现问题！");
+            }
+
+            //这是需要被删除的文件序号，进行简单的处理
+            List<Integer> xhs = new ArrayList<>();
+            if (delFileXh.length() > 0) {
+                delFileXh = delFileXh.substring(0, delFileXh.length() - 1);
+                String[] tempXh = delFileXh.split(",");
+                for (String xh : tempXh) {
+                    xh = xh.substring(3);
+                    xhs.add(Integer.parseInt(xh));
+                }
             }
 
             //如果被删除的需要不为空，则删除对应序号的文件
@@ -406,7 +428,7 @@ public class CxsqServiceImpl implements CxsqService {
         for (CkCkdx ckdx : ckdxes) {
             CkCkxz ckxz = new CkCkxz();
             ckxz.setCklsh(ckdx.getCklsh());
-            ckxz.setZt("10");
+            ckxz.setZt(CkztEnum.DJ.getCode());
             ckxz.setXzlb("1");
             ckxz.setAh(ckdx.getAh());
             ckxz.setZjhm(ckdx.getZjhm());

@@ -29,4 +29,9 @@ public class TranslateUtils {
     public static List<TsBzdm> getTsbzdmByKind(String kind) {
         return TsBzdmCache.KIND_TSBZDM_MAP.get(kind);
     }
+
+    //根据协执单位代码查询协执单位
+    public static CkXzdw getCkxzdwByXzdwdm(String xzdwdm) {
+        return CkxzdwCache.XZDWDM_XZDW_MAP.get(xzdwdm);
+    }
 }

@@ -28,6 +28,7 @@ public interface CkCkdxMapper {
      */
     int insert(CkCkdx ckdx);
 
+
     /**
      * 插入一条数据，可以不是完整的
      *
@@ -35,6 +36,7 @@ public interface CkCkdxMapper {
      * @return 插入的条数
      */
     int insertSelective(CkCkdx ckdx);
+
 
     /**
      * 根据登记批次查询同一批次的查控对象
@@ -44,6 +46,7 @@ public interface CkCkdxMapper {
      */
     List<CkCkdx> selectAllByDjpc(String djpc);
 
+
     /**
      * 根据登记批次删除信息
      *
@@ -51,6 +54,7 @@ public interface CkCkdxMapper {
      * @return 删除的条数
      */
     int deleteByDjpc(String djpc);
+
 
     /**
      * 更新查控对象
@@ -60,6 +64,7 @@ public interface CkCkdxMapper {
      */
     int updateCkdxByCklsh(CkCkdx ckdx);
 
+
     /**
      * 根据查控流水号删除信息
      *
@@ -67,6 +72,7 @@ public interface CkCkdxMapper {
      * @return 删除的条数
      */
     int deleteByCklsh(String[] cklsh);
+
 
     /**
      * 根据查控流水号判断数据是否在数据库中
@@ -85,6 +91,7 @@ public interface CkCkdxMapper {
      */
     List<String> selectCklshByDjpc(String djpc);
 
+
     /**
      * 发送时将状态设置为60
      *
@@ -92,6 +99,7 @@ public interface CkCkdxMapper {
      * @return 更新的数据条数
      */
     int updateZtByDjpc(String djpc);
+
 
     /**
      * 查询同一批次的查控对象的数量

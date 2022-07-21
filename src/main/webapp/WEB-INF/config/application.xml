@@ -6,10 +6,13 @@
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop.xsd">
 
+    <!-- 配置注解扫描的包，但是不扫描controller包里面的注解   -->
     <context:component-scan base-package="org.tdh">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
 
+
+    <!-- 配置数据源   -->
     <context:property-placeholder location="/WEB-INF/config/jdbc.properties"/>
 
     <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
@@ -22,9 +25,11 @@
         <property name="defaultAutoCommit" value="false"/>
     </bean>
 
+    <!-- 配置会话工厂  -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="typeAliasesPackage" value="org.tdh.domain"/>
+        <!-- 配置分页插件 -->
         <property name="plugins">
             <array>
                 <bean class="com.github.pagehelper.PageInterceptor">
@@ -39,13 +44,16 @@
         </property>
     </bean>
 
+    <!-- 配置mybatis和spring的整合   -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="org.tdh.mapper"/>
     </bean>
 
+    <!-- 将事务交给spring去处理   -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
 
+    <!-- 配置事务的注解，以aop的方式使用   -->
     <tx:annotation-driven transaction-manager="transactionManager"/>
 </beans>

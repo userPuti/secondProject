@@ -4,6 +4,8 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <!--    配置spring的监听器，项目一启动，创建IOC容器，注入好依赖关系，并且将
+    IOC容器放入ServletContext中 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>/WEB-INF/config/application*.xml</param-value>
@@ -14,6 +16,7 @@
         <param-value>/WEB-INF/config/log4j2.xml</param-value>
     </context-param>
 
+    <!-- 字符编码过滤器 -->
     <filter>
         <filter-name>characterEncodingFilter</filter-name>
         <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -31,6 +34,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <!-- 配置日志监听   -->
     <filter>
         <filter-name>log4jServletFilter</filter-name>
         <filter-class>org.apache.logging.log4j.web.Log4jServletFilter</filter-class>
@@ -51,6 +55,7 @@
         <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
     </listener>
 
+    <!-- 配置springmvc的dispatcherServlet   -->
     <servlet>
         <servlet-name>dispatcherServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -58,9 +63,11 @@
             <param-name>contextConfigLocation</param-name>
             <param-value>/WEB-INF/config/servlet-context*.xml</param-value>
         </init-param>
+        <!-- 启动就加载  -->
         <load-on-startup>1</load-on-startup>
     </servlet>
 
+    <!-- dispatcherServlet需要拦截的请求   -->
     <servlet-mapping>
         <servlet-name>dispatcherServlet</servlet-name>
         <url-pattern>*.do</url-pattern>

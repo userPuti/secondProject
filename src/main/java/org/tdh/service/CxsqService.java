@@ -73,10 +73,10 @@ public interface CxsqService {
      * 更新查询申请信息
      *
      * @param cxsqDto 查控协执参数
-     * @param xhs     数据库需要删除的文件的序号
+     * @param delFileXh     数据库需要删除的文件的序号
      * @return 更新成功返回true，否则返回false
      */
-    boolean updateSqInfo(CxsqDto cxsqDto, List<Integer> xhs);
+    boolean updateSqInfo(CxsqDto cxsqDto, String delFileXh);
 
     /**
      * 根据登记批次查询当前批次最大的序号

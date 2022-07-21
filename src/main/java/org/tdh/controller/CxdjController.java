@@ -107,7 +107,7 @@ public class CxdjController {
      */
     @RequestMapping("getCxdxTab.do")
     public ModelAndView getCxdxTab(String djpc) {
-        log.info("加载查控对象的表格...,当前批次为：{}", djpc);
+        log.debug("加载查控对象的表格...,当前批次为：{}", djpc);
 
         ModelAndView modelAndView = new ModelAndView("commonTable");
         loadSel(modelAndView);
@@ -120,6 +120,7 @@ public class CxdjController {
             String cklsh = Utils.getUUID();
             ckdx.setCklsh(cklsh);
             ckCkdxList.add(ckdx);
+
             modelAndView.addObject("count", 1);
         } else {
             ckCkdxList = cxsqService.viewCkdxInfo(djpc);
@@ -132,6 +133,7 @@ public class CxdjController {
         return modelAndView;
     }
 
+
     /**
      * 更新查控申请表
      *
@@ -140,7 +142,6 @@ public class CxdjController {
      * @param request
      * @return 成功返回ResResult.success()，否则返回ResResult.fail()
      */
-
     @RequestMapping("updateCxsqdj.do")
     @ResponseBody
     public ResponseVO updateCxsqdj(CxsqDto cxsqDto, String delFileXh, HttpServletRequest request) {
@@ -169,19 +170,8 @@ public class CxdjController {
             //不在数据库中存在的文件，需要将他移动到最终的文件位置
             copyFileToFinalPath(cxsqDto, request);
 
-            //这是需要被删除的文件序号，进行简单的处理，然后传递到service层中
-            List<Integer> xhs = new ArrayList<>();
-            if (delFileXh.length() > 0) {
-                delFileXh = delFileXh.substring(0, delFileXh.length() - 1);
-                String[] tempXh = delFileXh.split(",");
-                for (String xh : tempXh) {
-                    xh = xh.substring(3);
-                    xhs.add(Integer.parseInt(xh));
-                }
-            }
-
             //将简单处理过的需要的数据带到service中去进行处理
-            if (cxsqService.updateSqInfo(cxsqDto, xhs)) {
+            if (cxsqService.updateSqInfo(cxsqDto, delFileXh)) {
                 log.info("更新成功！");
                 return ResResult.success();
             } else {
@@ -319,6 +309,7 @@ public class CxdjController {
             }
         } catch (IOException e) {
             log.error("文件下载时出现错误 ：{}", e);
+            throw new RuntimeException("文件下载时出现错误");
         } finally {
             try {
                 if (fileInputStream != null) {
@@ -327,11 +318,17 @@ public class CxdjController {
                 response.getOutputStream().flush();
             } catch (IOException e) {
                 log.info("文件流操作失败：e", e);
+                throw new RuntimeException("文件流操作失败");
             }
         }
     }
 
 
+    /**
+     * 发送查询申请表
+     * @param djpc 登记批次
+     * @return 成功返回ResResult.success()，否则返回ResResult.fail()
+     */
     @RequestMapping("/send.do")
     @ResponseBody
     public ResponseVO sendCxsq(String djpc) {

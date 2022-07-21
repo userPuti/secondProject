@@ -78,8 +78,10 @@ public class MainPageController {
     /**
      * 批量删除
      *
-     * @param bdhms
-     * @return
+     * @param bdhms 表单号码
+     * @return 成功返回ResResult.successWithData，
+     *         其中包含的成功信息是删除成功的条数和失败的条数，
+     *         失败了返回ResResult.fail()
      */
     @RequestMapping(value = "/batchDel.do", produces = "application/json;charset=utf-8")
     @ResponseBody
