@@ -111,7 +111,7 @@
                 <tr rowspan="4">
                     <td align="center">协<br/>执<br/>说<br/>明<br/></td>
                     <td class="tdCont_pd">
-                        <textarea id="xzsmText" class="inputArea" name="xzsm" maxlength="255">${xzsm}</textarea>
+                        <textarea id="xzsmText" class="inputArea" name="xzsm" maxlength="255" style="resize:none;" >${xzsm}</textarea>
                     </td>
                 </tr>
             </table>

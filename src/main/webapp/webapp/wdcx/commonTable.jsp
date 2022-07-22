@@ -68,7 +68,7 @@
             <td class="tdTitle">证件号码<i class="required">*</i></td>
             <td class="tdCont" colspan="3"><input id="zjhm" name="ckCkdxMap['${ckdx.cklsh}'].zjhm"
                                                   class="inputText validate" type="text"
-                                                  value="${ckdx.zjhm}"/></td>
+                                                  value="${ckdx.zjhm}" maxlength="30"/></td>
         </tr>
         <tr>
             <td class="tdTitle">国家或地区</td>
