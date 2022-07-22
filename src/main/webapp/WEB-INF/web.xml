@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
-    <!--    配置spring的监听器，项目一启动，创建IOC容器，注入好依赖关系，并且将
+    <!-- 配置spring的监听器，项目一启动，创建IOC容器，注入好依赖关系，并且将
     IOC容器放入ServletContext中 -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
@@ -55,7 +55,7 @@
         <listener-class>org.apache.logging.log4j.web.Log4jServletContextListener</listener-class>
     </listener>
 
-    <!-- 配置springmvc的dispatcherServlet   -->
+    <!-- 配置springmvc的dispatcherServlet -->
     <servlet>
         <servlet-name>dispatcherServlet</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>

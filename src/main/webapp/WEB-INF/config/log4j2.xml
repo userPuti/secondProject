@@ -4,9 +4,9 @@
         <Property name="logDir">${sys:catalina.home}/logs/secondProject/</Property>
     </Properties>
 
-    <!-- 配置appender 控制台-->
+    <!-- 配置appender 控制台 -->
     <Appenders>
-        <!--     配置控制台输出   -->
+        <!-- 配置控制台输出 -->
         <Console name="consoleAppender" targer="SYSTEM_OUT">
             <PatternLayout pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss,SSS} - %m%n"/>
         </Console>
@@ -22,24 +22,21 @@
             <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
             <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
             <Policies>
-                <!-- 在系统启动的时候，就触发拆分的日志功能-->
+                <!-- 在系统启动的时候，就触发拆分的日志功能 -->
                 <OnStartupTriggeringPolicy/>
-                <!-- 按照文件的大小进行拆分-->
+                <!-- 按照文件的大小进行拆分 -->
                 <SizeBasedTriggeringPolicy size="20MB"/>
-                <!-- 按照时间节点进行拆分-->
+                <!-- 按照时间节点进行拆分 -->
                 <TimeBasedTriggeringPolicy/>
             </Policies>
 
-            <!-- 设置文件的最大的数量，如果超出了限制，新的文件就会覆盖旧的文件-->
+            <!-- 设置文件的最大的数量，如果超出了限制，新的文件就会覆盖旧的文件 -->
             <DefaultRolloverStrategy max="30"/>
         </RollingFile>
     </Appenders>
 
-    <!--  配置logger -->
+    <!-- 配置logger -->
     <Loggers>
-        <!--        <Logger name="org.springframework" level="INFO"/>-->
-        <!--        <Logger name="org.mybatis" level="INFO"/>-->
-
         <!-- 配置root -->
         <Root level="debug">
             <AppenderRef ref="rollingFile"/>

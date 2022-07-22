@@ -86,6 +86,7 @@ function doEdit() {
     $("#addCxdx").click(function () {
         getCkdxTab("");
     })
+
     cxsqdjUpdate();
 }
 
@@ -114,6 +115,7 @@ function cxsqdjUpdate() {
         $.ajax({
             url: CONTEXT_PATH + "webapp/wdcx/updateCxsqdj.do",
             type: "post",
+            //希望服务器返回json格式数据
             dataType: "json",
             data: params + "&xzdwdm=" + chkStr + "&delFileXh=" + delFileXh,
             success: function (data) {

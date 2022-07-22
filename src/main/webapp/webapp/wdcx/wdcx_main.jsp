@@ -38,15 +38,15 @@
                 </div>
                 <div class="searchbar_row">
                     <em class="searchbar_name">案号：</em>
-                    <input id="ah" name="ah" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
+                    <input id="ah" name="ah" class="inputText" type="text" placeholder="请输入" style="width: 190px;" maxlength="50"/>
                 </div>
                 <div class="searchbar_row">
                     <em class="searchbar_name">被执行人：</em>
-                    <input id="mc" name="mc" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
+                    <input id="mc" name="mc" class="inputText" type="text" placeholder="请输入" style="width: 190px;" maxlength="100"/>
                 </div>
                 <div class="searchbar_row">
                     <em class="searchbar_name">证件号码：</em>
-                    <input id="zjhm" name="zjhm" class="inputText" type="text" placeholder="请输入" style="width: 190px;"/>
+                    <input id="zjhm" name="zjhm" class="inputText" type="text" placeholder="请输入" style="width: 190px;" maxlength="30"/>
                 </div>
 
                 <div class="searchbar_row searchbar_row_fr">

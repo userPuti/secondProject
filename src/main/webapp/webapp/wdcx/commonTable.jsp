@@ -27,20 +27,21 @@
             <td class="tdTitle">案号<i class="required">*</i></td>
             <td class="tdCont"><input id="ah" name="ckCkdxMap['${ckdx.cklsh}'].ah" class="inputText validate"
                                       type="text"
-                                      value="${ckdx.ah}"/></td>
+                                      value="${ckdx.ah}"
+                                      maxlength="50"/></td>
             <td class="tdTitle">承办人<i class="required">*</i></td>
             <td class="tdCont"><input id="cbr" name="ckCkdxMap['${ckdx.cklsh}'].cbr" class="inputText validate"
-                                      type="text" value="${ckdx.cbr}"/>
+                                      type="text" value="${ckdx.cbr}" maxlength="20"/>
             </td>
             <td class="tdTitle">书记员<i class="required">*</i></td>
             <td class="tdCont"><input id="sjy" name="ckCkdxMap['${ckdx.cklsh}'].sjy" class="inputText validate"
-                                      type="text" value="${ckdx.sjy}"/>
+                                      type="text" value="${ckdx.sjy}" maxlength="20" />
             </td>
         </tr>
         <tr>
             <td class="tdTitle">查询对象<i class="required">*</i></td>
             <td class="tdCont"><input id="mc" name="ckCkdxMap['${ckdx.cklsh}'].mc" class="inputText validate"
-                                      type="text" value="${ckdx.mc}"/></td>
+                                      type="text" value="${ckdx.mc}" maxlength="100"/></td>
             <td class="tdTitle">涉案身份</td>
             <td class="tdCont">
                 <select class="inputSel sasf" name="ckCkdxMap['${ckdx.cklsh}'].ssdw">
@@ -82,7 +83,7 @@
             <td class="tdTitle">户籍地<i class="required">*</i></td>
             <td class="tdCont" colspan="3"><input id="hjszd" name="ckCkdxMap['${ckdx.cklsh}'].hjszd"
                                                   class="inputText validate" type="text"
-                                                  value="${ckdx.hjszd}"/></td>
+                                                  value="${ckdx.hjszd}" maxlength="80"/></td>
         </tr>
     </table>
 </c:forEach>

@@ -49,7 +49,7 @@
         <property name="basePackage" value="org.tdh.mapper"/>
     </bean>
 
-    <!-- 将事务交给spring去处理   -->
+    <!-- 将事务交给spring去处理,配置数据源  -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
